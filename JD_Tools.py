@@ -16,7 +16,7 @@ def refresh_JD_access_token():
     
     client_secret = os.getenv("JD_CLIENT_SECRET")
     scope = "org2 files offline_access  ag3  eq2 work2"
-    redirect_uri = "http://unlagdatamanagement.hopto.org/"
+    redirect_uri = "https://adma.hopto.org/"
 
 
 
