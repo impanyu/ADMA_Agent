@@ -62,3 +62,11 @@ def find_largest_enclosed_json(text):
                 max_substring = text[start:i+1]
 
     return max_substring
+
+def iterate_over_list(list,index):
+    if index >= len(list):
+        return None
+    element= list[index]
+    index+=1
+    return element,index
+    

@@ -1,6 +1,7 @@
 {
     "ADMA_list": {
         "type":"method",
+        "call_condition": "",
         "function":{
             "name":"ADMA_list_directory_contents",
             "description":"List the contents of a directory on the ADMA server.",
@@ -17,18 +18,94 @@
             "additionalProperties": false
         },
         "context":{
-            "upstream":["ADMA_list_input"],
-            "downstream":["ADMA_list_output"]
+            "upstream":["ADMA_path"],
+            "downstream":["ADMA_path_list"]
         }
     },
-    "ADMA_list_input":{
+    "ADMA_path":{
         "type":"string",
         "description":"The path the directory in the ADMA system.",
+        "context":{
+            "upstream":[],
+            "downstream":["ADMA_get_meta_data","ADMA_list"]
+        },
         "versions":[]
     },
-    "ADMA_list_output":{
-        "type":"list",
+    "ADMA_path_list":{
+        "type":"list of strings",
         "description":"A list of paths in the ADMA system.",
+        "context":{
+            "upstream":["ADMA_list"],
+            "downstream":[]
+        },
         "versions":[]
+    },
+    "ADMA_get_meta_data":{
+        "type":"method",
+        "call_condition": "",
+        "function":{
+            "name":"ADMA_get_meta_data",
+            "description":"Get the meta data of a file or folder on the ADMA server.",
+            "parameters":{
+                "type":"object",
+                "properties":{
+                    "file_path":{
+                        "type":"string",
+                        "description":"The path or name of the file in the ADMA system."
+                    }
+                }
+            },
+            "required":["file_path"],
+            "additionalProperties": false
+        },
+        "context":{
+            "upstream":["ADMA_path"],
+            "downstream":["ADMA_meta_data"]
+        }
+    },
+    "ADMA_meta_data":{
+        "type":"object",
+        "description":"The meta data of the file or folder on the ADMA server.",
+        "context":{
+            "upstream":["ADMA_get_meta_data"],
+            "downstream":[]
+        },
+        "versions":[]
+    },
+    "subscribe_list":{
+        "type":"method",
+        "call_condition": "*_list_current_index should be less than the length of the *_list, where * is the name of the list.",
+        "function":{
+            "name":"subscribe_list",
+            "description":"Subscribe a list with a given index.",
+            "parameters":{
+                "type":"object",
+                "properties":{
+                    "list":{
+                        "type":"list",
+                        "description":"The list to be subscribed."
+                    },
+                    "index":{
+                        "type":"integer",
+                        "description":"The index of the list to be subscribed."
+                    }
+                }
+            },
+            "required":["list","index"],
+            "additionalProperties": false
+        },
+        "context":{
+            "upstream":["ADMA_path_list","ADMA_path_list_current_index"],
+            "downstream":["ADMA_path","ADMA_path_list_current_index"]
+        }
+    },
+    "ADMA_path_list_current_index":{
+        "type":"integer",
+        "description":"The current index of the list in the ADMA system.",
+        "context":{
+            "upstream":["subscribe_list"],
+            "downstream":["subscribe_list"]
+        },
+        "versions":[0]
     }
 }
