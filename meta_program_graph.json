@@ -77,7 +77,7 @@
         "call_condition": "*_list_current_index should be less than the length of the *_list, where * is the name of the list.",
         "function":{
             "name":"subscribe_list",
-            "description":"Subscribe a list with a given index.",
+            "description":"Subscribe a list with a given index and return the element and the next index.",
             "parameters":{
                 "type":"object",
                 "properties":{
