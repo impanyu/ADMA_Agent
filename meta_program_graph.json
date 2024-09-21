@@ -4,7 +4,7 @@
         "call_condition": "",
         "function":{
             "name":"ADMA_list_directory_contents",
-            "description":"List the contents of a directory on the ADMA server.",
+            "description":"Given a path on ADMA, return the list of directories or fileson the ADMA server.",
             "parameters":{
                 "type":"object",
                 "properties":{
@@ -45,7 +45,7 @@
         "call_condition": "",
         "function":{
             "name":"ADMA_get_meta_data",
-            "description":"Get the meta data of a file or folder on the ADMA server.",
+            "description":"Given a path on ADMA, return the meta data of the path on the ADMA server.",
             "parameters":{
                 "type":"object",
                 "properties":{
@@ -77,7 +77,7 @@
         "call_condition": "*_list_current_index should be less than the length of the *_list, where * is the name of the list.",
         "function":{
             "name":"subscribe_list",
-            "description":"Subscribe a list with a given index and return the element and the next index.",
+            "description":"Given a list and an index, return the element at the index and the next index.",
             "parameters":{
                 "type":"object",
                 "properties":{
