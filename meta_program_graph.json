@@ -1,3 +1,34 @@
 {
-    "list":
+    "ADMA_list": {
+        "type":"method",
+        "function":{
+            "name":"ADMA_list_directory_contents",
+            "description":"List the contents of a directory on the ADMA server.",
+            "parameters":{
+                "type":"object",
+                "properties":{
+                    "dir_path":{
+                        "type":"string",
+                        "description":"The path or name of the directory in the ADMA system."
+                    }
+                }
+            },
+            "required":["dir_path"],
+            "additionalProperties": false
+        },
+        "context":{
+            "upstream":["ADMA_list_input"],
+            "downstream":["ADMA_list_output"]
+        }
+    },
+    "ADMA_list_input":{
+        "type":"string",
+        "description":"The path the directory in the ADMA system.",
+        "versions":[]
+    },
+    "ADMA_list_output":{
+        "type":"list",
+        "description":"A list of paths in the ADMA system.",
+        "versions":[]
+    }
 }
