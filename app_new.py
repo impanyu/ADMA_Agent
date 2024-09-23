@@ -408,9 +408,9 @@ def main():
 
 
     # upload file
-    files = st.sidebar.file_uploader("Upload Your File",accept_multiple_files=True)
-    for file in files:
-        st.write(file.name)
+    #files = st.sidebar.file_uploader("Upload Your File",accept_multiple_files=True)
+    #for file in files:
+    #    st.write(file.name)
 
     # Initialize the session state for chat history if it does not exist
     if 'chat_history' not in st.session_state:
