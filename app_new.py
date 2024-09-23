@@ -428,11 +428,6 @@ def main():
 
     st.sidebar.title("Control Panel")
 
-    # Embed a webpage using custom HTML
-    html_code = """
-    <iframe src="https://adma.hopto.org" width="1200" height="800" frameborder="0"></iframe>
-    """
-    st.components.v1.html(html_code, width=1190, height=790)
 
 
     # Load meta program graph
@@ -471,17 +466,7 @@ def main():
     # Initialize the session state for chat history if it does not exist
     if 'chat_history' not in st.session_state:
       st.session_state['chat_history'] = []
-    '''
-    # Display chat history
-    for message in st.session_state['chat_history']:
-      if message['role'] == "user":
-          # avatar is a emoji
-          st.chat_message("user",avatar="👨‍🎓").write(message['content'])
-      elif message['role'] == "assistant":
-          ai_reply(message['content'],if_history=True)
-          #st.chat_message("assistant", avatar="🤖").write(message['content'])
-    '''
-  
+
 
     if prompt := st.chat_input("Ask Me Anything About Your AgData"):
       # Update chat history with user message
