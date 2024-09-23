@@ -1,0 +1,72 @@
+{
+    "ADMA_list_directory_contents": {
+        "type":"method",
+        "call_condition": "",
+        "description": "Given a path of directory on ADMA, return the list of paths under the directory.",
+        "input":["ADMA_list_directory_contents&dir_path"],
+        "output":["ADMA_list_directory_contents&output_list"]
+    },
+    "ADMA_list_directory_contents&dir_path":{
+        "type":"string",
+        "description":"ADMA_list_directory_contents&dir_path is a path of the directory on the ADMA system.",
+        "output_from":[],
+        "input_to":["ADMA_list_directory_contents"],
+        "value":""
+    },
+    "ADMA_list_directory_contents&output_list":{
+        "type":"list of strings",
+        "description":"ADMA_list_directory_contents&output_list is a list of paths in the ADMA system.",
+        "output_from":["ADMA_list_directory_contents"],
+        "input_to":["subscribe_list_1"],
+        "value":[]
+    },
+    "ADMA_list_directory_contents&output_list_current_index":{
+        "type":"integer",
+        "description":"ADMA_list_directory_contents&output_list_current_index is the current index of ADMA_list_directory_contents&output_list.",
+        "output_from":[],
+        "input_to":["subscribe_list_1"],
+        "value":0
+    },
+
+    "subscribe_list_1":{
+        "type":"method",
+        "call_condition": "Only call this method when ADMA_list_directory_contents&output_list_current_index is less than the length of ADMA_list_directory_contents&output_list",
+        "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
+        "input":["ADMA_list_directory_contents&output_list","ADMA_list_directory_contents&output_list_current_index"],
+        "output":["ADMA_get_meta_data&path","ADMA_list_directory_contents&output_list_current_index"]
+    },
+
+    "subscribe_list_2":{
+        "type":"method",
+        "call_condition": "Only call this method when ADMA_list_directory_contents&output_list_current_index is less than the length of ADMA_list_directory_contents&output_list",
+        "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
+        "input":["ADMA_list_directory_contents&output_list","ADMA_list_directory_contents&output_list_current_index"],
+        "output":["ADMA_list_directory_contents&dir_path","ADMA_list_directory_contents&output_list_current_index"]
+    },
+
+
+
+    "ADMA_get_meta_data":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a path on ADMA, return the meta data of the path on the ADMA server.",
+        "input":["ADMA_get_meta_data&path"],
+        "output":["ADMA_get_meta_data&meta_data"]
+    },
+    "ADMA_get_meta_data&path":{
+        "type":"string",
+        "description":"ADMA_get_meta_data&path is a path of the file or folder on the ADMA server.",
+        "output_from":[],
+        "input_to":["ADMA_get_meta_data"],
+        "value":""
+    },
+    "ADMA_get_meta_data&meta_data":{
+        "type":"object",
+        "description":"ADMA_get_meta_data&meta_data is the meta data of the file or folder on the ADMA server.",
+        "output_from":["ADMA_get_meta_data"],
+        "input_to":[],
+        "value":[]
+    }
+
+ 
+}
