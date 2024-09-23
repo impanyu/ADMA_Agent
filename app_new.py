@@ -497,7 +497,7 @@ def ai_reply(response, if_history=False):
                     weight=0,  # Width of the border
                     fill=True,
                     fill_color='#3388ff',  # Fill color of the polygon
-                    fill_opacity=0.4,  # Opacity of the fill (0-1)
+                    fill_opacity=0.8,  # Opacity of the fill (0-1)
                     tooltip="Field Boundaries"
                 ).add_to(m)
             
