@@ -30,7 +30,7 @@ class controller:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a program controller. The user will tell you what they want to do. Given the following meta program graph which contains the information of each method and each variable, you need to decide the next method to call."
-        self.system_prompt += "The meta program graph is: " + json.dumps(meta_program_graph)
+        self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
         self.system_prompt += 'If you consider there\'s no more methods to call, you should only output a json with the following format: {"method": "None","args": {}}, with no other extra word at all.'
         self.system_prompt += 'Else if you consider there should be a method to call, you need to output a json with the following format: {"method": "the name of the method to call","args": {"arg_name": "arg_value"}}, with no other extra word at all.'
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the args should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
@@ -54,7 +54,7 @@ class final_output_formatter(BaseModel):
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output formatter. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the final answer or result, as closed as possible to user's instruction."
         self.system_prompt += "The output field in your output should be consistent with the type you specify. For example, if you specify the type as a list, you need to output a list, if you specify the type as a string, you need to output a string, if you specify the type as a boundary, you need to output a list of tuple of coordinates on the map , etc."
-        self.system_prompt += "The meta program graph is: " + json.dumps(meta_program_graph)
+        self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
 
     def format_output(self, user_instruction):
         response = self.client.chat.completions.create(
