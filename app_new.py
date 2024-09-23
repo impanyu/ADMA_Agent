@@ -95,7 +95,7 @@ output_type = {
                                 "description": "The type of the output."
                             }
                         },
-                        "required": ["type"],
+                        "required": ["output_type"],
                         "additionalProperties": False
                     }
                 }
