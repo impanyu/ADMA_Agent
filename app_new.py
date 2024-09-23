@@ -182,14 +182,16 @@ class final_output_formatter:
             )
             return response.choices[0].message.content
         elif output_type == "list":
-            response = self.client.beta.chat.completions.parse(
+            system_prompt += "Return a formatted json list with no extra word."
+
+            response = self.client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_instruction}],
                 response_format= list_string_format,
                 temperature=0.5,
             )
-            return json.dumps(json.loads(response.choices[0].message.content)["items"])
+            return response.choices[0].message.content
         elif output_type == "object":
             system_prompt += "Return a formatted json string with no extra word."
             response = self.client.chat.completions.create(
