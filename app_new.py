@@ -325,6 +325,12 @@ def main():
     output_formatter = final_output_formatter(meta_program_graph)
     output_typer = final_output_typer(meta_program_graph)
     
+    if 'program_controller' not in st.session_state:
+        st.session_state.program_controller = controller(meta_program_graph)
+    if 'output_formatter' not in st.session_state:
+        st.session_state.output_formatter = final_output_formatter(meta_program_graph)
+    if 'output_typer' not in st.session_state:
+        st.session_state.output_typer = final_output_typer(meta_program_graph)
 
 
 
