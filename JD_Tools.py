@@ -161,6 +161,7 @@ def field_id_from_name(field_name: str) -> str:
     for field in fields["values"]:
         print(field["name"])
         if field["name"] == field_name:
+            print(field["id"])
             return field["id"]
     return ""
 
