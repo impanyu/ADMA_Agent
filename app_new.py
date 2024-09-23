@@ -372,6 +372,12 @@ def main():
 
     st.sidebar.title("Control Panel")
 
+    # Embed a webpage using custom HTML
+    html_code = """
+    <iframe src="https://www.google.com" width="800" height="600" frameborder="0"></iframe>
+    """
+    st.components.v1.html(html_code, width=800, height=600)
+
 
     # Load meta program graph
     
