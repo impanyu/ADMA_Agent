@@ -159,6 +159,7 @@ def field_id_from_name(field_name: str) -> str:
     with open("tmp/JD_fields.json", "r") as f:
         fields = json.load(f)
     for field in fields["values"]:
+        print(field["name"])
         if field["name"] == field_name:
             return field["id"]
     return ""
