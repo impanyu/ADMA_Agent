@@ -61,6 +61,49 @@ controller_output = {
                 }
             }
 
+output_type = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "output_type",
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "output_type": {
+                                "type": "string",
+                                "enum": ["string", "list", "map","number","UI","object","url"],
+                                "description": "The type of the output."
+                            }
+                        },
+                        "required": ["output_type"],
+                        "additionalProperties": False
+                    }
+                }
+            }
+
+list_string_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "list_string_format",
+                        "strict": True,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "items": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "A list of string outputs."
+                                }
+                            },
+                            "required": ["items"],
+                            "additionalProperties": False
+                    }
+    }
+}
+
+
 
 
 class controller:
@@ -100,47 +143,6 @@ class controller:
             self.executed_methods.append(result["method"])
         return json.loads(response.choices[0].message.content)#response.choices[0].message.parsed
     
-output_type = {
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "output_type",
-                    "strict": True,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "output_type": {
-                                "type": "string",
-                                "enum": ["string", "list", "map","number","UI","object","url"],
-                                "description": "The type of the output."
-                            }
-                        },
-                        "required": ["output_type"],
-                        "additionalProperties": False
-                    }
-                }
-            }
-
-list_string_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "list_string_format",
-                        "strict": True,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "items": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "A list of string outputs."
-                                }
-                            },
-                            "required": ["items"],
-                            "additionalProperties": False
-                        }
-                    }
-                }
 
                                 
 
