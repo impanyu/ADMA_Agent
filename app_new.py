@@ -110,7 +110,7 @@ output_type = {
                         "properties": {
                             "output_type": {
                                 "type": "string",
-                                "enum": ["string", "list", "map","number","UI","object"],
+                                "enum": ["string", "list", "map","number","UI","object","url"],
                                 "description": "The type of the output."
                             }
                         },
@@ -150,7 +150,7 @@ class final_output_typer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, ADMA_meta_data."
+        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, object, url."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
@@ -325,6 +325,27 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] = meta_program_graph["ADMA_get_meta_data&meta_data"]["description"]+"\n"
             meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] += f"ADMA_push_to_meta_data_list&output_list is a list of meta data of the file or folder on the ADMA server."
 
+        elif next_task["method"] == "ADMA_menu_option":
+            if "ADMA_menu_option&menu_name" in args_dict and not args_dict["ADMA_menu_option&menu_name"] == "DEFAULT":
+                menu_name = args_dict["ADMA_menu_option&menu_name"]
+                meta_program_graph["ADMA_menu_option&menu_name"]["value"] = menu_name
+                meta_program_graph["ADMA_menu_option&menu_name"]["description"] = f"ADMA_menu_option&menu_name is the name of the menu on the ADMA server, and set to {menu_name}."
+            else:
+                menu_name = meta_program_graph["ADMA_menu_option&menu_name"]["value"]
+
+            if "ADMA_menu_option&path" in args_dict and not args_dict["ADMA_menu_option&path"] == "DEFAULT":
+                path = args_dict["ADMA_menu_option&path"]
+                meta_program_graph["ADMA_menu_option&path"]["value"] = path
+                meta_program_graph["ADMA_menu_option&path"]["description"] = f"ADMA_menu_option&path is the path of the menu on the ADMA server, and set to {path}."
+            else:
+                path = meta_program_graph["ADMA_menu_option&path"]["value"]
+
+            meta_program_graph["ADMA_menu_option&menu_url"]["value"] = ADMA_menu_option(menu_name,path)
+            meta_program_graph["ADMA_menu_option&menu_url"]["description"] = meta_program_graph["ADMA_menu_option&menu_name"]["description"]+"\n"
+            meta_program_graph["ADMA_menu_option&menu_url"]["description"] += meta_program_graph["ADMA_menu_option&path"]["description"]+"\n"
+            meta_program_graph["ADMA_menu_option&menu_url"]["description"] = f"ADMA_menu_option&menu_url is the url of the menu on the ADMA server."
+                
+
 
     final_output_type = output_typer.output_type(prompt)
     output = output_formatter.format_output(prompt,final_output_type["output_type"])
@@ -356,8 +377,13 @@ def ai_reply(response, if_history=False):
             #with st.chat_message("assistant", avatar="🤖"):
             #    st.json(json.loads(response["output"]))
             st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
+    elif response["type"] == "url":
+        html_code = f"""
+            <iframe src={response["output"]} width="1200" height="800" frameborder="0"></iframe>
+            """
 
- 
+        st.components.v1.html(html_code, width=1190, height=790)
+       
 
 
 
@@ -445,7 +471,7 @@ def main():
     # Initialize the session state for chat history if it does not exist
     if 'chat_history' not in st.session_state:
       st.session_state['chat_history'] = []
-    
+    '''
     # Display chat history
     for message in st.session_state['chat_history']:
       if message['role'] == "user":
@@ -454,7 +480,7 @@ def main():
       elif message['role'] == "assistant":
           ai_reply(message['content'],if_history=True)
           #st.chat_message("assistant", avatar="🤖").write(message['content'])
-
+    '''
   
 
     if prompt := st.chat_input("Ask Me Anything About Your AgData"):

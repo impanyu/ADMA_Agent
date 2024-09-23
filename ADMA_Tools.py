@@ -132,3 +132,21 @@ def ADMA_plot_option(dir_path, value_name="temperature"):
         ],
     }
     return options
+
+def ADMA_menu_option(menu_name,path=""):
+    root_url = "https://adma.hopto.org"
+    menu_paths = {
+        "search": "/search.html?current_path=ypan12",
+        "share_with_me": "/files.html?current_path=public",
+        "files": "/files.html?current_path=ypan12",
+        "data": "/data.html?current_path=ypan12",
+        "models": "/models.html?current_path=ypan12",
+        "tools": "/tools.html?current_path=ypan12",
+        "collections": "/collections.html?current_path=ypan12/collections",
+        "documentation": "/documentation.html",
+        "api": "/api.html"
+    }
+    result = f"{root_url}{menu_paths[menu_name]}"
+    if path != "" and menu_name == "files":
+        result += f"/{path}"
+    return result

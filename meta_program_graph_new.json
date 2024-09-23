@@ -8,7 +8,7 @@
     },
     "ADMA_list_directory_contents&dir_path":{
         "type":"string",
-        "description":"ADMA_list_directory_contents&dir_path is a path of the directory on the ADMA system.",
+        "description":"ADMA_list_directory_contents&dir_path is a path of the directory on the ADMA system. The format should be like path/to/directory, with 0 or more / in the path.",
         "output_from":[],
         "input_to":["ADMA_list_directory_contents"],
         "value":""
@@ -81,6 +81,36 @@
         "output_from":["ADMA_push_to_meta_data_list"],
         "input_to":[],
         "value":[]
+    },
+
+
+    "ADMA_menu_option":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a menu name and a path, return the url of the menu on the ADMA server.",
+        "input":["ADMA_menu_option&menu_name","ADMA_menu_option&path"],
+        "output":["ADMA_menu_option&menu_url"]
+    },
+    "ADMA_menu_option&menu_name":{
+        "type":"string",
+        "description":"ADMA_menu_option&menu_name is the name of the menu on the ADMA server. It should be one of the following: search, share_with_me, files, data, models, tools, collections, documentation, api.",
+        "output_from":[],
+        "input_to":["ADMA_menu_option"],
+        "value":""
+    },
+    "ADMA_menu_option&path":{
+        "type":"string",
+        "description":"ADMA_menu_option&path is the path of the menu on the ADMA server. It should be in the format of path/to/directory, with 0 or more / in the path.",
+        "output_from":[],
+        "input_to":["ADMA_menu_option"],
+        "value":""
+    },
+    "ADMA_menu_option&menu_url":{
+        "type":"string",
+        "description":"ADMA_menu_option&menu_url is the url of the menu on the ADMA server.",
+        "output_from":["ADMA_menu_option"],
+        "input_to":[],
+        "value":""
     }
 
  
