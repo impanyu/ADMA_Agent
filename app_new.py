@@ -259,7 +259,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             # update the value of the path
             meta_program_graph["ADMA_get_meta_data&path"]["value"] = output_list[index]
             meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
-            print(meta_program_graph["ADMA_get_meta_data&path"]["value"])
+            print(meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"])
 
             # update the description of the path
             meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
