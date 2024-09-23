@@ -486,8 +486,8 @@ def ai_reply(response, if_history=False):
             #m = folium.Map(location=[all_ring_coordinates[0][0][0],all_ring_coordinates[0][0][1]], zoom_start=16)
             for ring_coordinates in all_ring_coordinates:
                 folium.PolyLine(ring_coordinates, tooltip="Field Boundaries").add_to(m)
-            with  st.chat_message("assistant", avatar="🤖"):
-                folium_static(m,height=600,width=1200)
+            
+            folium_static(m,height=600,width=1200)
     elif response["type"] == "file":
         with open(response["output"]) as f:
             output = f.read()
