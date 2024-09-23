@@ -65,7 +65,7 @@
         "description":"ADMA_get_meta_data&meta_data is the meta data of the file or folder on the ADMA server.",
         "output_from":["ADMA_get_meta_data"],
         "input_to":[],
-        "value":[]
+        "value":{}
     },
 
     "ADMA_push_to_meta_data_list":{

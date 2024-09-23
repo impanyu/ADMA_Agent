@@ -18,6 +18,7 @@ import uuid
 from openai import OpenAI
 import json
 from pydantic import BaseModel, Field
+import copy
 
 
 
@@ -315,7 +316,9 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             
             meta_data = meta_program_graph["ADMA_get_meta_data&meta_data"]["value"]
             #push the meta data to the list
-            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(meta_data)
+            #meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(meta_data)
+            # append a deep copy of the meta data
+            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(copy.deepcopy(meta_data))
             meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] = meta_program_graph["ADMA_get_meta_data&meta_data"]["description"]+"\n"
             meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] += f"ADMA_push_to_meta_data_list&output_list is a list of meta data of the file or folder on the ADMA server."
 
