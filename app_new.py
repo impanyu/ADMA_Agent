@@ -431,7 +431,7 @@ def main():
 
 
 
-     upload file
+    #upload file
     files = st.sidebar.file_uploader("Upload Your File",accept_multiple_files=True)
     for file in files:
         st.write(file.name)
