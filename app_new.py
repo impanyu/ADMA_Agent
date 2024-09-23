@@ -190,6 +190,8 @@ class final_output_formatter:
                         {"role": "user", "content": user_instruction}],
                 temperature=0.5,
             )
+            print(response.choices[0].message.content)
+
             return response.choices[0].message.content
         elif output_type == "object":
             system_prompt += "Return a formatted json string with no extra word."
