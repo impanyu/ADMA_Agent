@@ -478,10 +478,8 @@ def ai_reply(response, if_history=False):
     elif response["type"] == "file":
         with open(response["output"]) as f:
             output = f.read()
-        if if_history:
-            st.chat_message("assistant", avatar="🤖").write(output)
-        else:
-            st.chat_message("assistant", avatar="🤖").write(stream_data(output))
+        
+        st.json(json.loads(output))
 
 
 
