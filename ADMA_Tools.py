@@ -45,7 +45,6 @@ def ADMA_list_directory_contents(dir_path):
     list_url = f"{root_url}/api/list/?target_path={dir_path}"
     response = requests.get(list_url)
     if response.status_code == 200:
-  
         return response.json()  # Assuming the API returns a JSON list of paths
     else:
         return f"Failed to list directory: {dir_path}, Status code: {response.status_code}, {response.text}"
