@@ -442,6 +442,7 @@ def ai_reply(response, if_history=False):
         st.components.v1.html(html_code, width=1190, height=790)
     elif response["type"] == "map":
         path = response["output"]["path"]
+        print(f"path: {path}")
         if not os.path.exists(path):
             if if_history:
                 st.chat_message("assistant", avatar="🤖").write("No boundary found for the field")
