@@ -77,7 +77,7 @@ class controller:
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the arg_name should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
         self.system_prompt += 'Try your best to extract required information from the meta program graph, and reduce the needs to make method calls. But do not fabricate any information.'
         self.system_prompt += 'How to extract required information from the meta program graph? You can check the description of each variable and the correspondingvalue of each variable. Compare this information with user\'s question, and check if you can find the answer.'
-
+        self.system_prompt += 'You can set the value of any variable to whatever you want, but DO NOT make up any information that does not exist in user\'s instruction.'
     
     def get_next_task(self,user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
