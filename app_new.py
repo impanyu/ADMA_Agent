@@ -106,7 +106,7 @@ output_type = {
                         "properties": {
                             "output_type": {
                                 "type": "string",
-                                "enum": ["string", "list", "map","number","UI"],
+                                "enum": ["string", "list", "map","number","UI","object"],
                                 "description": "The type of the output."
                             }
                         },
@@ -138,12 +138,15 @@ list_string_format={
                     }
                 }
 
+                                
+
+
 class final_output_typer:
     def __init__(self,meta_program_graph):
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, list, map, number, UI."
+        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, ADMA_meta_data."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
@@ -183,6 +186,15 @@ class final_output_formatter:
                 messages=[{"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_instruction}],
                 response_format= list_string_format,
+                temperature=0.5,
+            )
+            return json.dumps(json.loads(response.choices[0].message.content)["items"])
+        elif output_type == "object":
+            system_prompt += "Return a json string with no extra word."
+            response = self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_instruction}],
                 temperature=0.5,
             )
             return json.dumps(json.loads(response.choices[0].message.content)["items"])
@@ -317,7 +329,12 @@ def ai_reply(response, if_history=False):
             st.chat_message("assistant", avatar="🤖").write(response["output"])
         else:
             st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
-    elif response["type"] == "boundary":
+    elif response["type"] == "map":
+        if if_history:
+            st.chat_message("assistant", avatar="🤖").write(response["output"])
+        else:
+            st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
+    elif response["type"] == "object":
         if if_history:
             st.chat_message("assistant", avatar="🤖").write(response["output"])
         else:
