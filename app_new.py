@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 controller_output = {
                 "type": "json_schema",
                 "json_schema": {
+                    "name": "controller_output",
                     "strict": True,
                     "schema": {
                         "type": "object",
