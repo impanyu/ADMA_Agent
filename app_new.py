@@ -62,10 +62,14 @@ controller_output = {
 
 
 class controller:
-    def __init__(self,meta_program_graph):
+    def __init__(self,meta_program_graph,executed_methods):
         self.meta_program_graph = meta_program_graph
+        self.executed_methods = executed_methods
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.system_prompt = "You are a program controller. The user will tell you what they want to do. Given the following meta program graph which contains the information of each method and each variable, you need to decide if you should call any method and if yes, the method to call."
+        self.system_prompt = "You are a program controller. The user will tell you what they want to do."
+        self.system_prompt += "You'll be given a sequence of methods, which has been executed in the previous steps. Try to find the method that should be executed in next step."
+        self.system_prompt += "Try your best to explore the meta program graph in a depth-first manner."
+        self.system_prompt += "Given the following meta program graph which contains the information of each method and each variable, you need to decide if you should call any method and if yes, the method to call."
         self.system_prompt += 'If you find enough information in current meta program graph to answer user\'s question, you should make no method call and you should only output a json with the following format: {"method": "None","args": []}, with no other extra word at all.'
         self.system_prompt += 'Else if you do not find enough information in current meta program graph to answer user\'s question, you need to output a json with the following format: {"method": "the name of the method to call","args": [{"name": "the name of the argument", "value": "the value of the argument"},...]}, with no other extra word at all.'
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the arg_name should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
@@ -75,6 +79,7 @@ class controller:
     
     def get_next_task(self,user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+        system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
         #self.meta_program_graph["ADMA_list_directory_contents&output_list"]
 
         response = self.client.beta.chat.completions.parse(
@@ -86,6 +91,9 @@ class controller:
             temperature=0.5,
         )
         #print(response.choices[0].message.content)
+        result = json.loads(response.choices[0].message.content)
+        if result["method"] != "None":
+            self.executed_methods.append(result["method"])
         return json.loads(response.choices[0].message.content)#response.choices[0].message.parsed
     
 output_type = {
@@ -335,18 +343,24 @@ def main():
     if 'meta_program_graph' not in st.session_state:
         with open("meta_program_graph_new.json") as f:
             st.session_state.meta_program_graph = json.load(f)
+
+    executed_methods = []
+    
     
     if 'program_controller' not in st.session_state:
-        st.session_state.program_controller = controller(st.session_state.meta_program_graph)
+        st.session_state.program_controller = controller(st.session_state.meta_program_graph,executed_methods)
     if 'output_formatter' not in st.session_state:
         st.session_state.output_formatter = final_output_formatter(st.session_state.meta_program_graph)
     if 'output_typer' not in st.session_state:
         st.session_state.output_typer = final_output_typer(st.session_state.meta_program_graph)
+    
 
     meta_program_graph = st.session_state.meta_program_graph
     program_controller = st.session_state.program_controller
     output_formatter = st.session_state.output_formatter
     output_typer = st.session_state.output_typer
+
+    program_controller.executed_methods = []
 
 
 
