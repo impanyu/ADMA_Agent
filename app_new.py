@@ -133,6 +133,8 @@ class final_output_typer:
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+        print(self.meta_program_graph["ADMA_list_directory_contents&output_list"]["value"])
+
 
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-mini",
@@ -217,7 +219,6 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             # update the value of the output list
             print(dir_path)
             meta_program_graph["ADMA_list_directory_contents&output_list"]["value"] = ADMA_list_directory_contents(dir_path)
-            print(meta_program_graph["ADMA_list_directory_contents&output_list"]["value"])
 
             # update the description of the output list
             meta_program_graph["ADMA_list_directory_contents&output_list"]["description"] = meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"]+"\n"
