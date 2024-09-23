@@ -191,7 +191,7 @@ class final_output_formatter:
             )
             return json.dumps(json.loads(response.choices[0].message.content)["items"])
         elif output_type == "object":
-            system_prompt += "Return a json string with no extra word, that is, start with { and end with }."
+            system_prompt += "Return a json string with no extra word."
             response = self.client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": system_prompt},
@@ -338,13 +338,13 @@ def ai_reply(response, if_history=False):
             st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
     elif response["type"] == "object":
         if if_history:
-            with st.chat_message("assistant", avatar="🤖"):
-                st.json(json.loads(response["output"]))
-            #st.chat_message("assistant", avatar="🤖").write(response["output"])
+            #with st.chat_message("assistant", avatar="🤖"):
+            #    st.json(json.loads(response["output"]))
+            st.chat_message("assistant", avatar="🤖").write(response["output"])
         else:
-            with st.chat_message("assistant", avatar="🤖"):
-                st.json(json.loads(response["output"]))
-            #st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
+            #with st.chat_message("assistant", avatar="🤖"):
+            #    st.json(json.loads(response["output"]))
+            st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
 
  
 
