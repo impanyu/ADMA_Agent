@@ -191,7 +191,7 @@ class final_output_formatter:
             )
             return json.dumps(json.loads(response.choices[0].message.content)["items"])
         elif output_type == "object":
-            system_prompt += "Return a json string with no extra word."
+            system_prompt += "Return a json string with no extra word, that is, start with { and end with }."
             response = self.client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": system_prompt},
