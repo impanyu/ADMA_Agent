@@ -181,6 +181,17 @@ def create_map(lat,lng):
 
 
 def get_answer(prompt,meta_program_graph,program_controller,output_formatter,max_iter=10):
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "What is a LLM?"}
+    ]
+    )
+    print(response.choices[0].message.content)
+
     while max_iter > 0:
         max_iter -= 1
         next_task = program_controller.get_next_task(prompt)
