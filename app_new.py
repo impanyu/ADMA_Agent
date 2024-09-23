@@ -149,7 +149,7 @@ class final_output_formatter:
                 response_format= {"type": "text"},
                 temperature=0.5,
             )
-            return response.choices[0].message.parsed
+            return response.choices[0].message.content
         elif output_type == "list":
             response = self.client.beta.chat.completions.parse(
                 model="gpt-4o-mini",
