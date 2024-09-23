@@ -124,7 +124,7 @@
     "JD_ENREEC_boundary_in_field&field_id":{
         "type":"string",
         "description":"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere.",
-        "output_from":[],
+        "output_from":["JD_ENREEC_field_id_assign_1"],
         "input_to":["JD_ENREEC_boundary_in_field"],
         "value":""
     },
@@ -171,7 +171,7 @@
         "type":"string",
         "description":"JD_ENREEC_field_id_from_name&field_id is the id of the field in ENREEC from John Deere.",
         "output_from":["JD_ENREEC_field_id_from_name"],
-        "input_to":[],
+        "input_to":["JD_ENREEC_field_id_assign_1"],
         "value":""
     },
 
@@ -179,7 +179,7 @@
         "type":"method",
         "call_condition": "",
         "description":"assign JD_ENREEC_field_id_from_name&field_id to JD_ENREEC_boundary_in_field&field_id",
-        "input":["JD_ENREEC_field_id_assign_1&field_id"],
+        "input":["JD_ENREEC_field_id_from_name&field_id"],
         "output":["JD_ENREEC_boundary_in_field&field_id"]
     }
 
