@@ -30,7 +30,7 @@
 
     "iter_list_1":{
         "type":"method",
-        "call_condition": "",
+        "call_condition": "Do not call this method if ADMA_list_directory_contents&output_list_current_index is greater than the length of ADMA_list_directory_contents&output_list",
         "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
         "input":["ADMA_list_directory_contents&output_list","ADMA_list_directory_contents&output_list_current_index"],
         "output":["ADMA_get_meta_data&path","ADMA_list_directory_contents&output_list_current_index"]
@@ -38,7 +38,7 @@
 
     "iter_list_2":{
         "type":"method",
-        "call_condition": "",
+        "call_condition": "Do not call this method if ADMA_list_directory_contents&output_list_current_index is greater than the length of ADMA_list_directory_contents&output_list",
         "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
         "input":["ADMA_list_directory_contents&output_list","ADMA_list_directory_contents&output_list_current_index"],
         "output":["ADMA_list_directory_contents&dir_path","ADMA_list_directory_contents&output_list_current_index"]

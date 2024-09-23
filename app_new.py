@@ -261,17 +261,17 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
 
             output_list = meta_program_graph["ADMA_list_directory_contents&output_list"]["value"]
 
-            index = index % len(output_list)
-
             
-            # update the value of the path
-            meta_program_graph["ADMA_get_meta_data&path"]["value"] = output_list[index]
-            meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
-            print(meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"])
 
-            # update the description of the path
-            meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
-            meta_program_graph["ADMA_get_meta_data&path"]["description"] += f"ADMA_get_meta_data&path is path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
+            if index < len(output_list):
+                # update the value of the path
+                meta_program_graph["ADMA_get_meta_data&path"]["value"] = output_list[index]
+                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
+                print(meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"])
+
+                # update the description of the path
+                meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
+                meta_program_graph["ADMA_get_meta_data&path"]["description"] += f"ADMA_get_meta_data&path is path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
 
         elif next_task["method"] == "iter_list_2":
 
@@ -283,15 +283,15 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
                 index = meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"]
             
             output_list = meta_program_graph["ADMA_list_directory_contents&output_list"]["value"]
-            index = index % len(output_list)
             
-            # update the value of the path
-            meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = output_list[index]
-            meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
-            # update the description of the path
-            meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
-            meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] += f"ADMA_list_directory_contents&dir_path is the path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
-        
+            if index < len(output_list):
+                # update the value of the path
+                meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = output_list[index]
+                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
+                # update the description of the path
+                meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
+                meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] += f"ADMA_list_directory_contents&dir_path is the path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
+            
         elif next_task["method"] == "ADMA_push_to_meta_data_list":
             
             meta_data = meta_program_graph["ADMA_get_meta_data&meta_data"]["value"]
@@ -340,27 +340,30 @@ def main():
 
 
     # Load meta program graph
-    if 'meta_program_graph' not in st.session_state:
-        with open("meta_program_graph_new.json") as f:
-            st.session_state.meta_program_graph = json.load(f)
+    
+    with open("meta_program_graph_new.json") as f:
+        meta_program_graph = json.load(f)
 
     executed_methods = []
     
     
     if 'program_controller' not in st.session_state:
-        st.session_state.program_controller = controller(st.session_state.meta_program_graph,executed_methods)
+        st.session_state.program_controller = controller(meta_program_graph,executed_methods)
     if 'output_formatter' not in st.session_state:
-        st.session_state.output_formatter = final_output_formatter(st.session_state.meta_program_graph)
+        st.session_state.output_formatter = final_output_formatter(meta_program_graph)
     if 'output_typer' not in st.session_state:
-        st.session_state.output_typer = final_output_typer(st.session_state.meta_program_graph)
+        st.session_state.output_typer = final_output_typer(meta_program_graph)
     
 
-    meta_program_graph = st.session_state.meta_program_graph
+ 
     program_controller = st.session_state.program_controller
     output_formatter = st.session_state.output_formatter
     output_typer = st.session_state.output_typer
 
     program_controller.executed_methods = []
+    program_controller.meta_program_graph = meta_program_graph
+    output_formatter.meta_program_graph = meta_program_graph
+    output_typer.meta_program_graph = meta_program_graph
 
 
 
