@@ -341,6 +341,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
                 path = meta_program_graph["ADMA_menu_option&path"]["value"]
 
             meta_program_graph["ADMA_menu_option&menu_url"]["value"] = ADMA_menu_option(menu_name,path)
+            print(meta_program_graph["ADMA_menu_option&menu_url"]["value"])
             meta_program_graph["ADMA_menu_option&menu_url"]["description"] = meta_program_graph["ADMA_menu_option&menu_name"]["description"]+"\n"
             meta_program_graph["ADMA_menu_option&menu_url"]["description"] += meta_program_graph["ADMA_menu_option&path"]["description"]+"\n"
             meta_program_graph["ADMA_menu_option&menu_url"]["description"] = f"ADMA_menu_option&menu_url is the url of the menu on the ADMA server."
@@ -381,6 +382,7 @@ def ai_reply(response, if_history=False):
         html_code = f"""
             <iframe src={response["output"]} width="1200" height="800" frameborder="0"></iframe>
             """
+        print(response["output"])
 
         st.components.v1.html(html_code, width=1190, height=790)
        
