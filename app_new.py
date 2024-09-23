@@ -479,7 +479,7 @@ def ai_reply(response, if_history=False):
         with open(response["output"]) as f:
             output = f.read()
         
-        st.json(json.loads(output))
+        st.json(json.loads(output),expanded=False)
 
 
 
