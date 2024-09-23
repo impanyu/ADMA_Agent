@@ -84,6 +84,7 @@ class controller:
 output_type = {
                 "type": "json_schema",
                 "json_schema": {
+                    "name": "output_type",
                     "strict": True,
                     "schema": {
                         "type": "object",
@@ -103,6 +104,7 @@ output_type = {
 list_string_format={
                 "type": "json_schema",
                 "json_schema": {
+                    "name": "list_string_format",
                     "strict": True,
                     "schema": {
                         "type": "array",
