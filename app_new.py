@@ -243,7 +243,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["ADMA_get_meta_data&meta_data"]["description"] += f"ADMA_get_meta_data&meta_data is the meta data of the file or directory {path} in the ADMA system."
 
 
-        elif next_task["method"] == "subscribe_list_1":
+        elif next_task["method"] == "iter_list_1":
 
             if "ADMA_list_directory_contents&output_list_current_index" in args_dict and not args_dict["ADMA_list_directory_contents&output_list_current_index"] == "DEFAULT":
                 index = args_dict["ADMA_list_directory_contents&output_list_current_index"]
@@ -254,15 +254,17 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
 
             output_list = meta_program_graph["ADMA_list_directory_contents&output_list"]["value"]
 
-            if index < len(output_list):
-                # update the value of the path
-                meta_program_graph["ADMA_get_meta_data&path"]["value"] = output_list[index]
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index + 1
-                # update the description of the path
-                meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
-                meta_program_graph["ADMA_get_meta_data&path"]["description"] += f"ADMA_get_meta_data&path is path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
+            index = index % len(output_list)
 
-        elif next_task["method"] == "subscribe_list_2":
+            
+             # update the value of the path
+            meta_program_graph["ADMA_get_meta_data&path"]["value"] = output_list[index]
+            meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
+            # update the description of the path
+            meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
+            meta_program_graph["ADMA_get_meta_data&path"]["description"] += f"ADMA_get_meta_data&path is path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
+
+        elif next_task["method"] == "iter_list_2":
 
             if "ADMA_list_directory_contents&output_list_current_index" in args_dict and not args_dict["ADMA_list_directory_contents&output_list_current_index"] == "DEFAULT":
                 index = args_dict["ADMA_list_directory_contents&output_list_current_index"]
@@ -272,14 +274,22 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
                 index = meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"]
             
             output_list = meta_program_graph["ADMA_list_directory_contents&output_list"]["value"]
-            if index < len(output_list):
-                # update the value of the path
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = output_list[index]
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index + 1
-                # update the description of the path
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] += f"ADMA_list_directory_contents&dir_path is the path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
+            index = index % len(output_list)
             
+            # update the value of the path
+            meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = output_list[index]
+            meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
+            # update the description of the path
+            meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
+            meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] += f"ADMA_list_directory_contents&dir_path is the path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
+        
+        elif next_task["method"] == "ADMA_push_to_meta_data_list":
+            
+            meta_data = meta_program_graph["ADMA_get_meta_data&meta_data"]["value"]
+            #push the meta data to the list
+            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(meta_data)
+            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] = meta_program_graph["ADMA_get_meta_data&meta_data"]["description"]+"\n"
+            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] += f"ADMA_push_to_meta_data_list&output_list is a list of meta data of the file or folder on the ADMA server."
 
 
     final_output_type = output_typer.output_type(prompt)

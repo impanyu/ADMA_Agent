@@ -28,17 +28,17 @@
         "value":0
     },
 
-    "subscribe_list_1":{
+    "iterate_list_1":{
         "type":"method",
-        "call_condition": "Only call this method when ADMA_list_directory_contents&output_list_current_index is less than the length of ADMA_list_directory_contents&output_list",
+        "call_condition": "",
         "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
         "input":["ADMA_list_directory_contents&output_list","ADMA_list_directory_contents&output_list_current_index"],
         "output":["ADMA_get_meta_data&path","ADMA_list_directory_contents&output_list_current_index"]
     },
 
-    "subscribe_list_2":{
+    "iterate_list_2":{
         "type":"method",
-        "call_condition": "Only call this method when ADMA_list_directory_contents&output_list_current_index is less than the length of ADMA_list_directory_contents&output_list",
+        "call_condition": "",
         "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
         "input":["ADMA_list_directory_contents&output_list","ADMA_list_directory_contents&output_list_current_index"],
         "output":["ADMA_list_directory_contents&dir_path","ADMA_list_directory_contents&output_list_current_index"]
@@ -64,6 +64,21 @@
         "type":"object",
         "description":"ADMA_get_meta_data&meta_data is the meta data of the file or folder on the ADMA server.",
         "output_from":["ADMA_get_meta_data"],
+        "input_to":[],
+        "value":[]
+    },
+
+    "ADMA_push_to_meta_data_list":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a meta data, push the meta data to the list.",
+        "input":["ADMA_get_meta_data&meta_data"],
+        "output":["ADMA_push_to_meta_data_list&output_list"]
+    },
+    "ADMA_push_to_meta_data_list&output_list":{
+        "type":"list of meta data",
+        "description":"ADMA_push_to_meta_data_list&output_list is a list of meta data of the file or folder on the ADMA server.",
+        "output_from":["ADMA_push_to_meta_data_list"],
         "input_to":[],
         "value":[]
     }
