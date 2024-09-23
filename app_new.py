@@ -403,6 +403,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
 
 
     final_output_type = output_typer.output_type(prompt)
+    print(final_output_type)
     output = output_formatter.format_output(prompt,final_output_type["output_type"])
 
     return {"type": final_output_type["output_type"],"output": output}
