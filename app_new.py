@@ -366,7 +366,7 @@ def main():
       st.chat_message("user",avatar="👨‍🎓").write(prompt)
 
       # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-      response = get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,max_iter=5)
+      response = get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,max_iter=20)
 
       ai_reply(response)
 
