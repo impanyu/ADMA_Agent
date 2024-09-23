@@ -210,7 +210,7 @@ class final_output_formatter:
             
             return response.choices[0].message.content
         elif output_type == "url":
-            system_prompt += "Return a url that can be opened in a web browser."
+            system_prompt += "Return a url that can be opened in a web browser. Note: only return the url starting with http or https, with no other word or information."
             response = self.client.beta.chat.completions.parse(
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": system_prompt},
