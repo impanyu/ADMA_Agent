@@ -48,7 +48,7 @@ class output_format(BaseModel):
     type: str = Field(description="The type of the output, in the following format: boundary, file, list, string")
     output: str = Field(description="The output of the program, which is a json string")
 
-class final_output_formatter(BaseModel):
+class final_output_formatter:
     def __init__(self,meta_program_graph):
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -61,6 +61,7 @@ class final_output_formatter(BaseModel):
             model="gpt-4o-mini",
             messages=[{"role": "system", "content": self.system_prompt},
                       {"role": "user", "content": user_instruction}],
+            response_format= output_format,
             temperature=0.5,
         )
         return response.choices[0].message.parsed
