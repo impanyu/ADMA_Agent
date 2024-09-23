@@ -421,11 +421,6 @@ def ai_reply(response, if_history=False):
             st.chat_message("assistant", avatar="🤖").write(response["output"])
         else:
             st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
-    elif response["type"] == "map":
-        if if_history:
-            st.chat_message("assistant", avatar="🤖").write(response["output"])
-        else:
-            st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
     elif response["type"] == "object":
         if if_history:
             #with st.chat_message("assistant", avatar="🤖"):
