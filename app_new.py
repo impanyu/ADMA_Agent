@@ -192,14 +192,16 @@ def main():
     st.set_page_config(page_title="ADMA Copilot", page_icon="🍃")
     st.header("ADMA Copilot",divider="green")
 
-    program_controller = controller(meta_program_graph)
-    output_formatter = final_output_formatter(meta_program_graph)
+
 
     st.sidebar.title("Control Panel")
 
     #load meta program graph
     with open("meta_program_graph_new.json") as f:
         meta_program_graph = json.load(f)
+
+    program_controller = controller(meta_program_graph)
+    output_formatter = final_output_formatter(meta_program_graph)
     
 
 
