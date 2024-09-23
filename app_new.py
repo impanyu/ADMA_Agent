@@ -102,19 +102,26 @@ output_type = {
             }
 
 list_string_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "list_string_format",
-                    "strict": True,
-                    "schema": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "description": "A list of string outputs."
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "list_string_format",
+                        "strict": True,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "items": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "A list of string outputs."
+                                }
+                            },
+                            "required": ["items"],
+                            "additionalProperties": False
+                        }
                     }
                 }
-            }
 
 class final_output_typer:
     def __init__(self,meta_program_graph):
@@ -159,7 +166,7 @@ class final_output_formatter:
                 response_format= list_string_format,
                 temperature=0.5,
             )
-            return json.loads(response.choices[0].message.content)
+            return json.loads(response.choices[0].message.content)["items"]
         else:
             return "I don't know how to complete this task."
         #return response.choices[0].message.parsed
