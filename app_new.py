@@ -338,11 +338,11 @@ def ai_reply(response, if_history=False):
     elif response["type"] == "object":
         if if_history:
             with st.chat_message("assistant", avatar="🤖"):
-                st.json(response["output"])
+                st.json(json.loads(response["output"]))
             #st.chat_message("assistant", avatar="🤖").write(response["output"])
         else:
             with st.chat_message("assistant", avatar="🤖"):
-                st.json(stream_data(response["output"]))
+                st.json(json.loads(stream_data(response["output"])))
             #st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
 
  
