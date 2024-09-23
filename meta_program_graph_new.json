@@ -178,7 +178,7 @@
     "JD_ENREEC_field_id_assign_1":{
         "type":"method",
         "call_condition": "",
-        "description":"assign JD_ENREEC_field_id_from_name&field_id to JD_ENREEC_boundary_in_field&field_id",
+        "description":"assign JD_ENREEC_field_id_from_name&field_id to JD_ENREEC_boundary_in_field&field_id, this is to ensure JD_ENREEC_boundary_in_field has the correct field_id as input.",
         "input":["JD_ENREEC_field_id_from_name&field_id"],
         "output":["JD_ENREEC_boundary_in_field&field_id"]
     }
