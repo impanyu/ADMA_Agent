@@ -166,7 +166,7 @@ class final_output_formatter:
                 response_format= list_string_format,
                 temperature=0.5,
             )
-            return json.loads(response.choices[0].message.content)["items"]
+            return json.dumps(json.loads(response.choices[0].message.content)["items"])
         else:
             return "I don't know how to complete this task."
         #return response.choices[0].message.parsed
