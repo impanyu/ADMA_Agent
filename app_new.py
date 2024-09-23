@@ -209,6 +209,16 @@ class final_output_formatter:
             print(response.choices[0].message.content)
             
             return response.choices[0].message.content
+        elif output_type == "url":
+            system_prompt += "Return a url that can be opened in a web browser."
+            response = self.client.beta.chat.completions.parse(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_instruction}],
+                response_format= {"type": "text"},
+                temperature=temperature,
+            )
+            return response.choices[0].message.content
         else:
             return "I don't know how to complete this task."
         #return response.choices[0].message.parsed
