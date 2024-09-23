@@ -387,6 +387,12 @@ def main():
             width: 100%;
             max-width: 800px;
         }
+        .st-emotion-cache-1eo1tir{
+        max-width: 80rem;
+        }
+        .st-emotion-cache-arzcut{
+        max-width: 80rem;
+        }
         </style>
         """,
         unsafe_allow_html=True
