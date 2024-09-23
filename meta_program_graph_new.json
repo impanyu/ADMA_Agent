@@ -61,7 +61,7 @@
         "value":""
     },
     "ADMA_get_meta_data&meta_data":{
-        "type":"object",
+        "type":"ADMA meta data",
         "description":"ADMA_get_meta_data&meta_data is the meta data of the file or folder on the ADMA server.",
         "output_from":["ADMA_get_meta_data"],
         "input_to":[],
@@ -76,8 +76,8 @@
         "output":["ADMA_push_to_meta_data_list&output_list"]
     },
     "ADMA_push_to_meta_data_list&output_list":{
-        "type":"list of meta data",
-        "description":"ADMA_push_to_meta_data_list&output_list is a list of meta data of the file or folder on the ADMA server.",
+        "type":"list of ADMA meta data",
+        "description":"ADMA_push_to_meta_data_list&output_list is a list of ADMA meta data of the file or folder on the ADMA server.",
         "output_from":["ADMA_push_to_meta_data_list"],
         "input_to":[],
         "value":[]
@@ -117,23 +117,38 @@
     "JD_ENREEC_boundary_in_field":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a field_id, return the boundary of the field.",
+        "description":"Given a field_id, return the boundary of the field in ENREEC from John Deere.",
         "input":["JD_ENREEC_boundary_in_field&field_id"],
         "output":["JD_ENREEC_boundary_in_field&boundary"]
     },
     "JD_ENREEC_boundary_in_field&field_id":{
         "type":"string",
-        "description":"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC.",
+        "description":"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere.",
         "output_from":[],
         "input_to":["JD_ENREEC_boundary_in_field"],
         "value":""
     },
     "JD_ENREEC_boundary_in_field&boundary":{
         "type":"object",
-        "description":"JD_ENREEC_boundary_in_field&boundary is the boundary of the field in ENREEC.",
+        "description":"JD_ENREEC_boundary_in_field&boundary is the boundary of the field in ENREEC from John Deere.",
         "output_from":["JD_ENREEC_boundary_in_field"],
         "input_to":[],
         "value":{}
+    },
+
+    "JD_ENREEC_fields":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Return the list of all the fields in ENREEC from John Deere.",
+        "input":[],
+        "output":["JD_ENREEC_fields&fields"]
+    },
+    "JD_ENREEC_fields&fields":{
+        "type":"dictionary of fields",
+        "description":"JD_ENREEC_fields&fields is the dictionary of all the fields in ENREEC from John Deere, in which the key is the field_id and the value is the field name.",
+        "output_from":["JD_ENREEC_fields"],
+        "input_to":[],
+        "value":[]
     }
     
     
