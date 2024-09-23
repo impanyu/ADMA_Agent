@@ -122,8 +122,8 @@
         "output":["JD_ENREEC_boundary_in_field&boundary"]
     },
     "JD_ENREEC_boundary_in_field&field_id":{
-        "type":"string",
-        "description":"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere.",
+        "type":"field id string",
+        "description":"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere, which must be a long string, in the format of 514a1e63-0000-1000-4052-e1e1e1263770",
         "output_from":["JD_ENREEC_field_id_assign_1"],
         "input_to":["JD_ENREEC_boundary_in_field"],
         "value":""
@@ -168,7 +168,7 @@
         "value":""
     },
     "JD_ENREEC_field_id_from_name&field_id":{
-        "type":"string",
+        "type":"field idstring",
         "description":"JD_ENREEC_field_id_from_name&field_id is the id of the field in ENREEC from John Deere.",
         "output_from":["JD_ENREEC_field_id_from_name"],
         "input_to":["JD_ENREEC_field_id_assign_1"],
