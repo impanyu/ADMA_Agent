@@ -59,6 +59,7 @@ def ADMA_get_running_instance(dir_path):
     """Always call this tool when the user want to check if there is any running instance for dir_path on the ADMA server."""
     instance_url = f"{root_url}/api/get_running_instance/?target_path=ypan12/ag_data/{dir_path}"
     response = requests.get(instance_url)
+    print(response.json())
     if response.status_code == 200:
         return response.json()  # Assuming the API returns a JSON list of paths
     else:
