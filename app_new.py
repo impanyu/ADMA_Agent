@@ -315,7 +315,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
         elif next_task["method"] == "ADMA_push_to_meta_data_list":
             
             meta_data = meta_program_graph["ADMA_get_meta_data&meta_data"]["value"]
-            print(meta_data)    
+            meta_data
             #push the meta data to the list
             #meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(meta_data)
             # append a deep copy of the meta data
