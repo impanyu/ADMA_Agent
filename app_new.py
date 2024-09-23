@@ -317,20 +317,18 @@ def main():
 
     st.sidebar.title("Control Panel")
 
-    #load meta program graph
-    with open("meta_program_graph_new.json") as f:
-        meta_program_graph = json.load(f)
 
-    program_controller = controller(meta_program_graph)
-    output_formatter = final_output_formatter(meta_program_graph)
-    output_typer = final_output_typer(meta_program_graph)
+    # Load meta program graph
+    if 'meta_program_graph' not in st.session_state:
+        with open("meta_program_graph_new.json") as f:
+            st.session_state.meta_program_graph = json.load(f)
     
     if 'program_controller' not in st.session_state:
-        st.session_state.program_controller = controller(meta_program_graph)
+        st.session_state.program_controller = controller(st.session_state.meta_program_graph)
     if 'output_formatter' not in st.session_state:
-        st.session_state.output_formatter = final_output_formatter(meta_program_graph)
+        st.session_state.output_formatter = final_output_formatter(st.session_state.meta_program_graph)
     if 'output_typer' not in st.session_state:
-        st.session_state.output_typer = final_output_typer(meta_program_graph)
+        st.session_state.output_typer = final_output_typer(st.session_state.meta_program_graph)
 
 
 
