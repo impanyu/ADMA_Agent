@@ -75,7 +75,7 @@ class controller:
     
     def get_next_task(self,user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
-        self.meta_program_graph["ADMA_list_directory_contents&output_list"]
+        #self.meta_program_graph["ADMA_list_directory_contents&output_list"]
 
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-mini",
