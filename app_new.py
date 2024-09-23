@@ -85,7 +85,7 @@ class controller:
         #self.meta_program_graph["ADMA_list_directory_contents&output_list"]
 
         response = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
+            model="gpt-4o-mini",#"gpt-4o-2024-08-06",
            
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": user_instruction}],
@@ -192,8 +192,8 @@ class final_output_formatter:
                         {"role": "user", "content": user_instruction}],
                 temperature=0.5,
             )
-            print(response.choices[0].message.content)
-            print(self.meta_program_graph["ADMA_push_to_meta_data_list&output_list"])
+            #(response.choices[0].message.content)
+            #print(self.meta_program_graph["ADMA_push_to_meta_data_list&output_list"])
 
             return response.choices[0].message.content
         elif output_type == "object":
@@ -288,7 +288,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
                 # update the value of the path
                 meta_program_graph["ADMA_get_meta_data&path"]["value"] = os.path.join("/",*output_list[index].split("/")[3:])
                 meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index + 1
-                print(meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"])
+                #print(meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"])
 
                 # update the description of the path
                 meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
