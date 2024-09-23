@@ -71,6 +71,8 @@ class controller:
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the arg_name should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
     def get_next_task(self,user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+        print(self.meta_program_graph["ADMA_list_directory_contents&output_list"]["value"])
+
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-mini",
            
@@ -133,7 +135,6 @@ class final_output_typer:
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
-        print(self.meta_program_graph["ADMA_list_directory_contents&output_list"]["value"])
 
 
         response = self.client.beta.chat.completions.parse(
