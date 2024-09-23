@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 import copy
 import os
 
-
+temperature = 0.2
 
 controller_output = {
                 "type": "json_schema",
@@ -90,7 +90,7 @@ class controller:
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": user_instruction}],
             response_format= controller_output,
-            temperature=0.5,
+            temperature=temperature,
         )
         #print(response.choices[0].message.content)
         result = json.loads(response.choices[0].message.content)
@@ -159,7 +159,7 @@ class final_output_typer:
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": user_instruction}],
             response_format= output_type,
-            temperature=0.5,
+            temperature=temperature,
         )
         return json.loads(response.choices[0].message.content)
 
@@ -180,7 +180,7 @@ class final_output_formatter:
                 messages=[{"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_instruction}],
                 response_format= {"type": "text"},
-                temperature=0.5,
+                temperature=temperature,
             )
             return response.choices[0].message.content
         elif output_type == "list":
@@ -190,7 +190,7 @@ class final_output_formatter:
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_instruction}],
-                temperature=0.5,
+                temperature=temperature,
             )
             #(response.choices[0].message.content)
             #print(self.meta_program_graph["ADMA_push_to_meta_data_list&output_list"])
@@ -202,7 +202,7 @@ class final_output_formatter:
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_instruction}],
-                temperature=0.5,
+                temperature=temperature,
             )
             print(response.choices[0].message.content)
             
