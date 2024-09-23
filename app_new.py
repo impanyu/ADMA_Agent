@@ -211,7 +211,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 dir_path = meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"]
             # update the value of the output list
-            
+            print(dir_path)
             meta_program_graph["ADMA_list_directory_contents&output_list"]["value"] = ADMA_list_directory_contents(dir_path)
 
             # update the description of the output list
