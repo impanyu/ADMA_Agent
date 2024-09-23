@@ -222,7 +222,6 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 dir_path = meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"]
             # update the value of the output list
-            print(dir_path)
             meta_program_graph["ADMA_list_directory_contents&output_list"]["value"] = ADMA_list_directory_contents(dir_path)
 
             # update the description of the output list
@@ -257,9 +256,11 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             index = index % len(output_list)
 
             
-             # update the value of the path
+            # update the value of the path
             meta_program_graph["ADMA_get_meta_data&path"]["value"] = output_list[index]
             meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = (index + 1) % len(output_list)
+            print(meta_program_graph["ADMA_get_meta_data&path"]["value"])
+
             # update the description of the path
             meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
             meta_program_graph["ADMA_get_meta_data&path"]["description"] += f"ADMA_get_meta_data&path is path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
