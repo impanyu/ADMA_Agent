@@ -35,7 +35,7 @@ class controller:
         self.system_prompt += 'Else if you consider there should be a method to call, you need to output a json with the following format: {"method": "the name of the method to call","args": {"arg_name": "arg_value"}}, with no other extra word at all.'
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the args should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
     def get_next_task(self,user_instruction):
-        response = self.client.chat.completions.create(
+        response = self.client.chat.completions.parse(
             model="gpt-4o-mini",
             messages=[{"role": "system", "content": self.system_prompt},
                       {"role": "user", "content": user_instruction}],
@@ -57,7 +57,7 @@ class final_output_formatter:
         self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
 
     def format_output(self, user_instruction):
-        response = self.client.chat.completions.create(
+        response = self.client.chat.completions.parse(
             model="gpt-4o-mini",
             messages=[{"role": "system", "content": self.system_prompt},
                       {"role": "user", "content": user_instruction}],
