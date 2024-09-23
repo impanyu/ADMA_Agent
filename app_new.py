@@ -198,6 +198,7 @@ class final_output_formatter:
                         {"role": "user", "content": user_instruction}],
                 temperature=0.5,
             )
+            print(response.choices[0].message.content)
             return response.choices[0].message.content
         else:
             return "I don't know how to complete this task."
