@@ -36,13 +36,17 @@ controller_output = {
                             "args": {
                                 "type": "array",
                                 "items": {
-                                    "type": "array",
-                                    "minItems": 2,
-                                    "maxItems": 2,
-                                    "items": [
-                                        {"type": "string", "description": "Argument name, which is the key in the meta program graph"},
-                                        {"type": "string", "description": "Argument value, which is the value of the argument. Set to DEFAULT if you want to use the value in the meta program graph, otherwise set to the value you want to use."}
-                                    ]
+                                    "type": "object",
+                                    "properties": {
+                                        "arg_name": {
+                                            "type": "string",
+                                            "description": "The name of the argument, which should be one of the keys in the meta program graph."
+                                        },
+                                        "value": {
+                                            "type": "string",
+                                            "description": "The value of the argument, which should be one of the values in the meta program graph. Set to DEFAULT if you want to use the value in the meta program graph, otherwise set to the value you want to use."
+                                        }
+                                    },
                                 },
                                 "description": "List of argument name-value pairs."
                             }
