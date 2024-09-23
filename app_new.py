@@ -71,7 +71,7 @@ output_type = {
                         "properties": {
                             "output_type": {
                                 "type": "string",
-                                "enum": ["string", "list", "map","number","UI","object","url"],
+                                "enum": ["string", "list", "map","number","UI","object","url","file"],
                                 "description": "The type of the output."
                             }
                         },
@@ -152,7 +152,7 @@ class final_output_typer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, object, url."
+        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, object, url, file."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)

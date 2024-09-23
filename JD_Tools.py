@@ -63,6 +63,19 @@ def query_ENREEC_fields() -> str:
         response = requests.get("https://sandboxapi.deere.com/platform/organizations/4193081/fields")
     return json.dumps(response.json())
 
+def query_ENREEC_fields_file() -> str:
+    """Call this when the user ask for fields in ENREEC. Get the list of all the fields in ENREEC. There are a bunch of fields in ENREEC. When the user ask for any information such as operations, farms, or boundaries of a field, you need first call this function to get the list of all the fields in ENREEC. Then you can use the field_id to get the operations, farms, or boundaries of a field."""
+    global requests
+    response = requests.get("https://sandboxapi.deere.com/platform/organizations/4193081/fields")
+    if (not response.status_code == 200): # in case the authorization token is expired, refresh the token and try again
+        JD_api_key = refresh_JD_access_token()["access_token"]
+        requests = Requests(headers={"Authorization": f"Bearer {JD_api_key}", "User-Agent": "ADMA", "Accept": "application/vnd.deere.axiom.v3+json","Connection": "keep-alive","Accept-Encoding": "gzip, deflate, br"})
+        response = requests.get("https://sandboxapi.deere.com/platform/organizations/4193081/fields")
+    with open("tmp/JD_fields.json", "w") as f:
+        json.dump(response.json(), f)
+
+    return "tmp/JD_fields.json"
+
 
 
 class query_ENREEC_farms_in_field_input_schema(BaseModel):
@@ -139,6 +152,9 @@ def file_existence_check(path: str) -> str:
         return True
     else:
         return False
+
+
+
 
 
 
