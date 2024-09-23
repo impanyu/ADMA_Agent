@@ -153,7 +153,15 @@ def file_existence_check(path: str) -> str:
     else:
         return False
 
-
+def field_id_from_name(field_name: str) -> str:
+    if not os.path.exists("tmp/JD_fields.json"):
+        query_ENREEC_fields_file()
+    with open("tmp/JD_fields.json", "r") as f:
+        fields = json.load(f)
+    for field in fields["values"]:
+        if field["name"] == field_name:
+            return field["id"]
+    return ""
 
 
 
