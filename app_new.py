@@ -464,6 +464,9 @@ def ai_reply(response, if_history=False):
             with open(path) as f:
                 boundary = json.load(f)
             #print(boundary)
+            if not "values" in boundary:
+                st.chat_message("assistant", avatar="🤖").write("No boundary found for the field")
+                return
             if len(boundary["values"]) == 0:
                 if if_history:
                     st.chat_message("assistant", avatar="🤖").write("No boundary found for the field")
