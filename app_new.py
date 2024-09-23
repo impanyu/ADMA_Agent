@@ -368,6 +368,30 @@ def main():
     st.set_page_config(page_title="ADMA Copilot", page_icon="🍃")
     st.header("ADMA Copilot",divider="green")
 
+    # Custom CSS to align iframe and chat messages to the left
+    st.markdown(
+        """
+        <style>
+        .left-align {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .iframe-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 800px;
+            border: 1px solid #ddd;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 
     st.sidebar.title("Control Panel")
