@@ -382,9 +382,10 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["description"] += f"JD_ENREEC_boundary_in_field&boundary is the boundary of the field {field_id} in ENREEC."
         
         elif next_task["method"] == "JD_ENREEC_fields":
-            meta_program_graph["JD_ENREEC_fields&fields"]["value"] = json.loads(query_ENREEC_fields())
+            fields = query_ENREEC_fields()
+            meta_program_graph["JD_ENREEC_fields&fields"]["value"] = json.loads(fields)
             meta_program_graph["JD_ENREEC_fields&fields"]["description"] = f"JD_ENREEC_fields&fields is the dictionary of all the fields in ENREEC from John Deere, in which the key is the field_id and the value is the field name."
-            
+
                 
                 
 
