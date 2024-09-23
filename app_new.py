@@ -406,7 +406,7 @@ def main():
     html_code = """
     <iframe src="https://adma.hopto.org" width="1200" height="800" frameborder="0"></iframe>
     """
-    st.components.v1.html(html_code, width=1220, height=800)
+    st.components.v1.html(html_code, width=1190, height=790)
 
 
     # Load meta program graph
