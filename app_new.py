@@ -370,7 +370,7 @@ def main():
 
 
 
-    #st.sidebar.title("Control Panel")
+    st.sidebar.title("Control Panel")
 
     # Embed a webpage using custom HTML
     html_code = """
@@ -407,10 +407,10 @@ def main():
 
 
 
-    # upload file
-    #files = st.sidebar.file_uploader("Upload Your File",accept_multiple_files=True)
-    #for file in files:
-    #    st.write(file.name)
+     upload file
+    files = st.sidebar.file_uploader("Upload Your File",accept_multiple_files=True)
+    for file in files:
+        st.write(file.name)
 
     # Initialize the session state for chat history if it does not exist
     if 'chat_history' not in st.session_state:
