@@ -404,9 +404,9 @@ def main():
 
     # Embed a webpage using custom HTML
     html_code = """
-    <iframe src="https://adma.hopto.org" width="1300" height="800" frameborder="0"></iframe>
+    <iframe src="https://adma.hopto.org" width="1200" height="800" frameborder="0"></iframe>
     """
-    st.components.v1.html(html_code, width=1290, height=790)
+    st.components.v1.html(html_code, width=1190, height=790)
 
 
     # Load meta program graph
