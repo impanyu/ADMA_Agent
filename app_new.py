@@ -67,8 +67,8 @@ class controller:
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a program controller. The user will tell you what they want to do. Given the following meta program graph which contains the information of each method and each variable, you need to decide the next method to call."
         self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
-        self.system_prompt += 'If you consider there\'s no more methods to call, you should only output a json with the following format: {"method": "None","args": {}}, with no other extra word at all.'
-        self.system_prompt += 'Else if you consider there should be a method to call, you need to output a json with the following format: {"method": "the name of the method to call","args": {"arg_name": "arg_value"}}, with no other extra word at all.'
+        self.system_prompt += 'If you consider there\'s no more methods to call, you should only output a json with the following format: {"method": "None","args": []}, with no other extra word at all.'
+        self.system_prompt += 'Else if you consider there should be a method to call, you need to output a json with the following format: {"method": "the name of the method to call","args": [{"name": "the name of the argument", "value": "the value of the argument"},...]}, with no other extra word at all.'
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the arg_name should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
     def get_next_task(self,user_instruction):
         response = self.client.beta.chat.completions.parse(
