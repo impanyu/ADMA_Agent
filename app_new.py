@@ -330,6 +330,11 @@ def main():
     if 'output_typer' not in st.session_state:
         st.session_state.output_typer = final_output_typer(st.session_state.meta_program_graph)
 
+    meta_program_graph = st.session_state.meta_program_graph
+    program_controller = st.session_state.program_controller
+    output_formatter = st.session_state.output_formatter
+    output_typer = st.session_state.output_typer
+
 
 
     # upload file
