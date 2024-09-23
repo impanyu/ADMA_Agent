@@ -19,6 +19,7 @@ from openai import OpenAI
 import json
 from pydantic import BaseModel, Field
 import copy
+import os
 
 
 
@@ -285,7 +286,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
 
             if index < len(output_list):
                 # update the value of the path
-                meta_program_graph["ADMA_get_meta_data&path"]["value"] = output_list[index]
+                meta_program_graph["ADMA_get_meta_data&path"]["value"] = os.path.join("/",*output_list[index].split("/")[3:])
                 meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index + 1
                 print(meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"])
 
@@ -306,7 +307,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             
             if index < len(output_list):
                 # update the value of the path
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = output_list[index]
+                meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = os.path.join("/",*output_list[index].split("/")[3:])
                 meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index + 1
                 # update the description of the path
                 meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
@@ -315,7 +316,6 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
         elif next_task["method"] == "ADMA_push_to_meta_data_list":
             
             meta_data = meta_program_graph["ADMA_get_meta_data&meta_data"]["value"]
-            meta_data
             #push the meta data to the list
             #meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(meta_data)
             # append a deep copy of the meta data
