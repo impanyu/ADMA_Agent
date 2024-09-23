@@ -191,6 +191,7 @@ class final_output_formatter:
                 temperature=0.5,
             )
             print(response.choices[0].message.content)
+            print(self.meta_program_graph["ADMA_push_to_meta_data_list&output_list"])
 
             return response.choices[0].message.content
         elif output_type == "object":
@@ -202,7 +203,7 @@ class final_output_formatter:
                 temperature=0.5,
             )
             print(response.choices[0].message.content)
-            print(self.meta_program_graph["ADMA_push_to_meta_data_list&output_list"])
+            
             return response.choices[0].message.content
         else:
             return "I don't know how to complete this task."
