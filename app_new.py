@@ -410,7 +410,12 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["value"] = field_id_from_name(field_name)
             meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_name"]["description"]+"\n"
             meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"] += f"JD_ENREEC_field_id_from_name&field_id is the id of the field {field_name} in ENREEC from John Deere."
-
+            # for convenience, assign the value of JD_ENREEC_field_id_from_name&field_id to JD_ENREEC_boundary_in_field&field_id
+            # but we should depend on controller to route to JD_ENREEC_field_id_assign_1
+            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["value"]
+            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"]+"\n"
+            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] += f"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere."
+            
         elif next_task["method"] == "JD_ENREEC_field_id_assign_1":
             meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["value"]
             meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"]+"\n"
@@ -589,7 +594,7 @@ def main():
     # Initialize the session state for chat history if it does not exist
     if 'chat_history' not in st.session_state:
       st.session_state['chat_history'] = []
-      
+
     # Display chat history
     for message in st.session_state['chat_history']:
       if message['role'] == "user":
