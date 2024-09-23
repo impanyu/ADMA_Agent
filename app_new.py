@@ -85,7 +85,7 @@ class controller:
         #self.meta_program_graph["ADMA_list_directory_contents&output_list"]
 
         response = self.client.beta.chat.completions.parse(
-            model="gpt-4o-mini",#"gpt-4o-2024-08-06",
+            model="gpt-4o-2024-08-06",
            
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": user_instruction}],
