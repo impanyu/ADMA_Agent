@@ -28,7 +28,7 @@
         "value":0
     },
 
-    "iterate_list_1":{
+    "iter_list_1":{
         "type":"method",
         "call_condition": "",
         "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
@@ -36,7 +36,7 @@
         "output":["ADMA_get_meta_data&path","ADMA_list_directory_contents&output_list_current_index"]
     },
 
-    "iterate_list_2":{
+    "iter_list_2":{
         "type":"method",
         "call_condition": "",
         "description":"Given a list of path and an index, return the path at the index and increase the index by 1.",
