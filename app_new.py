@@ -38,7 +38,7 @@ controller_output = {
                                 "items": {
                                     "type": "object",
                                     "properties": {
-                                        "arg_name": {
+                                        "name": {
                                             "type": "string",
                                             "description": "The name of the argument, which should be one of the keys in the meta program graph."
                                         },
@@ -47,6 +47,8 @@ controller_output = {
                                             "description": "The value of the argument, which should be one of the values in the meta program graph. Set to DEFAULT if you want to use the value in the meta program graph, otherwise set to the value you want to use."
                                         }
                                     },
+                                    "required": ["name", "value"],
+                                    "additionalProperties": False
                                 },
                                 "description": "List of argument name-value pairs."
                             }
