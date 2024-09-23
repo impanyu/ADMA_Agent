@@ -21,9 +21,38 @@ from pydantic import BaseModel, Field
 
 
 
-class controller_output(BaseModel):
-    method: str = Field(description="The name of the method to call.")
-    args: dict = Field(description="The values of the arguments of the method.")
+controller_output = {
+                "type": "json_schema",
+                "json_schema": {
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "method": {
+                                "type": "string",
+                                "description": "The name of the method to call."
+                            },
+                            "args": {
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "minItems": 2,
+                                    "maxItems": 2,
+                                    "items": [
+                                        {"type": "string", "description": "Argument name, which is the key in the meta program graph"},
+                                        {"type": "string", "description": "Argument value, which is the value of the argument. Set to DEFAULT if you want to use the value in the meta program graph, otherwise set to the value you want to use."}
+                                    ]
+                                },
+                                "description": "List of argument name-value pairs."
+                            }
+                        },
+                        "required": ["method", "args"],
+                        "additionalProperties": False
+                    }
+                }
+            }
+
+
 
 class controller:
     def __init__(self,meta_program_graph):
@@ -33,7 +62,7 @@ class controller:
         self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
         self.system_prompt += 'If you consider there\'s no more methods to call, you should only output a json with the following format: {"method": "None","args": {}}, with no other extra word at all.'
         self.system_prompt += 'Else if you consider there should be a method to call, you need to output a json with the following format: {"method": "the name of the method to call","args": {"arg_name": "arg_value"}}, with no other extra word at all.'
-        self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the args should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
+        self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the arg_name should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
     def get_next_task(self,user_instruction):
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-mini",
@@ -44,9 +73,56 @@ class controller:
         )
         return response.choices[0].message.parsed
     
-class output_format(BaseModel):
-    type: str = Field(description="The type of the output, in the following format: boundary, file, list, string")
-    output: str = Field(description="The output of the program, which is a json string")
+output_type = {
+                "type": "json_schema",
+                "json_schema": {
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "output_type": {
+                                "type": "string",
+                                "enum": ["string", "list", "map","number","UI"],
+                                "description": "The type of the output."
+                            }
+                        },
+                        "required": ["type"],
+                        "additionalProperties": False
+                    }
+                }
+            }
+
+list_string_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "strict": True,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of string outputs."
+                    }
+                }
+            }
+
+class final_output_typer:
+    def __init__(self,meta_program_graph):
+        self.meta_program_graph = meta_program_graph
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
+        self.system_prompt += "The type should be one of the following: string, list, map, number, UI."
+        self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
+
+    def output_type(self, user_instruction):
+        response = self.client.beta.chat.completions.parse(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": self.system_prompt},
+                      {"role": "user", "content": user_instruction}],
+            response_format= output_type,
+            temperature=0.5,
+        )
+        return response.choices[0].message.parsed
 
 class final_output_formatter:
     def __init__(self,meta_program_graph):
@@ -56,15 +132,28 @@ class final_output_formatter:
         self.system_prompt += "The output field in your output should be consistent with the type you specify. For example, if you specify the type as a list, you need to output a list, if you specify the type as a string, you need to output a string, if you specify the type as a boundary, you need to output a list of tuple of coordinates on the map , etc."
         self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
 
-    def format_output(self, user_instruction):
-        response = self.client.beta.chat.completions.parse(
-            model="gpt-4o-mini",
-            messages=[{"role": "system", "content": self.system_prompt},
-                      {"role": "user", "content": user_instruction}],
-            response_format= output_format,
-            temperature=0.5,
-        )
-        return response.choices[0].message.parsed
+    def format_output(self, user_instruction,output_type):
+        if output_type == "string":
+            response = self.client.beta.chat.completions.parse(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": self.system_prompt},
+                        {"role": "user", "content": user_instruction}],
+                response_format= {"type": "text"},
+                temperature=0.5,
+            )
+            return response.choices[0].message.parsed
+        elif output_type == "list":
+            response = self.client.beta.chat.completions.parse(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": self.system_prompt},
+                        {"role": "user", "content": user_instruction}],
+                response_format= list_string_format,
+                temperature=0.5,
+            )
+            return response.choices[0].message.parsed
+        else:
+            return "I don't know how to complete this task."
+        #return response.choices[0].message.parsed
 
 
 def stream_data(stream):
@@ -160,10 +249,10 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,max
             
 
 
-    
-    output = output_formatter.format_output(prompt)
+    final_output_type = final_output_typer.output_type(prompt)
+    output = final_output_formatter.format_output(prompt,final_output_type["output_type"])
 
-    return output
+    return {"type": final_output_type["output_type"],"output": output}
 
 def ai_reply(response, if_history=False):
     if response["type"] == "string":
