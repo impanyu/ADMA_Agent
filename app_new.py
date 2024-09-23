@@ -157,7 +157,7 @@ class final_output_formatter:
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": self.system_prompt},
                         {"role": "user", "content": user_instruction}],
-                response_format= list_string_format,
+                response_format= {"type": "list"},
                 temperature=0.5,
             )
             return json.loads(response.choices[0].message.content)
