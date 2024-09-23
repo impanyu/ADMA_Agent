@@ -78,7 +78,7 @@ class controller:
             response_format= controller_output,
             temperature=0.5,
         )
-        print(response)
+        print(response.choices[0].message)
         return response.choices[0].message.parsed
     
 output_type = {
