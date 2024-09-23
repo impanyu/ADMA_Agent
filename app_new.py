@@ -231,6 +231,16 @@ class final_output_formatter:
                 temperature=temperature,
             )
             return response.choices[0].message.content
+        elif output_type == "file":
+            system_prompt += "Return the file path of the json file, in the format of tmp/file.suffix. Note: only return the file path, with no other word or information."
+            response = self.client.beta.chat.completions.parse(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_instruction}],
+                response_format= {"type": "text"},
+                temperature=temperature,
+            )
+            return response.choices[0].message.content
         else:
             return "I don't know how to complete this task."
         #return response.choices[0].message.parsed
@@ -376,15 +386,15 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 field_id = meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"]
             
-            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["value"] = json.loads(query_ENREEC_boundary_in_field(field_id))
+            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["value"] = json.loads(query_ENREEC_boundary_in_field(field_id))["path"]
 
             meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["description"] = meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"]+"\n"
             meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["description"] += f"JD_ENREEC_boundary_in_field&boundary is the boundary of the field {field_id} in ENREEC."
         
         elif next_task["method"] == "JD_ENREEC_fields":
-            fields = query_ENREEC_fields({})
-            meta_program_graph["JD_ENREEC_fields&fields"]["value"] = json.loads(fields)
-            meta_program_graph["JD_ENREEC_fields&fields"]["description"] = f"JD_ENREEC_fields&fields is the dictionary of all the fields in ENREEC from John Deere, in which the key is the field_id and the value is the field name."
+            fields_file_path = query_ENREEC_fields_file()
+            meta_program_graph["JD_ENREEC_fields&fields_file_path"]["value"] = fields_file_path
+            meta_program_graph["JD_ENREEC_fields&fields_file_path"]["description"] = f"JD_ENREEC_fields&fields_file_path is the json file path of all the fields in ENREEC from John Deere, in which the key is the field_id and the value is the field name."
 
                 
                 
@@ -428,7 +438,7 @@ def ai_reply(response, if_history=False):
 
         st.components.v1.html(html_code, width=1190, height=790)
     elif response["type"] == "map":
-        path = response["output"]
+        path = response["output"]["path"]
         if not os.path.exists(path):
             if if_history:
                 st.chat_message("assistant", avatar="🤖").write("No boundary found for the field")
@@ -463,7 +473,13 @@ def ai_reply(response, if_history=False):
                 folium.PolyLine(ring_coordinates, tooltip="Field Boundaries").add_to(m)
             with  st.chat_message("assistant", avatar="🤖"):
                 folium_static(m,height=400,width=600)
-       
+    elif response["type"] == "file":
+        with open(response["output"]) as f:
+            output = f.read()
+        if if_history:
+            st.chat_message("assistant", avatar="🤖").write(output)
+        else:
+            st.chat_message("assistant", avatar="🤖").write(stream_data(output))
 
 
 
