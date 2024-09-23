@@ -139,7 +139,6 @@ class final_output_formatter:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output formatter. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the final answer or result, as closed as possible to user's instruction."
-        self.system_prompt += "The output field in your output should be consistent with the type you specify. For example, if you specify the type as a list, you need to output a list, if you specify the type as a string, you need to output a string, if you specify the type as a boundary, you need to output a list of tuple of coordinates on the map , etc."
         self.system_prompt += "The meta program graph is: " + json.dumps(self.meta_program_graph)
 
     def format_output(self, user_instruction,output_type):
@@ -157,7 +156,7 @@ class final_output_formatter:
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": self.system_prompt},
                         {"role": "user", "content": user_instruction}],
-                response_format= {"type": "list"},
+                response_format= {"type": list_string_format},
                 temperature=0.5,
             )
             return json.loads(response.choices[0].message.content)
