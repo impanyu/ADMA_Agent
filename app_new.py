@@ -161,6 +161,7 @@ class final_output_typer:
         )
         return json.loads(response.choices[0].message.content)
 
+# return a string
 class final_output_formatter:
     def __init__(self,meta_program_graph):
         self.meta_program_graph = meta_program_graph
@@ -197,7 +198,7 @@ class final_output_formatter:
                         {"role": "user", "content": user_instruction}],
                 temperature=0.5,
             )
-            return json.dumps(json.loads(response.choices[0].message.content)["items"])
+            return response.choices[0].message.content
         else:
             return "I don't know how to complete this task."
         #return response.choices[0].message.parsed
