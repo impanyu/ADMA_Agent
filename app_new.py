@@ -188,7 +188,6 @@ class final_output_formatter:
                 model="gpt-4o-mini",
                 messages=[{"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_instruction}],
-                response_format= list_string_format,
                 temperature=0.5,
             )
             return response.choices[0].message.content
