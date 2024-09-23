@@ -221,6 +221,16 @@ class final_output_formatter:
                 temperature=temperature,
             )
             return response.choices[0].message.content
+        elif output_type == "map":
+            system_prompt += "Return the file path of the boundary file, in the format of tmp/boundary_xxxx.json. Note: only return the file path, with no other word or information."
+            response = self.client.beta.chat.completions.parse(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_instruction}],
+                response_format= {"type": "text"},
+                temperature=temperature,
+            )
+            return response.choices[0].message.content
         else:
             return "I don't know how to complete this task."
         #return response.choices[0].message.parsed
@@ -357,6 +367,20 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["ADMA_menu_option&menu_url"]["description"] = meta_program_graph["ADMA_menu_option&menu_name"]["description"]+"\n"
             meta_program_graph["ADMA_menu_option&menu_url"]["description"] += meta_program_graph["ADMA_menu_option&path"]["description"]+"\n"
             meta_program_graph["ADMA_menu_option&menu_url"]["description"] = f"ADMA_menu_option&menu_url is the url of the menu on the ADMA server."
+        
+        elif next_task["method"] == "JD_ENREEC_boundary_in_field":
+            if "JD_ENREEC_boundary_in_field&field_id" in args_dict and not args_dict["JD_ENREEC_boundary_in_field&field_id"] == "DEFAULT":
+                field_id = args_dict["JD_ENREEC_boundary_in_field&field_id"]
+                meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"] = field_id
+                meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] = f"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC, and set to {field_id}."
+            else:
+                field_id = meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"]
+            
+            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["value"] = query_ENREEC_boundary_in_field(field_id)
+
+            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["description"] = meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"]+"\n"
+            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["description"] += f"JD_ENREEC_boundary_in_field&boundary is the boundary of the field {field_id} in ENREEC."
+                
                 
 
 
@@ -397,6 +421,42 @@ def ai_reply(response, if_history=False):
         print(response["output"])
 
         st.components.v1.html(html_code, width=1190, height=790)
+    elif response["type"] == "map":
+        path = response["output"]
+        if not os.path.exists(path):
+            if if_history:
+                st.chat_message("assistant", avatar="🤖").write("No boundary found for the field")
+            else:
+                st.chat_message("assistant", avatar="🤖").write(stream_data("No boundary found for the field"))
+
+        else:
+            with open(path) as f:
+                boundary = json.load(f)
+            #print(boundary)
+            if len(boundary["values"]) == 0:
+                if if_history:
+                    st.chat_message("assistant", avatar="🤖").write("No boundary found for the field")
+                else:
+                    st.chat_message("assistant", avatar="🤖").write(stream_data("No boundary found for the field"))
+
+                return
+            else:
+                rings = boundary["values"][0]["multipolygons"][0]["rings"]
+            
+            all_ring_coordinates = []
+            for ring in rings:
+                ring_coordinates = []
+                for point in ring["points"]:
+                    ring_coordinates.append([float(point["lat"]),float(point["lon"])])
+                all_ring_coordinates.append(ring_coordinates)
+
+            m = create_map(all_ring_coordinates[0][0][0],all_ring_coordinates[0][0][1])
+
+            #m = folium.Map(location=[all_ring_coordinates[0][0][0],all_ring_coordinates[0][0][1]], zoom_start=16)
+            for ring_coordinates in all_ring_coordinates:
+                folium.PolyLine(ring_coordinates, tooltip="Field Boundaries").add_to(m)
+            with  st.chat_message("assistant", avatar="🤖"):
+                folium_static(m,height=400,width=600)
        
 
 
