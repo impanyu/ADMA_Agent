@@ -578,6 +578,9 @@ def ai_reply(response, if_history=False):
         
         st.json(json.loads(output),expanded=False)
     elif response["type"] == "data":
+        if not os.path.exists(response["output"]):
+            st.chat_message("assistant", avatar="🤖").write("No data found for the field")
+            return
         with open(response["output"]) as f:        
             data = json.load(f)
         df = pd.DataFrame(data)
