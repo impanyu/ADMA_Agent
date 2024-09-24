@@ -472,8 +472,10 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] += f"Realm5_format_data_for_plot&local_file_path is the local file path of the file to be plotted in Realm5."
 
         elif next_task["method"] == "Realm5_format_data_for_plot":
+
             if "Realm5_format_data_for_plot&variable_names" in args_dict and not args_dict["Realm5_format_data_for_plot&variable_names"] == "DEFAULT":
                 variable_names = args_dict["Realm5_format_data_for_plot&variable_names"]
+                variable_names = json.loads(variable_names)
                 meta_program_graph["Realm5_format_data_for_plot&variable_names"]["value"] = variable_names
                 meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"] = f"Realm5_format_data_for_plot&variable_names is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure']."
             else:
