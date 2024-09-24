@@ -18,4 +18,4 @@ def Realm5_format_data_for_plot(file_path, variable_names):
     return "tmp/Realm5_formatted_data.json"
 
 def Realm5_generate_file_url(date_str):
-    return f"Realm5/weather_data/{date_str}.json"
+    return f"Realm5/weather_data_{date_str}.json"
