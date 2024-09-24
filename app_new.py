@@ -246,6 +246,16 @@ class final_output_formatter:
                 temperature=temperature,
             )
             return response.choices[0].message.content
+        elif output_type == "data":
+            system_prompt += "Return the file path of the json file to be plotted. Note: only return the file path, with no other word or information."
+            response = self.client.beta.chat.completions.parse(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_instruction}],
+                response_format= {"type": "text"},
+                temperature=temperature,
+            )
+            return response.choices[0].message.content
         else:
             return "I don't know how to complete this task."
         #return response.choices[0].message.parsed
