@@ -574,7 +574,7 @@ def ai_reply(response, if_history=False):
             data = json.load(f)
         df = pd.DataFrame(data)
     
-        st.line_chart(df)
+        st.line_chart(df,width=1200,height=400)
 
 
 
