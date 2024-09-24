@@ -87,7 +87,7 @@
     "ADMA_menu_option":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a menu name and a path, return the url of the menu on the ADMA server. When user asked for going topublic data, you should set this to 'shared_with_me', when user asked to go to file or folder followed by a path, you should set menu_name to 'files' and path to the path givenby user. If the user asked root folder, you should set path to empty string.",
+        "description":"Given a menu name and a path, return the url of the menu on the ADMA server. When user asked for going to public data, you should set this to 'shared_with_me', when user asked to go to file or folder followed by a path, you should set menu_name to 'files' and path to the path givenby user. If the user asked root folder, you should set the path to empty string.",
         "input":["ADMA_menu_option&menu_name","ADMA_menu_option&path"],
         "output":["ADMA_menu_option&menu_url"]
     },
