@@ -160,6 +160,8 @@ def ADMA_menu_option(menu_name,path=""):
         "documentation": "/documentation.html",
         "api": "/api.html"
     }
+    if menu_name not in menu_paths:
+        menu_name = "files"
     result = f"{root_url}{menu_paths[menu_name]}"
     if path != "" and menu_name == "files":
         result += f"/{path}"
