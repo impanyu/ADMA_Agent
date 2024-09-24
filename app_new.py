@@ -22,6 +22,7 @@ import copy
 import os
 from Realm5_Tools import *
 import pandas as pd
+from Soil import *
 
 temperature = 0.2
 
@@ -158,6 +159,7 @@ class final_output_typer:
         self.system_prompt += "If you see a boundary file path, you should output the type as map."
         self.system_prompt += "If you see a file path, you should output the type as file."
         self.system_prompt += "If you see a file path of the realm5 data, you should output the type as data."
+        self.system_prompt += "If you see a file path of the soil data, you should output the type as data."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
