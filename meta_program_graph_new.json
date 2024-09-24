@@ -187,13 +187,13 @@
     "Realm5_format_data_for_plot":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a local file path of the realm5 weather data file and a list variable names, return the file path of the formatted json data for plot.",
+        "description":"Given a local file path of the realm5 weather data file and a list variable names, return the file path of the formatted json data for plot. Make sure to call this method after ADMA_download_file.",
         "input":["Realm5_format_data_for_plot&local_file_path","Realm5_format_data_for_plot&variable_names"],
         "output":["Realm5_format_data_for_plot&formatted_data_file_path"]
     },
     "Realm5_format_data_for_plot&local_file_path":{
         "type":"file path",
-        "description":"Realm5_format_data_for_plot&local_file_path is the local file path of the realm5 weather data file.",
+        "description":"Realm5_format_data_for_plot&local_file_path is the local file path of the realm5 weather data file. ",
         "output_from":["Realm5_assign_file_path"],
         "input_to":["Realm5_format_data_for_plot"],
         "value":""
