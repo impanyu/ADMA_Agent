@@ -519,11 +519,11 @@ def ai_reply(response, if_history=False):
             st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
     elif response["type"] == "url":
         html_code = f"""
-            <iframe src={response["output"]} width="1200" height="800" frameborder="0"></iframe>
+            <iframe src={response["output"]} width="1250" height="800" frameborder="0"></iframe>
             """
         print(response["output"])
 
-        st.components.v1.html(html_code, width=1190, height=790)
+        st.components.v1.html(html_code, width=1240, height=790)
     elif response["type"] == "map":
         path = response["output"]
         if not os.path.exists(path):
