@@ -628,7 +628,7 @@ def main():
 
 
 
-    st.sidebar.title("Control Panel")
+    #st.sidebar.title("Control Panel")
 
 
 
