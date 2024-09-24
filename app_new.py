@@ -124,7 +124,7 @@ class controller:
         self.system_prompt += 'How to extract required information from the meta program graph? You can check the description of each variable and the correspondingvalue of each variable. Compare this information with user\'s question, and check if you can find the answer.'
         self.system_prompt += 'You can set the value of any variable to whatever you want, but DO NOT make up any information that does not exist in user\'s instruction.'
         self.system_prompt += 'When you decide which method to call, you need to check the whole meta program graph to make sure you do not miss any information.'
-        self.system_prompt += "If you want to plot the data, you need to make sure 'tmp/Realm5_formatted_data.json' finally appears in the meta program graph. "
+        self.system_prompt += "If you want to plot the data, you need to make sure 'tmp/Realm5_formatted_data.json' is the value of Realm5_format_data_for_plot&formatted_data_file_path in the meta program graph. "
     
     def get_next_task(self,user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
