@@ -3,7 +3,7 @@ import json
 
 def Realm5_format_data_for_plot(file_path, variable_names):
     if not os.path.exists(file_path):
-        return {}
+        return ""
     with open(file_path, "r") as f:
         data = json.load(f)
     formatted_data = {}
