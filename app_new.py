@@ -21,6 +21,7 @@ from pydantic import BaseModel, Field
 import copy
 import os
 from Realm5_Tools import *
+import pandas as pd
 
 temperature = 0.2
 
@@ -571,15 +572,10 @@ def ai_reply(response, if_history=False):
     elif response["type"] == "data":
         with open(response["output"]) as f:        
             data = json.load(f)
-        vis_data = []   
-        x = "Time"
-        y = []
-        n=0
-        for variable in data:
-            vis_data.append(data[variable])
-            y.append(variable)
-        
-        st.line_chart(vis_data,x,y)
+        df = pd.DataFrame(data)
+    
+        st.line_chart(df)
+
 
 
 def main():
