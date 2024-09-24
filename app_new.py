@@ -442,34 +442,34 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 date_str = meta_program_graph["Realm5_generate_file_url&date_str"]["value"]
 
-            meta_program_graph["ADMA_download_file&file_path"]["value"] = Realm5_generate_file_url(date_str)
-            print(meta_program_graph["ADMA_download_file&file_path"]["value"])
-            meta_program_graph["ADMA_download_file&file_path"]["description"] = meta_program_graph["Realm5_generate_file_url&date_str"]["description"]+"\n"
-            meta_program_graph["ADMA_download_file&file_path"]["description"] += f"ADMA_download_file&file_path is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
+            meta_program_graph["ADMA_download_file&file_url"]["value"] = Realm5_generate_file_url(date_str)
+            print(meta_program_graph["ADMA_download_file&file_url"]["value"])
+            meta_program_graph["ADMA_download_file&file_url"]["description"] = meta_program_graph["Realm5_generate_file_url&date_str"]["description"]+"\n"
+            meta_program_graph["ADMA_download_file&file_url"]["description"] += f"ADMA_download_file&file_url is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
 
         elif next_task["method"] == "ADMA_download_file":
-            if "ADMA_download_file&file_path" in args_dict and not args_dict["ADMA_download_file&file_path"] == "DEFAULT":
-                file_path = args_dict["ADMA_download_file&file_path"]
-                meta_program_graph["ADMA_download_file&file_path"]["value"] = file_path
+            if "ADMA_download_file&file_url" in args_dict and not args_dict["ADMA_download_file&file_url"] == "DEFAULT":
+                file_url = args_dict["ADMA_download_file&file_url"]
+                meta_program_graph["ADMA_download_file&file_url"]["value"] = file_url
                 meta_program_graph["ADMA_download_file&file_path"]["description"] = f"ADMA_download_file&file_path is the url of the file to be downloaded on ADMA, and set to {file_path}."
             else:
-                file_path = meta_program_graph["ADMA_download_file&file_path"]["value"]
+                file_url = meta_program_graph["ADMA_download_file&file_url"]["value"]
             
-            meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"] = ADMA_download_file(file_path)
-            print(meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"])
-            meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"] = meta_program_graph["ADMA_download_file&file_path"]["description"]+"\n"
-            meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"] += f"ADMA_download_file&downloaded_file_path is the local file path of the file to be downloaded on ADMA."
+            meta_program_graph["ADMA_download_file&local_file_path"]["value"] = ADMA_download_file(file_url)
+            print(meta_program_graph["ADMA_download_file&local_file_path"]["value"])
+            meta_program_graph["ADMA_download_file&local_file_path"]["description"] = meta_program_graph["ADMA_download_file&file_url"]["description"]+"\n"
+            meta_program_graph["ADMA_download_file&local_file_path"]["description"] += f"ADMA_download_file&local_file_path is the local file path of the file to be downloaded on ADMA."
 
             # for convenience, assign the value of ADMA_download_file&downloaded_file_path to Realm5_format_data_for_plot&file_path
-            meta_program_graph["Realm5_format_data_for_plot&file_path"]["value"] = meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"]
-            meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"] = meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"]+"\n"
-            meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"] += f"Realm5_format_data_for_plot&file_path is the file path of the file to be plotted in Realm5."
+            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["value"] = meta_program_graph["ADMA_download_file&local_file_path"]["value"]
+            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] = meta_program_graph["ADMA_download_file&local_file_path"]["description"]+"\n"
+            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] += f"Realm5_format_data_for_plot&local_file_path is the local file path of the file to be plotted in Realm5."
 
 
         elif next_task["method"] == "Realm5_assign_file_path":
-            meta_program_graph["Realm5_format_data_for_plot&file_path"]["value"] = meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"]
-            meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"] = meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"]+"\n"
-            meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"] += f"Realm5_format_data_for_plot&file_path is the file path of the file to be plotted in Realm5."
+            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["value"] = meta_program_graph["ADMA_download_file&local_file_path"]["value"]
+            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] = meta_program_graph["ADMA_download_file&local_file_path"]["description"]+"\n"
+            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] += f"Realm5_format_data_for_plot&local_file_path is the local file path of the file to be plotted in Realm5."
 
         elif next_task["method"] == "Realm5_format_data_for_plot":
             if "Realm5_format_data_for_plot&variable_names" in args_dict and not args_dict["Realm5_format_data_for_plot&variable_names"] == "DEFAULT":
@@ -480,9 +480,9 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
                 variable_names = meta_program_graph["Realm5_format_data_for_plot&variable_names"]["value"]
             
             
-            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["Realm5_format_data_for_plot&file_path"]["value"],variable_names)
+            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["value"],variable_names)
             print(meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["value"])
-            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] = meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"]+"\n"
+            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] = meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"]+"\n"
             meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] += meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"]+"\n"
             meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] += f"Realm5_format_data_for_plot&formatted_data_file_path is the file path of the formatted json data for plot."
 

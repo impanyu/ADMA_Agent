@@ -187,13 +187,13 @@
     "Realm5_format_data_for_plot":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a file path of the realm5 weather data file and a list variable names, return the file path of the formatted json data for plot.",
-        "input":["Realm5_format_data_for_plot&file_path","Realm5_format_data_for_plot&variable_names"],
+        "description":"Given a local file path of the realm5 weather data file and a list variable names, return the file path of the formatted json data for plot.",
+        "input":["Realm5_format_data_for_plot&local_file_path","Realm5_format_data_for_plot&variable_names"],
         "output":["Realm5_format_data_for_plot&formatted_data_file_path"]
     },
-    "Realm5_format_data_for_plot&file_path":{
+    "Realm5_format_data_for_plot&local_file_path":{
         "type":"file path",
-        "description":"Realm5_format_data_for_plot&file_path is the file path of the realm5 weather data file.",
+        "description":"Realm5_format_data_for_plot&local_file_path is the local file path of the realm5 weather data file.",
         "output_from":["Realm5_assign_file_path"],
         "input_to":["Realm5_format_data_for_plot"],
         "value":""
@@ -210,7 +210,7 @@
         "description":"Realm5_format_data_for_plot&formatted_data_file_path is the file path of the formatted json data for plot.",
         "output_from":["Realm5_format_data_for_plot"],
         "input_to":[],
-        "value":"tmp/Realm5_formatted_data.json"
+        "value":""
     },
 
     "Realm5_generate_file_url":{
@@ -218,7 +218,7 @@
         "call_condition": "",
         "description":"Given a date string, return the file path of the realm5 weather data file. The date string should be in the format of 'YYYY-MM-DD'.",
         "input":["Realm5_generate_file_url&date_str"],
-        "output":["ADMA_download_file&file_path"]
+        "output":["ADMA_download_file&file_url"]
     },
     "Realm5_generate_file_url&date_str":{
         "type":"date string",
@@ -234,20 +234,20 @@
     "ADMA_download_file":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a file path on ADMA, download the file and return the local file path.",
-        "input":["ADMA_download_file&file_path"],
+        "description":"Given a file url on ADMA, download the file and return the local file path.",
+        "input":["ADMA_download_file&file_url"],
         "output":["ADMA_download_file&downloaded_file_path"]
     },
-    "ADMA_download_file&file_path":{
+    "ADMA_download_file&file_url":{
         "type":"file path",
-        "description":"ADMA_download_file&file_path is the file path of the file to be downloaded on ADMA.",  
+        "description":"ADMA_download_file&file_url is the url of the file to be downloaded on ADMA.",  
         "output_from":["Realm5_generate_file_url"],
         "input_to":["ADMA_download_file"],
         "value":""
     },
-    "ADMA_download_file&downloaded_file_path":{
+    "ADMA_download_file&local_file_path":{
         "type":"file path",
-        "description":"ADMA_download_file&downloaded_file_path is the local file path of the downloaded file.",
+        "description":"ADMA_download_file&local_file_path is the local file path of the downloaded file.",
         "output_from":["ADMA_download_file"],
         "input_to":["Realm5_assign_file_path"],
         "value":""
@@ -256,9 +256,9 @@
     "Realm5_assign_file_path":{
         "type":"method",
         "call_condition": "",
-        "description":"Assign ADMA_download_file&downloaded_file_path to Realm5_format_data_for_plot&file_path. Don't forget to call this method after ADMA_download_file, if you want to plot the data later.",
-        "input":["ADMA_download_file&downloaded_file_path"],
-        "output":["Realm5_format_data_for_plot&file_path"]
+        "description":"Assign ADMA_download_file&local_file_path to Realm5_format_data_for_plot&local_file_path. Don't forget to call this method after ADMA_download_file, if you want to plot the data later.",
+        "input":["ADMA_download_file&local_file_path"],
+        "output":["Realm5_format_data_for_plot&local_file_path"]
     }
 
 
