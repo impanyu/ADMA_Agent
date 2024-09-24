@@ -86,6 +86,20 @@ def ADMA_check_file(dir_path):
     else:
         return f"Failed to download file: {dir_path}, Status code: {response.status_code}, {response.text}"
 
+def ADMA_download_file(dir_path):
+   
+    download_url = f"{root_url}/api/download/?target_path={dir_path}"
+    response = requests.get(download_url)
+
+    if response.status_code == 200:
+        rd = uuid.uuid4()
+        with open(f"tmp/{rd}_{os.path.basename(dir_path)}", "wb") as f:
+            f.write(response.content)
+        result =  f"tmp/{rd}_{os.path.basename(dir_path)}"
+        return result
+        #return response.text
+    else:
+        return ""
 
 
 

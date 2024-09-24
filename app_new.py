@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, Field
 import copy
 import os
+from Realm5_Tools import *
 
 temperature = 0.2
 
@@ -71,7 +72,7 @@ output_type = {
                         "properties": {
                             "output_type": {
                                 "type": "string",
-                                "enum": ["string", "list", "map","number","UI","object","url","file"],
+                                "enum": ["string", "list", "map","number","UI","object","url","file","data"],
                                 "description": "The type of the output."
                             }
                         },
@@ -152,9 +153,10 @@ class final_output_typer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, object, url, file."
+        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, object, url, file,data."
         self.system_prompt += "If you see a boundary file path, you should output the type as map."
         self.system_prompt += "If you see a file path, you should output the type as file."
+        self.system_prompt += "If you see a file path of the realm5 data, you should output the type as data."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
@@ -420,8 +422,48 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["value"]
             meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"]+"\n"
             meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] += f"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere."
+        
+        elif next_task["method"] == "Realm5_generate_file_url":
+            if "Realm5_generate_file_url&date_str" in args_dict and not args_dict["Realm5_generate_file_url&date_str"] == "DEFAULT":
+                date_str = args_dict["Realm5_generate_file_url&date_str"]
+                meta_program_graph["Realm5_generate_file_url&date_str"]["value"] = date_str
+                meta_program_graph["Realm5_generate_file_url&date_str"]["description"] = f"Realm5_generate_file_url&date_str is the date string of the file to be generated in Realm5, and set to {date_str}."
+            else:
+                date_str = meta_program_graph["Realm5_generate_file_url&date_str"]["value"]
+
+            meta_program_graph["ADMA_download_file&file_path"]["value"] = Realm5_generate_file_url(date_str)
+            meta_program_graph["ADMA_download_file&file_path"]["description"] = meta_program_graph["Realm5_generate_file_url&date_str"]["description"]+"\n"
+            meta_program_graph["ADMA_download_file&file_path"]["description"] += f"ADMA_download_file&file_path is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
+
+        elif next_task["method"] == "ADMA_download_file":
+            if "ADMA_download_file&file_path" in args_dict and not args_dict["ADMA_download_file&file_path"] == "DEFAULT":
+                file_path = args_dict["ADMA_download_file&file_path"]
+                meta_program_graph["ADMA_download_file&file_path"]["value"] = file_path
+                meta_program_graph["ADMA_download_file&file_path"]["description"] = f"ADMA_download_file&file_path is the url of the file to be downloaded on ADMA, and set to {file_path}."
+            else:
+                file_path = meta_program_graph["ADMA_download_file&file_path"]["value"]
             
-           
+            meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"] = ADMA_download_file(file_path)
+            meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"] = meta_program_graph["ADMA_download_file&file_path"]["description"]+"\n"
+            meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"] += f"ADMA_download_file&downloaded_file_path is the local file path of the file to be downloaded on ADMA."
+
+        elif next_task["method"] == "Realm5_assign_file_path":
+            meta_program_graph["Realm5_format_data_for_plot&file_path"]["value"] = meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"]
+            meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"] = meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"]+"\n"
+            meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"] += f"Realm5_format_data_for_plot&file_path is the file path of the file to be plotted in Realm5."
+
+        elif next_task["method"] == "Realm5_format_data_for_plot":
+            if "Realm5_format_data_for_plot&variable_names" in args_dict and not args_dict["Realm5_format_data_for_plot&variable_names"] == "DEFAULT":
+                variable_names = args_dict["Realm5_format_data_for_plot&variable_names"]
+                meta_program_graph["Realm5_format_data_for_plot&variable_names"]["value"] = variable_names
+                meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"] = f"Realm5_format_data_for_plot&variable_names is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure']."
+            else:
+                variable_names = meta_program_graph["Realm5_format_data_for_plot&variable_names"]["value"]
+            
+            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["Realm5_format_data_for_plot&file_path"]["value"],variable_names)
+            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] = meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"]+"\n"
+            meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"] += meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"]+"\n"
+            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] += f"Realm5_format_data_for_plot&formatted_data_file_path is the file path of the formatted json data for plot."
 
     final_output_type = output_typer.output_type(prompt)
     print(final_output_type)
@@ -512,7 +554,18 @@ def ai_reply(response, if_history=False):
             output = f.read()
         
         st.json(json.loads(output),expanded=False)
-
+    elif response["type"] == "data":
+        with open(response["output"]) as f:        
+            data = json.load(f)
+        vis_data = []   
+        x = "Time"
+        y = []
+        n=0
+        for variable in data:
+            vis_data.append(data[variable])
+            y.append(variable)
+        
+        st.line_chart(vis_data,x,y)
 
 
 def main():
