@@ -472,7 +472,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             
             meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["Realm5_format_data_for_plot&file_path"]["value"],variable_names)
             meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] = meta_program_graph["Realm5_format_data_for_plot&file_path"]["description"]+"\n"
-            meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"] += meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"]+"\n"
+            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] += meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"]+"\n"
             meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] += f"Realm5_format_data_for_plot&formatted_data_file_path is the file path of the formatted json data for plot."
 
     final_output_type = output_typer.output_type(prompt)
