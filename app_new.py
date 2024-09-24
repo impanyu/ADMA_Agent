@@ -454,6 +454,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
                 file_path = meta_program_graph["ADMA_download_file&file_path"]["value"]
             
             meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"] = ADMA_download_file(file_path)
+            print(meta_program_graph["ADMA_download_file&downloaded_file_path"]["value"])
             meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"] = meta_program_graph["ADMA_download_file&file_path"]["description"]+"\n"
             meta_program_graph["ADMA_download_file&downloaded_file_path"]["description"] += f"ADMA_download_file&downloaded_file_path is the local file path of the file to be downloaded on ADMA."
 
