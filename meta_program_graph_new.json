@@ -236,7 +236,7 @@
         "call_condition": "",
         "description":"Given a file url on ADMA, download the file and return the local file path.",
         "input":["ADMA_download_file&file_url"],
-        "output":["ADMA_download_file&downloaded_file_path"]
+        "output":["ADMA_download_file&local_file_path"]
     },
     "ADMA_download_file&file_url":{
         "type":"file path",
