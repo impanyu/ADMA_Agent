@@ -256,7 +256,7 @@
     "Realm5_assign_file_path":{
         "type":"method",
         "call_condition": "",
-        "description":"Assign ADMA_download_file&downloaded_file_path to Realm5_format_data_for_plot&file_path",
+        "description":"Assign ADMA_download_file&downloaded_file_path to Realm5_format_data_for_plot&file_path. Don't forget to call this method after ADMA_download_file, if you want to plot the data later.",
         "input":["ADMA_download_file&downloaded_file_path"],
         "output":["Realm5_format_data_for_plot&file_path"]
     }
