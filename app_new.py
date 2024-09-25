@@ -106,6 +106,33 @@ list_string_format={
     }
 }
 
+initializer_output = {
+    "type": "json_schema",
+    "json_schema": {
+        "name": "initializer_output",
+        "strict": True,
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "variable": {
+                        "type": "string",
+                        "enum": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Date_string", "Field_ID", "Field_name", "Realm5_variable_name_list"],
+                        "description": "The name of the variable to initialize."
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "The value of the variable to initialize."
+                    }
+                },
+                "required": ["variable", "value"],
+                "additionalProperties": False
+            }
+        }
+    }
+}
+
 
 
 
@@ -178,23 +205,30 @@ class final_output_typer:
         return json.loads(response.choices[0].message.content)
     
 
-class ADMA_search_string_generator:
-    def __init__(self):
-
+class meta_program_graph_initializer:
+    def __init__(self,meta_program_graph):
+        self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.system_prompt = "Given the user's instruction, you need to extract some 1 keyword contained in the instruction or 1 keyword that is closed to the user's instruction."
+        self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
+        self.system_prompt += "Note: you can only initialize some of these variables: ADMA_search_string,ADMA_menu_name, ADMA_API_file_path, Date_string, Field_ID, Field_name, Realm5_variable_name_list. You do not need to initialize all of above variables, only those you feel necessary."
+        self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate information."
+        self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
+        self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+
+        
 
 
-    def generate_search_string(self, user_instruction):
+    def initialize_meta_program_graph(self, user_instruction):
 
 
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-mini",
             messages=[{"role": "system", "content": self.system_prompt},
                       {"role": "user", "content": user_instruction}],
+            response_format= initializer_output,
             temperature=temperature,
         )
-        return response.choices[0].message.content
+        return json.loads(response.choices[0].message.content)
     
 
 
@@ -328,7 +362,10 @@ def create_map(lat,lng):
     return map_obj
 
 
-def get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,search_string_generator,adma_recommender,max_iter=10):
+def get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,initializer,adma_recommender,max_iter=10):
+    initialized_variables = initializer.initialize_meta_program_graph(prompt)
+    print(initialized_variables)
+    
 
     while max_iter > 0:
         max_iter -= 1
@@ -710,8 +747,8 @@ def main():
         st.session_state.output_formatter = final_output_formatter(meta_program_graph)
     if 'output_typer' not in st.session_state:
         st.session_state.output_typer = final_output_typer(meta_program_graph)
-    if 'search_string_generator' not in st.session_state:
-        st.session_state.search_string_generator = ADMA_search_string_generator()
+    if 'initializer' not in st.session_state:
+        st.session_state.initializer = meta_program_graph_initializer(meta_program_graph)
     if 'adma_recommender' not in st.session_state:
         st.session_state.adma_recommender = ADMA_recommender()
 
@@ -719,13 +756,14 @@ def main():
     program_controller = st.session_state.program_controller
     output_formatter = st.session_state.output_formatter
     output_typer = st.session_state.output_typer
-    search_string_generator = st.session_state.search_string_generator
+    initializer = st.session_state.initializer
     adma_recommender = st.session_state.adma_recommender
 
     program_controller.executed_methods = []
     program_controller.meta_program_graph = meta_program_graph
     output_formatter.meta_program_graph = meta_program_graph
     output_typer.meta_program_graph = meta_program_graph
+    initializer.meta_program_graph = meta_program_graph
 
 
 
@@ -755,7 +793,7 @@ def main():
       st.chat_message("user",avatar="👨‍🎓").write(prompt)
 
       # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-      response = get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,search_string_generator,adma_recommender,max_iter=20)
+      response = get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,initializer,adma_recommender,max_iter=20)
 
       ai_reply(response)
 
