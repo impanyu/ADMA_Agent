@@ -43,7 +43,7 @@
     },
     "ADMA_menu_name":{
         "type":"ADMA menu name",
-        "description":"ADMA_menu_name is the name of the menu on the ADMA server. It should be one of the following: search, share_with_me, files, data, models, tools, collections, documentation, api. When user asked for going to public data, you should set this to 'shared_with_me', when user asked to go to file or folder followed by a path, you should set this menu name to 'files'. If the user asked root folder, you should set the path to empty string.",
+        "description":"ADMA_menu_name is the name of the menu on the ADMA server. ",
         "output_from":[],
         "input_to":["ADMA_menu_option"],
         "value":""
