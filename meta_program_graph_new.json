@@ -9,7 +9,7 @@
     "ADMA_meta_data":{
         "type":"ADMA meta data",
         "description":"ADMA_meta_data is the meta data of the file or folder on the ADMA server.",
-        "output_from":["ADMA_get_meta_data"],
+        "output_from":["ADMA_get_meta_data","ADMA_search"],
         "input_to":["ADMA_url_extractor","ADMA_push_to_meta_data_list","frontend_ADMA_meta_data_printer"],
         "value":{}
     },
@@ -30,7 +30,7 @@
     "ADMA_meta_data_list":{
         "type":"list of ADMA meta data",
         "description":"ADMA_meta_data_list is a list of ADMA meta data of the file or folder on the ADMA server.",
-        "output_from":["ADMA_push_to_meta_data_list","ADMA_search"],
+        "output_from":["ADMA_push_to_meta_data_list"],
         "input_to":["frontend_ADMA_meta_data_list_printer"],
         "value":[]
     },
@@ -207,7 +207,7 @@
         "call_condition": "",
         "description":"Given a ADMA API file path as root directory, and a search content, return the list of meta data for all the folders or directories under the root directory.",
         "input":["ADMA_API_file_path","ADMA_search_string"],
-        "output":["ADMA_meta_data_list"]
+        "output":["ADMA_meta_data"]
     },
  
 

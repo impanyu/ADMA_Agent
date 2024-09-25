@@ -138,7 +138,8 @@ class controller:
         self.system_prompt += 'When you decide which method to call, you need to check the whole meta program graph to make sure you do not miss any information.'
         #self.system_prompt += "If you want to plot the data, you need to make sure 'tmp/Realm5_formatted_data.json' is the value of local_file_path in the meta program graph. "
         self.system_prompt += "When user request go to somewhere, try your best to find ways to get the adma url. "
-    
+        #self.system_prompt += "Note: only call a method, if all the variables in the input list of this method have value. "
+
     def get_next_task(self,user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
         system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
