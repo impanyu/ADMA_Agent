@@ -212,7 +212,7 @@ class final_output_typer:
 
 
         response = self.client.beta.chat.completions.parse(
-            model="gpt-4o-mini",
+            model="gpt-4o-2024-08-06",
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": user_instruction}],
             response_format= output_type,
