@@ -46,25 +46,7 @@ controller_output = {
 }
             
 
-output_type = {
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "output_type",
-                    "strict": True,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "output_type": {
-                                "type": "string",
-                                "enum": ["string", "map","url","file","data","object"],
-                                "description": "The type of the output."
-                            }
-                        },
-                        "required": ["output_type"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+
 
 list_string_format={
                     "type": "json_schema",
@@ -143,12 +125,13 @@ class controller:
         self.system_prompt += "You'll be given a sequence of methods, which has been executed in the previous steps. Try to find the method that should be executed in next step."
         self.system_prompt += "The meta program graph is a directed graph, which has two types of nodes, method nodes and variable nodes. Each node may have incoming edges and outgoing edges."
 
-        self.system_prompt += "Try to explore the meta program graph in a depth-first manner, if there's no method in current exploration thread, try to find a new method to call."
+        self.system_prompt += "Try to explore the meta program graph in a depth-first manner, if there's no method in current exploration path, try to find a new method to call."
         self.system_prompt += "Check each method in the meta program graph, check the value and description of each variable in the input list of each method. Choose the most appropriate method which can use these variables as input, and which once called will move the status towards the goal of user's instruction."
-        self.system_prompt += "You only need to observe the value and description of these variables: ADMA_url and local_file_path"
-        self.system_prompt += 'If you are confident you can answer user\'s instruction, based on these variables, you should make no further method call and you should only output a json with the following format: {"method": "None"}, with no other extra word at all.'
+        #self.system_prompt += "You only need to observe the value and description of these variables: ADMA_url and local_file_path"
+        #self.system_prompt += 'If you are confident you can answer user\'s instruction, based on these variables, you should make no further method call and you should only output a json with the following format: {"method": "None"}, with no other extra word at all.'
         
-        self.system_prompt += 'Otherwise, try to find a method which may lead you to the answer of user\'s instruction, you need to output a json with the following format: {"method": "the name of the method to call"}, with no other extra word at all.'
+        self.system_prompt += 'Try to find a method which may lead you to the answer of user\'s instruction, you need to output a json with the following format: {"method": "the name of the method to call"}, with no other extra word at all.'
+        self.system_prompt += 'If you feel confident that you can answer user\'s instruction, especially one variable contains what the user want, you can call one of the method whose name contains "frontend" at the beginning. Note: once you call these frontend methods, you indicate the program ends with no further method calls.'
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph. '
         self.system_prompt += 'Try your best to extract required information from the meta program graph, and reduce the needs to make method calls. But do not fabricate any information.'
         self.system_prompt += 'How to extract required information from the meta program graph? You can check the description of each variable and the correspondingvalue of each variable. Compare this information with user\'s instruction, and check if you can find the answer.'
@@ -178,42 +161,7 @@ class controller:
                                 
 
 
-class final_output_typer:
-    def __init__(self,meta_program_graph):
-        self.meta_program_graph = meta_program_graph
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "You only need to observe the value and description of these variables: ADMA_url and local_file_path"
-        #self.system_prompt += "In meta program graph, if you see a ADMA_url contains a url, you should output the type as url."
-        self.system_prompt += "Compare the description and value of these variables with user's instruction, and decide the type of the output, which can best represent the output."
-        self.system_prompt += "url means the output is a url that can be opened in a web browser."
-        self.system_prompt += "map means the output will be rendered in a map, like the boundary of a field."
-        self.system_prompt += "file means the output is a file."
-        self.system_prompt += "data means the output is some data, which can be plotted."
-        self.system_prompt += "object means the output is a json string."
-        self.system_prompt += "if local_file_path contains a file path containing 'boundary', you should output the type as map."
-        self.system_prompt += "if local_file_path contains a file path containing realm5 data, you should output the type as data."
 
-
-        #self.system_prompt += "If you see local_file_path contains a file path and you are asked to draw a map, you should output the type as map."
-        #self.system_prompt += "In meta program graph, if you see local_file_path contains some path, you should output the type as file."
-        #self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the realm5 data and asked to plot the data, you should output the type as data."
-        #self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the soil data, you should output the type as data."
-        
-        #self.system_prompt += "In meta program graph, if you see a meta data, you should output the type as object."
-
-    def output_type(self, user_instruction):
-        system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
-
-
-        response = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
-            messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": user_instruction}],
-            response_format= output_type,
-            temperature=temperature,
-        )
-        return json.loads(response.choices[0].message.content)
     
 
 class meta_program_graph_initializer:
@@ -221,14 +169,13 @@ class meta_program_graph_initializer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
-        self.system_prompt += "If the user's instruction contains related information, you can set the value based on the information. Otherwise, just set it to DEFAULT."
+        self.system_prompt += "If the user's instruction contains related information, you can set the value based on the information. Otherwise, just set it to 'DEFAULT'."
         #self.system_prompt += "Note: only initialize the variables purely based on the user's instruction, and do not fabricate any information or check the value in meta program graph."
         self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate any information."
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
         self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
 
         
-
 
     def initialize_meta_program_graph(self, user_instruction):
 
@@ -243,28 +190,6 @@ class meta_program_graph_initializer:
         return json.loads(response.choices[0].message.content)
     
 
-
-
-class ADMA_recommender:
-    def __init__(self):
-
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.system_prompt = "Given the user's instruction and a json string of list of meta data, you need to recommend top 1 meta data that best match the user's instruction."
-        self.system_prompt += " Note: only output the best meta data json string, starting with { and ending with }, with no other word or information."
-
-
-    def recommend(self, user_instruction, meta_data_list):
-        meta_data_list_string = json.dumps(meta_data_list)
-        system_prompt = self.system_prompt + "The meta data list is: " + meta_data_list_string
-
-
-        response = self.client.beta.chat.completions.parse(
-            model="gpt-4o-mini",
-            messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": user_instruction}],
-            temperature=temperature,
-        )
-        return json.loads(response.choices[0].message.content)    
 
 
 # return a string
@@ -376,22 +301,48 @@ def create_map(lat,lng):
     return map_obj
 
 
-def get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,initializer,adma_recommender,max_iter=10):
+def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter=10):
     initialized_variables = initializer.initialize_meta_program_graph(prompt)
     print(initialized_variables)
     for variable in initialized_variables:
         if initialized_variables[variable] != "DEFAULT":
             meta_program_graph[variable]["value"] = initialized_variables[variable]
+    result = {}
 
 
-    while max_iter > 0:
+
+    while max_iter >= 0:
         max_iter -= 1
         next_task = program_controller.get_next_task(prompt)
         print(next_task)
 
+
         # process different methods
-        if next_task["method"] == "None":
+        if next_task["method"] == "frontend_download_file":
+            result = {"type": "download","output": meta_program_graph["local_file_path"]["value"]}
             break
+        elif next_task["method"] == "frontend_plot_weather_data":
+            result = {"type": "plot_Realm5_data","output": meta_program_graph["local_file_path"]["value"]}
+            break
+        elif next_task["method"] == "frontend_field_bourndary_map":
+            result = {"type": "map","output": meta_program_graph["local_file_path"]["value"]}
+            break
+        elif next_task["method"] == "frontend_JD_ENREEC_field_list_printer":
+            result = {"type": "JD_field_list","output": meta_program_graph["local_file_path"]["value"]}
+            break
+        elif next_task["method"] == "frontend_ADMA_url_browser":
+            result = {"type": "url","output": meta_program_graph["ADMA_url"]["value"]}
+            break
+        elif next_task["method"] == "frontend_ADMA_meta_data_list_printer":
+            result = {"type": "object","output": meta_program_graph["ADMA_meta_data_list"]["value"]}
+            break
+        elif next_task["method"] == "frontend_ADMA_meta_data_printer":
+            result = {"type": "object","output": meta_program_graph["ADMA_meta_data"]["value"]}
+            break
+        elif next_task["method"] == "frontend_ADMA_API_file_path_list_printer":
+            result = {"type": "object","output": meta_program_graph["ADMA_API_file_path_list"]["value"]}
+            break
+
         
         elif next_task["method"] == "ADMA_list_directory":
 
@@ -518,56 +469,66 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
    
             path = meta_program_graph["ADMA_API_file_path"]["value"]
             
-            meta_program_graph["ADMA_meta_data_list"]["value"] = ADMA_search(path,search_string)
-            print(meta_program_graph["ADMA_meta_data_list"]["value"])
-            meta_program_graph["ADMA_meta_data_list"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
-            meta_program_graph["ADMA_meta_data_list"]["description"] += f"ADMA_meta_data_list is a list of meta data of the file or folder on the ADMA system under the directory {path}."
+            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_search(path,search_string)
+            print(meta_program_graph["ADMA_meta_data"]["value"])
+            meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
+            meta_program_graph["ADMA_meta_data"]["description"] += f"ADMA_meta_data is the meta data of the file or folder on the ADMA system under the directory {path}."
 
        
-        elif next_task["method"] == "ADMA_recommender":
-            recommended_meta_data = adma_recommender.recommend(prompt,meta_program_graph["ADMA_meta_data_list"]["value"])
-            meta_program_graph["ADMA_meta_data"]["value"] = recommended_meta_data
-            meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_meta_data_list"]["description"]+"\n"
-            meta_program_graph["ADMA_meta_data"]["description"] += f"ADMA_meta_data is the meta data of the file or folder on the ADMA system."
-
         elif next_task["method"] == "ADMA_url_extractor":
             
             meta_program_graph["ADMA_url"]["value"] = ADMA_url_extractor(meta_program_graph["ADMA_meta_data"]["value"])
             meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
             meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is the url of the file or directory on ADMA."
 
-        print(f"ADMA_url: {meta_program_graph['ADMA_url']['value']}, local_file_path: {meta_program_graph['local_file_path']['value']}")
-                
-                
-                
-    final_output_type = output_typer.output_type(prompt)
-    print(final_output_type)
-    output = output_formatter.format_output(prompt,final_output_type["output_type"])
-    print(f"output: {output}")
-    
 
-    return {"type": final_output_type["output_type"],"output": output}
+        #print(f"ADMA_url: {meta_program_graph['ADMA_url']['value']}, local_file_path: {meta_program_graph['local_file_path']['value']}")
+                
+                
+                
+    
+    if max_iter <0:
+        result = {"type": "error","output": "I cannot find the answer to your question. Please try again."}
+
+    return result
 
 def ai_reply(response, if_history=False):
-    if response["type"] == "string":
-        if if_history:
-            st.chat_message("assistant", avatar="🤖").write(response["output"])
-        else:
-            st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
-    elif response["type"] == "list":
-        if if_history:
-            st.chat_message("assistant", avatar="🤖").write(response["output"])
-        else:
-            st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
+    if response["type"] == "error":
+        st.chat_message("assistant", avatar="🤖").write(response["output"])
+        return
+    elif response["type"] == "download":
+        if not os.path.exists(response["output"]):
+            st.chat_message("assistant", avatar="🤖").write("No data found for the field")
+            return
+        with open(response["output"]) as f:        
+            data = f.read()
+          
+        st.download_button(label="Download",data=data,file_name=os.path.basename(response["output"]))
+        return
+    elif response["type"] == "plot_Realm5_data":
+        if not os.path.exists(response["output"]):
+            st.chat_message("assistant", avatar="🤖").write("No data found for the field")
+            return
+        with open(response["output"]) as f:        
+            data = json.load(f)
+        df = pd.DataFrame(data)
+    
+        st.line_chart(df,width=1200,height=600)
+    elif response["type"] == "JD_field_list":
+        if not os.path.exists(response["output"]):
+            st.chat_message("assistant", avatar="🤖").write("No data found for the field")
+            return
+        with open(response["output"]) as f:
+            output = f.read()
+        
+        st.json(json.loads(output),expanded=False)
     elif response["type"] == "object":
-        if if_history:
-            #with st.chat_message("assistant", avatar="🤖"):
-            #    st.json(json.loads(response["output"]))
-            st.chat_message("assistant", avatar="🤖").write(response["output"])
-        else:
-            #with st.chat_message("assistant", avatar="🤖"):
-            #    st.json(json.loads(response["output"]))
-            st.chat_message("assistant", avatar="🤖").write(stream_data(response["output"]))
+
+        st.json(response["output"],expanded=False)
+
+
+  
+
     elif response["type"] == "url":
         html_code = f"""
             <iframe src={response["output"]} width="1250" height="800" frameborder="0"></iframe>
@@ -625,20 +586,9 @@ def ai_reply(response, if_history=False):
                 ).add_to(m)
             
             folium_static(m,height=600,width=1200)
-    elif response["type"] == "file":
-        with open(response["output"]) as f:
-            output = f.read()
+
         
-        st.json(json.loads(output),expanded=False)
-    elif response["type"] == "data":
-        if not os.path.exists(response["output"]):
-            st.chat_message("assistant", avatar="🤖").write("No data found for the field")
-            return
-        with open(response["output"]) as f:        
-            data = json.load(f)
-        df = pd.DataFrame(data)
-    
-        st.line_chart(df,width=1200,height=600)
+
 
 
 
@@ -695,26 +645,23 @@ def main():
     
     if 'program_controller' not in st.session_state:
         st.session_state.program_controller = controller(meta_program_graph,executed_methods)
-    if 'output_formatter' not in st.session_state:
-        st.session_state.output_formatter = final_output_formatter(meta_program_graph)
-    if 'output_typer' not in st.session_state:
-        st.session_state.output_typer = final_output_typer(meta_program_graph)
+
+
     if 'initializer' not in st.session_state:
         st.session_state.initializer = meta_program_graph_initializer(meta_program_graph)
-    if 'adma_recommender' not in st.session_state:
-        st.session_state.adma_recommender = ADMA_recommender()
+
 
  
     program_controller = st.session_state.program_controller
-    output_formatter = st.session_state.output_formatter
-    output_typer = st.session_state.output_typer
+
+ 
     initializer = st.session_state.initializer
-    adma_recommender = st.session_state.adma_recommender
+
 
     program_controller.executed_methods = []
     program_controller.meta_program_graph = meta_program_graph
-    output_formatter.meta_program_graph = meta_program_graph
-    output_typer.meta_program_graph = meta_program_graph
+ 
+
     initializer.meta_program_graph = meta_program_graph
 
 
@@ -745,7 +692,7 @@ def main():
       st.chat_message("user",avatar="👨‍🎓").write(prompt)
 
       # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-      response = get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,initializer,adma_recommender,max_iter=20)
+      response = get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter=20)
 
       ai_reply(response)
 

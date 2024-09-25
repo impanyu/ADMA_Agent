@@ -208,7 +208,10 @@ def ADMA_search(root_dir, search_box, category=["All"], mode=["All"], format=["A
 
     response = requests.get(list_url)
     if response.status_code == 200:
-        return response.json()[:5]  # Assuming the API returns a JSON list of meta data, only return 5 results
+        if len(response.json()) == 0:
+            return []
+        else:
+            return response.json()[0]  # Assuming the API returns a JSON list of meta data, only return 1 result
     else:
         print(f"Failed to search directory: {root_dir}, Status code: {response.status_code}, {response.text}")
         return []

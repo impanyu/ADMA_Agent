@@ -9,15 +9,15 @@
     "ADMA_meta_data":{
         "type":"ADMA meta data",
         "description":"ADMA_meta_data is the meta data of the file or folder on the ADMA server.",
-        "output_from":["ADMA_get_meta_data","ADMA_recommender"],
-        "input_to":["ADMA_url_extractor","ADMA_push_to_meta_data_list"],
+        "output_from":["ADMA_get_meta_data"],
+        "input_to":["ADMA_url_extractor","ADMA_push_to_meta_data_list","frontend_ADMA_meta_data_printer"],
         "value":{}
     },
     "ADMA_API_file_path_list":{
         "type":"list of ADMA API file path",
         "description":"ADMA_API_file_path_list is a list of paths in the ADMA system.",
         "output_from":["ADMA_list_directory"],
-        "input_to":["ADMA_API_file_path_list_iterator"],
+        "input_to":["ADMA_API_file_path_list_iterator","frontend_ADMA_API_file_path_list_printer"],
         "value":[]
     },
     "ADMA_API_file_path_list_index":{
@@ -31,14 +31,14 @@
         "type":"list of ADMA meta data",
         "description":"ADMA_meta_data_list is a list of ADMA meta data of the file or folder on the ADMA server.",
         "output_from":["ADMA_push_to_meta_data_list","ADMA_search"],
-        "input_to":["ADMA_recommender"],
+        "input_to":["frontend_ADMA_meta_data_list_printer"],
         "value":[]
     },
     "ADMA_url":{
         "type":"ADMA url",
         "description":"ADMA_url is the url of the menu on the ADMA server.",
         "output_from":["ADMA_menu_option","ADMA_url_extractor"],
-        "input_to":[],
+        "input_to":["frontend_ADMA_url_browser"],
         "value":""
     },
     "ADMA_menu_name":{
@@ -59,7 +59,7 @@
         "type":"local file path",
         "description":"local_file_path is the file path of the file on the serv.",
         "output_from":["JD_ENREEC_boundary_in_field","ADMA_download_file","Reaml5_format_data_for_plot"],
-        "input_to":["Realm5_format_data_for_plot"],
+        "input_to":["frontend_JD_ENREEC_field_list_printer","frontend_field_bourndary_map","Realm5_format_data_for_plot"],
         "value":""
     },
     "JD_ENREEC_field_name":{
@@ -98,7 +98,7 @@
         "type":"user instruction",
         "description":"user_instruction is the instruction of the user.",
         "output_from":[],
-        "input_to":["ADMA_recommender"],
+        "input_to":[],
         "value":""
     },
 
@@ -211,22 +211,79 @@
     },
  
 
-    "ADMA_recommender":{
-        "type":"method",
-        "call_condition": "",
-        "description":"Given a list of meta data and the user's instruction, return the recommended meta data.",
-        "input":["ADMA_meta_data_list","user_instruction"],
-        "output":["ADMA_meta_data"]
-    },
-
-
     "ADMA_url_extractor":{
         "type":"method",
         "call_condition": "",
         "description":"Given a ADMA meta data, return the url on adma.",
         "input":["ADMA_meta_data"],
         "output":["ADMA_url"]
+    },
+
+    "frontend_ADMA_url_browser":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given an url, open the url in a web browser.",
+        "input":["ADMA_url"],
+        "output":[]
+    },
+
+    "frontend_ADMA_API_file_path_list_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a list of ADMA API file path, print the file path in a list format.",
+        "input":["ADMA_API_file_path_list"],
+        "output":[]
+    },
+
+    "frontend_ADMA_meta_data_list_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a list of ADMA meta data, print the meta data in a list format.",
+        "input":["ADMA_meta_data_list"],
+        "output":[]
+    },
+
+    "frontend_ADMA_meta_data_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a ADMA meta data, print the meta data in a readable format.",
+        "input":["ADMA_meta_data"],
+        "output":[]
+    },
+
+    "frontend_JD_ENREEC_field_list_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path containing a json file of JD ENREEC fields, print the file content in a readable format.",
+        "input":["local_file_path"],
+        "output":[]
+    },
+
+    "frontend_field_bourndary_map":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path containing boundary of JD ENREEC field, show the boundary on a map.",
+        "input":["local_file_path"],
+        "output":[]
+    },
+
+    "frontend_plot_weather_data":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path containing the realm5 weather data file, plot the weather data.",
+        "input":["local_file_path"],
+        "output":[]
+    },
+
+    "frontend_download_file":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path, download the file to the local file path.",
+        "input":["local_file_path"],
+        "output":[]
     }
+
+
 
 
 
