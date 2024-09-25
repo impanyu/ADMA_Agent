@@ -221,7 +221,7 @@ class meta_program_graph_initializer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
-        self.system_prompt += "You can initialize the variables to DEFAULT, or to any value based on the user's instruction. If you are not sure what value to set, just set it to DEFAULT."
+        self.system_prompt += "You you find information from the user's instruction, you can set the value based on the information. Otherwise, just set it to DEFAULT."
         self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate any information."
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
         self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
