@@ -37,32 +37,14 @@ controller_output = {
                             "method": {
                                 "type": "string",
                                 "description": "The name of the method to call."
-                            },
-                            "args": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "type": "string",
-                                            "description": "The name of the argument, which should be one of the keys in the meta program graph."
-                                        },
-                                        "value": {
-                                            "type": "string",
-                                            "description": "The value of the argument, which should be one of the values in the meta program graph. Set to DEFAULT if you want to use the value in the meta program graph, otherwise set to the value you want to use."
-                                        }
-                                    },
-                                    "required": ["name", "value"],
-                                    "additionalProperties": False
-                                },
-                                "description": "List of argument name-value pairs."
                             }
                         },
                         "required": ["method", "args"],
                         "additionalProperties": False
                     }
                 }
-            }
+}
+            
 
 output_type = {
                 "type": "json_schema",
@@ -160,16 +142,15 @@ class controller:
         self.system_prompt = "You are a program controller. The user will tell you what they want to do."
         self.system_prompt += "You'll be given a sequence of methods, which has been executed in the previous steps. Try to find the method that should be executed in next step."
         self.system_prompt += "Try to explore the meta program graph as much as possible, if one execution sequence is not working, start from scratch and try another execution sequence."
-        self.system_prompt += "Check each method in the meta program graph, check the value of each variable in the input list of each method, or set the value of some variable based on the instruction of the user. Choose the most appropriate method which once called will move the status towards the goal of user's instruction."
-        self.system_prompt += "Given the following meta program graph which contains the information of each method and each variable, you need to decide if you should call any method and if yes, the method to call."
-        self.system_prompt += 'If you find enough information in current meta program graph to answer user\'s question, you should make no method call and you should only output a json with the following format: {"method": "None","args": []}, with no other extra word at all.'
-        self.system_prompt += 'Else if you do not find enough information in current meta program graph to answer user\'s question, you need to output a json with the following format: {"method": "the name of the method to call","args": [{"name": "the name of the argument", "value": "the value of the argument"},...]}, with no other extra word at all.'
-        self.system_prompt += 'The name of the method should match one of the methods in the meta program graph, and the arg_name should match one of the keys in the meta program graph, and also be the element in the "input" field of the method. If you decide to use the values in the meta program graph, you only need to set the values of the arguments as "DEFAULT", otherwise you need to set the values of the arguments as the values you want to use.'
+        self.system_prompt += "Check each method in the meta program graph, check the value of each variable in the input list of each method. Choose the most appropriate method which once called will move the status towards the goal of user's instruction."
+        self.system_prompt += "Given the following meta program graph which contains the information of each method and each variable, you need to decide if you should call any method."
+        self.system_prompt += 'If you find enough information in current meta program graph to answer user\'s instruction, you should make no further method call and you should only output a json with the following format: {"method": "None"}, with no other extra word at all.'
+        self.system_prompt += 'Else if you do not find enough information in current meta program graph to answer user\'s instruction, you need to output a json with the following format: {"method": "the name of the method to call"}, with no other extra word at all.'
+        self.system_prompt += 'The name of the method should match one of the methods in the meta program graph. '
         self.system_prompt += 'Try your best to extract required information from the meta program graph, and reduce the needs to make method calls. But do not fabricate any information.'
-        self.system_prompt += 'How to extract required information from the meta program graph? You can check the description of each variable and the correspondingvalue of each variable. Compare this information with user\'s question, and check if you can find the answer.'
-        self.system_prompt += 'You can set the value of any variable to whatever you want, but DO NOT make up any information that does not exist in user\'s instruction.'
+        self.system_prompt += 'How to extract required information from the meta program graph? You can check the description of each variable and the correspondingvalue of each variable. Compare this information with user\'s instruction, and check if you can find the answer.'
         self.system_prompt += 'When you decide which method to call, you need to check the whole meta program graph to make sure you do not miss any information.'
-        self.system_prompt += "If you want to plot the data, you need to make sure 'tmp/Realm5_formatted_data.json' is the value of Realm5_format_data_for_plot&formatted_data_file_path in the meta program graph. "
+        #self.system_prompt += "If you want to plot the data, you need to make sure 'tmp/Realm5_formatted_data.json' is the value of local_file_path in the meta program graph. "
     
     def get_next_task(self,user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
