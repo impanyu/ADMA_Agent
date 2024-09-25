@@ -539,7 +539,10 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
 
        
         elif next_task["method"] == "ADMA_recommender":
-            meta_program_graph["ADMA_meta_data_list"]["value"] = adma_recommender.recommend(prompt,meta_program_graph["ADMA_meta_data_list"]["value"])
+            recommended_meta_data = adma_recommender.recommend(prompt,meta_program_graph["ADMA_meta_data_list"]["value"])
+            meta_program_graph["ADMA_meta_data"]["value"] = recommended_meta_data
+            meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_meta_data_list"]["description"]+"\n"
+            meta_program_graph["ADMA_meta_data"]["description"] += f"ADMA_meta_data is the meta data of the file or folder on the ADMA system."
 
         elif next_task["method"] == "ADMA_url_extractor":
             
