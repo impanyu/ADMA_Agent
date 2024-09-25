@@ -493,19 +493,19 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
         elif next_task["method"] == "Realm5_format_data_for_plot":
             # this should be changed to use an agent to set the value based on user's instruction
 
-            if "Realm5_variable_names" in args_dict and not args_dict["Realm5_variable_names"] == "DEFAULT":
-                variable_names = args_dict["Realm5_variable_names"]
+            if "Realm5_variable_name_list" in args_dict and not args_dict["Realm5_variable_name_list"] == "DEFAULT":
+                variable_names = args_dict["Realm5_variable_name_list"]
                 variable_names = json.loads(variable_names.replace("'",'"'))
-                meta_program_graph["Realm5_variable_names"]["value"] = variable_names
-                meta_program_graph["Realm5_variable_names"]["description"] = f"Realm5_variable_names is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure']."
+                meta_program_graph["Realm5_variable_name_list"]["value"] = variable_names
+                meta_program_graph["Realm5_variable_name_list"]["description"] = f"Realm5_variable_name_list is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure']."
             else:
-                variable_names = meta_program_graph["Realm5_variable_names"]["value"]
+                variable_names = meta_program_graph["Realm5_variable_name_list"]["value"]
             
             
             meta_program_graph["local_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["local_file_path"]["value"],variable_names)
             print(meta_program_graph["local_file_path"]["value"])
             meta_program_graph["local_file_path"]["description"] = meta_program_graph["local_file_path"]["description"]+"\n"
-            meta_program_graph["local_file_path"]["description"] += meta_program_graph["Realm5_variable_names"]["description"]+"\n"
+            meta_program_graph["local_file_path"]["description"] += meta_program_graph["Realm5_variable_name_list"]["description"]+"\n"
             meta_program_graph["local_file_path"]["description"] += f"local_file_path is the file path of the formatted Realm5 data for plot."
 
         elif next_task["method"] == "ADMA_search":
