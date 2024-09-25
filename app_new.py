@@ -380,7 +380,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 index = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
 
-            output_list = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
+            output_list = meta_program_graph["ADMA_API_file_path_list"]["value"]
 
             
 
