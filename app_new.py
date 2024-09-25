@@ -540,6 +540,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
     print(final_output_type)
     output = output_formatter.format_output(prompt,final_output_type["output_type"])
     print(f"output: {output}")
+    print(f"ADMA_url: {meta_program_graph['ADMA_url']['value']}, local_file_path: {meta_program_graph['local_file_path']['value']}")
 
     return {"type": final_output_type["output_type"],"output": output}
 
