@@ -706,9 +706,9 @@ def main():
         st.session_state.output_formatter = final_output_formatter(meta_program_graph)
     if 'output_typer' not in st.session_state:
         st.session_state.output_typer = final_output_typer(meta_program_graph)
-    if 'ADMA_search_string_generator' not in st.session_state:
+    if 'search_string_generator' not in st.session_state:
         st.session_state.search_string_generator = ADMA_search_string_generator()
-    if 'ADMA_recommender' not in st.session_state:
+    if 'adma_recommender' not in st.session_state:
         st.session_state.adma_recommender = ADMA_recommender()
 
  
