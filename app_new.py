@@ -116,7 +116,7 @@ class controller:
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a program controller. The user will tell you what they want to do."
         self.system_prompt += "You'll be given a sequence of methods, which has been executed in the previous steps. Try to find the method that should be executed in next step."
-        self.system_prompt += "Try your best to explore the meta program graph in a depth-first manner. Make full use of the methods you have in meta program graph."
+        self.system_prompt += "Try your best stop as soon as possible, if you find enough information."
         self.system_prompt += "Check each method in the meta program graph, check the value of each variable in the input list of each method, or set the value of some variable based on the instruction of the user. Choose the most appropriate method which once called will move the status towards the goal of user's instruction."
         self.system_prompt += "Given the following meta program graph which contains the information of each method and each variable, you need to decide if you should call any method and if yes, the method to call."
         self.system_prompt += 'If you find enough information in current meta program graph to answer user\'s question, you should make no method call and you should only output a json with the following format: {"method": "None","args": []}, with no other extra word at all.'
