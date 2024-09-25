@@ -364,6 +364,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 path = meta_program_graph["ADMA_API_file_path"]["value"]
             # update the value of the meta data
+            print(f"ADMA_API_file_path: {path}")
             meta_program_graph["ADMA_meta_data"]["value"] = ADMA_get_meta_data(path)
             # update the description of the meta data
             meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
