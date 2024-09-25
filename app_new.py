@@ -108,9 +108,9 @@ initializer_output = {
                     "type": "string",
                     "description": "ADMA_API_file_path."
                 },
-                "Date_string": {
+                "Realm5_date_str": {
                     "type": "string",
-                    "description": "Date_string."
+                    "description": "Realm5_date_str."
                 },
                 "Field_ID": {
                     "type": "string",
@@ -127,7 +127,7 @@ initializer_output = {
                     }
                 }
             },
-            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Date_string", "Field_ID", "Field_name", "Realm5_variable_name_list"],
+            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "Field_ID", "Field_name", "Realm5_variable_name_list"],
             "additionalProperties": False   
         }
     }
@@ -221,7 +221,7 @@ class meta_program_graph_initializer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
-        self.system_prompt += "Note: you can only initialize some of these variables: ADMA_search_string,ADMA_menu_name, ADMA_API_file_path, Date_string, Field_ID, Field_name, Realm5_variable_name_list. You do not need to initialize all of above variables, only those you feel necessary."
+        self.system_prompt += "Note: you can only initialize some of these variables: ADMA_search_string,ADMA_menu_name, ADMA_API_file_path, Realm5_date_str, Field_ID, Field_name, Realm5_variable_name_list. You do not need to initialize all of above variables, only those you feel necessary."
         self.system_prompt += "You can initialize the variables to DEFAULT, or to any value based on the user's instruction. If you are not sure what value to set, just set it to DEFAULT."
         self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate any information."
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
