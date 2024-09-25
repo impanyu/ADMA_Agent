@@ -381,6 +381,7 @@ def create_map(lat,lng):
 
 def get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,initializer,adma_recommender,max_iter=10):
     initialized_variables = initializer.initialize_meta_program_graph(prompt)
+    print(initialized_variables)
     for variable in initialized_variables:
         if initialized_variables[variable] != "DEFAULT":
             meta_program_graph[variable]["value"] = initialized_variables[variable]
