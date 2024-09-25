@@ -74,7 +74,7 @@ output_type = {
                         "properties": {
                             "output_type": {
                                 "type": "string",
-                                "enum": ["string", "map","number","UI","object","url","file","data"],
+                                "enum": ["string", "map","url","file","data"],
                                 "description": "The type of the output."
                             }
                         },
@@ -156,12 +156,12 @@ class final_output_typer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, map, number, UI, object, url, file,data."
-        self.system_prompt += "If you see local_file_path has a file path and asked to draw a map, you should output the type as map."
-        self.system_prompt += "If you see local_file_path has some value, you should output the type as file. Except the following cases:"
-        self.system_prompt += "If you see local_file_path has a file path of the realm5 data and asked to plot the data, you should output the type as data."
-        self.system_prompt += "If you see local_file_path has a file path of the soil data, you should output the type as data."
-        self.system_prompt += "If you see a ADMA_url contains a url, you should output the type as url."
+        self.system_prompt += "The type should be one of the following: string, map,  url, file, data."
+        self.system_prompt += "In meta program graph, if you see local_file_path contains a file path and you are asked to draw a map, you should output the type as map."
+        self.system_prompt += "In meta program graph, if you see local_file_path contains some path, you should output the type as file. Except the following cases:"
+        self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the realm5 data and asked to plot the data, you should output the type as data."
+        self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the soil data, you should output the type as data."
+        self.system_prompt += "In meta program graph, if you see a ADMA_url contains a url, you should output the type as url."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
@@ -223,7 +223,7 @@ class final_output_formatter:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output formatter. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the final answer or result, as closed as possible to user's instruction."
-        self.system_prompt += "Your output should be 100 percent based on the information extracted from current meta program graph, do not fabricate any information."
+        self.system_prompt += "Your output should be 100 percent based on the information extracted from current meta program graph, do not fabricate any information!!"
 
     def format_output(self, user_instruction,output_type):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
@@ -426,7 +426,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             print(meta_program_graph["ADMA_url"]["value"])
             meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_menu_name"]["description"]+"\n"
             meta_program_graph["ADMA_url"]["description"] += meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
-            meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is the url of the menu on the ADMA server."
+            meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is a url on the ADMA server."
         
         elif next_task["method"] == "JD_ENREEC_boundary_in_field":
             # this should be changed to use an agent to set the value based on user's instruction
