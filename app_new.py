@@ -529,10 +529,10 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 path = meta_program_graph["ADMA_API_file_path"]["value"]
             
-            meta_program_graph["ADMA_API_file_path_list"]["value"] = ADMA_search(path,search_string)
-            print(meta_program_graph["ADMA_API_file_path_list"]["value"])
-            meta_program_graph["ADMA_API_file_path_list"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
-            meta_program_graph["ADMA_API_file_path_list"]["description"] += f"ADMA_API_file_path_list is a list of paths under the directory {path} in the ADMA system."
+            meta_program_graph["ADMA_meta_data_list"]["value"] = ADMA_search(path,search_string)
+            print(meta_program_graph["ADMA_meta_data_list"]["value"])
+            meta_program_graph["ADMA_meta_data_list"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
+            meta_program_graph["ADMA_meta_data_list"]["description"] += f"ADMA_meta_data_list is a list of meta data of the file or folder on the ADMA system under the directory {path}."
 
         elif next_task["method"] == "ADMA_search_string_generator":
             meta_program_graph["ADMA_search_string"]["value"] = search_string_generator.generate_search_string(prompt)
