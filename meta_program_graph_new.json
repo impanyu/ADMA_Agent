@@ -124,7 +124,7 @@
     "ADMA_get_meta_data":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a path on ADMA, return the meta data of the path on the ADMA server. If you are asked to get the meta data of a path, you should call this method, with the path set to the path.",
+        "description":"Given a path on ADMA, return the meta data of the path on the ADMA server. ",
         "input":["ADMA_API_file_path"],
         "output":["ADMA_meta_data"]
     },
