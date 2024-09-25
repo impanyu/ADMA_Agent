@@ -372,10 +372,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
         max_iter -= 1
         next_task = program_controller.get_next_task(prompt)
         print(next_task)
-        # format next_task["args"] to dict
-        args_dict = {}
-        for arg in next_task["args"]:
-            args_dict[arg["name"]] = arg["value"]
+
         # process different methods
         if next_task["method"] == "None":
             break
