@@ -471,6 +471,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
                 date_str = meta_program_graph["Realm5_date_str"]["value"]
 
             meta_program_graph["ADMA_API_file_path"]["value"] = Realm5_generate_file_url(date_str)
+            
             print(meta_program_graph["ADMA_API_file_path"]["value"])
             meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["Realm5_generate_file_url&date_str"]["description"]+"\n"
             meta_program_graph["ADMA_API_file_path"]["description"] += f"ADMA_API_file_path is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
@@ -501,12 +502,14 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             else:
                 variable_names = meta_program_graph["Realm5_variable_name_list"]["value"]
             
-            
+            old_path = meta_program_graph["local_file_path"]["value"]
             meta_program_graph["local_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["local_file_path"]["value"],variable_names)
-            print(meta_program_graph["local_file_path"]["value"])
-            meta_program_graph["local_file_path"]["description"] = meta_program_graph["local_file_path"]["description"]+"\n"
-            meta_program_graph["local_file_path"]["description"] += meta_program_graph["Realm5_variable_name_list"]["description"]+"\n"
-            meta_program_graph["local_file_path"]["description"] += f"local_file_path is the file path of the formatted Realm5 data for plot."
+            if not meta_program_graph["local_file_path"]["value"] == old_path:
+
+                print(meta_program_graph["local_file_path"]["value"])
+                meta_program_graph["local_file_path"]["description"] = meta_program_graph["local_file_path"]["description"]+"\n"
+                meta_program_graph["local_file_path"]["description"] += meta_program_graph["Realm5_variable_name_list"]["description"]+"\n"
+                meta_program_graph["local_file_path"]["description"] += f"local_file_path is the file path of the formatted Realm5 data for plot."
 
         elif next_task["method"] == "ADMA_search":
             # this should be changed to use an agent to set the value based on user's instruction
