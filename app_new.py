@@ -112,28 +112,44 @@ initializer_output = {
         "name": "initializer_output",
         "strict": True,
         "schema": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "variable": {
-                        "type": "string",
-                        "enum": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Date_string", "Field_ID", "Field_name", "Realm5_variable_name_list"],
-                        "description": "The name of the variable to initialize."
-                    },
-                    "value": {
-                        "type": "string",
-                        "description": "The value of the variable to initialize."
-                    }
+            "type": "object",
+            "properties": {
+                "ADMA_search_string": {
+                    "type": "string",
+                    "description": "ADMA_search_string."
                 },
-                "required": ["variable", "value"],
-                "additionalProperties": False
-            }
+                "ADMA_menu_name": {
+                    "type": "string",
+                    "description": "ADMA_menu_name."
+                },
+                "ADMA_API_file_path": {
+                    "type": "string",
+                    "description": "ADMA_API_file_path."
+                },
+                "Date_string": {
+                    "type": "string",
+                    "description": "Date_string."
+                },
+                "Field_ID": {
+                    "type": "string",
+                    "description": "Field_ID."
+                },
+                "Field_name": {
+                    "type": "string",
+                    "description": "Field_name."
+                },
+                "Realm5_variable_name_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Date_string", "Field_ID", "Field_name", "Realm5_variable_name_list"],
+            "additionalProperties": False   
         }
     }
 }
-
-
 
 
 class controller:
@@ -211,6 +227,7 @@ class meta_program_graph_initializer:
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
         self.system_prompt += "Note: you can only initialize some of these variables: ADMA_search_string,ADMA_menu_name, ADMA_API_file_path, Date_string, Field_ID, Field_name, Realm5_variable_name_list. You do not need to initialize all of above variables, only those you feel necessary."
+        self.system_prompt += "You can initialize the variables to DEFAULT, or to any value based on the user's instruction. If you are not sure what value to set, just set it to DEFAULT."
         self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate information."
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
         self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
@@ -365,7 +382,7 @@ def create_map(lat,lng):
 def get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,initializer,adma_recommender,max_iter=10):
     initialized_variables = initializer.initialize_meta_program_graph(prompt)
     print(initialized_variables)
-    
+
 
     while max_iter > 0:
         max_iter -= 1
