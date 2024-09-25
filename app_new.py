@@ -145,9 +145,10 @@ class controller:
 
         self.system_prompt += "Try to explore the meta program graph in a depth-first manner, if there's no method in current exploration thread, try to find a new method to call."
         self.system_prompt += "Check each method in the meta program graph, check the value of each variable in the input list of each method. Choose the most appropriate method which once called will move the status towards the goal of user's instruction."
-        self.system_prompt += "Given the following meta program graph which contains the information of each method and each variable, you need to decide if you should call any method."
-        self.system_prompt += 'If you find enough information in current meta program graph to answer user\'s instruction, you should make no further method call and you should only output a json with the following format: {"method": "None"}, with no other extra word at all.'
-        self.system_prompt += 'Else if you do not find enough information in current meta program graph to answer user\'s instruction, you need to output a json with the following format: {"method": "the name of the method to call"}, with no other extra word at all.'
+        self.system_prompt += "You only need to observe the value and description of these variables: ADMA_url and local_file_path"
+        self.system_prompt += 'If you are confident you can answer user\'s instruction, based on these variables, you should make no further method call and you should only output a json with the following format: {"method": "None"}, with no other extra word at all.'
+        
+        self.system_prompt += 'Otherwise, try to find a method which may lead you to the answer of user\'s instruction, you need to output a json with the following format: {"method": "the name of the method to call"}, with no other extra word at all.'
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph. '
         self.system_prompt += 'Try your best to extract required information from the meta program graph, and reduce the needs to make method calls. But do not fabricate any information.'
         self.system_prompt += 'How to extract required information from the meta program graph? You can check the description of each variable and the correspondingvalue of each variable. Compare this information with user\'s instruction, and check if you can find the answer.'
@@ -182,12 +183,23 @@ class final_output_typer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, map,  url, file, data,object."
-        self.system_prompt += "In meta program graph, if you see local_file_path contains a file path and you are asked to draw a map, you should output the type as map."
-        self.system_prompt += "In meta program graph, if you see local_file_path contains some path, you should output the type as file."
-        self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the realm5 data and asked to plot the data, you should output the type as data."
+        self.system_prompt += "You only need to observe the value and description of these variables: ADMA_url and local_file_path"
+        #self.system_prompt += "In meta program graph, if you see a ADMA_url contains a url, you should output the type as url."
+        self.system_prompt += "Compare the description and value of these variables with user's instruction, and decide the type of the output, which can best represent the output."
+        self.system_prompt += "url means the output is a url that can be opened in a web browser."
+        self.system_prompt += "map means the output will be rendered in a map, like the boundary of a field."
+        self.system_prompt += "file means the output is a file."
+        self.system_prompt += "data means the output is some data, which can be plotted."
+        self.system_prompt += "object means the output is a json string."
+        self.system_prompt += "if local_file_path contains a file path containing 'boundary', you should output the type as map."
+        self.system_prompt += "if local_file_path contains a file path containing realm5 data, you should output the type as data."
+
+
+        #self.system_prompt += "If you see local_file_path contains a file path and you are asked to draw a map, you should output the type as map."
+        #self.system_prompt += "In meta program graph, if you see local_file_path contains some path, you should output the type as file."
+        #self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the realm5 data and asked to plot the data, you should output the type as data."
         #self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the soil data, you should output the type as data."
-        self.system_prompt += "In meta program graph, if you see a ADMA_url contains a url, you should output the type as url."
+        
         #self.system_prompt += "In meta program graph, if you see a meta data, you should output the type as object."
 
     def output_type(self, user_instruction):
