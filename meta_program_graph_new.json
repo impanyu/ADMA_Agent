@@ -110,7 +110,7 @@
     "ADMA_list_directory": {
         "type":"method",
         "call_condition": "",
-        "description": "Given a ADMA API file path of directory on ADMA, return the list of ADMA abs paths under the directory.",
+        "description": "Given a ADMA API file path of directory on ADMA, return the list of paths for all the subdirectories and files under the directory.",
         "input":["ADMA_API_file_path"],
         "output":["ADMA_API_file_path_list"]
     },
