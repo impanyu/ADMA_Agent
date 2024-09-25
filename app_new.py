@@ -533,6 +533,8 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["ADMA_url"]["value"] = ADMA_url_extractor(meta_program_graph["ADMA_meta_data"]["value"])
             meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
             meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is the url of the file or directory on ADMA."
+
+        print(f"ADMA_url: {meta_program_graph['ADMA_url']['value']}, local_file_path: {meta_program_graph['local_file_path']['value']}")
                 
                 
                 
@@ -540,7 +542,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
     print(final_output_type)
     output = output_formatter.format_output(prompt,final_output_type["output_type"])
     print(f"output: {output}")
-    print(f"ADMA_url: {meta_program_graph['ADMA_url']['value']}, local_file_path: {meta_program_graph['local_file_path']['value']}")
+    
 
     return {"type": final_output_type["output_type"],"output": output}
 
