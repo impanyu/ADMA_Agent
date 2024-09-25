@@ -50,7 +50,7 @@
     },
     "JD_ENREEC_field_id":{
         "type":"JD field id",
-        "description":"JD_ENREEC_field_id is the id of the field in ENREEC from John Deere. Note, this field_id is a long string, like 514a1e63-0000-1000-4052-e1e1e1263770, which is different from the field name, like 1863N001863.",
+        "description":"JD_ENREEC_field_id is the id of the field in ENREEC from John Deere. Note, this field_id is a long string, like 514a1e63-0000-1000-4052-e1e1e1263770, which is different from the field name, like 1863.",
         "output_from":["JD_ENREEC_field_id_from_name"],
         "input_to":["JD_ENREEC_boundary_in_field"],
         "value":""
