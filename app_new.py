@@ -112,11 +112,11 @@ initializer_output = {
                     "type": "string",
                     "description": "Realm5_date_str."
                 },
-                "Field_ID": {
+                "JD_ENREEC_field_id": {
                     "type": "string",
                     "description": "Field_ID."
                 },
-                "Field_name": {
+                "JD_ENREEC_field_name": {
                     "type": "string",
                     "description": "Field_name."
                 },
