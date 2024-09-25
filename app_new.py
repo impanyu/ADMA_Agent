@@ -39,7 +39,7 @@ controller_output = {
                                 "description": "The name of the method to call."
                             }
                         },
-                        "required": ["method", "args"],
+                        "required": ["method"],
                         "additionalProperties": False
                     }
                 }
