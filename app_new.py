@@ -223,7 +223,7 @@ class final_output_formatter:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output formatter. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the final answer or result, as closed as possible to user's instruction."
-        self.system_prompt += "Your output should 100 percent based on the information extracted from current meta program graph, do not fabricate any information."
+        self.system_prompt += "Your output should be 100 percent based on the information extracted from current meta program graph, do not fabricate any information."
 
     def format_output(self, user_instruction,output_type):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
