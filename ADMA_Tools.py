@@ -218,7 +218,10 @@ def ADMA_url_extractor(meta_data):
     """Extract the ADMA url from the ADMA meta data"""
     # the abs_path is in the absolute path format of /data/username/ag_data/.../file_name, extract the path starting from the username directory
     # return the url for the path on adma
-    abs_path = meta_data["abs_path"]
+    if "abs_path" not in meta_data:
+        abs_path = ""
+    else:
+        abs_path = meta_data["abs_path"]
     root_dir = "https://adma.hopto.org/files.html?current_path="
     adma_web_path = "/".join(abs_path.split("/")[2:])
     return f"{root_dir}{adma_web_path}"
