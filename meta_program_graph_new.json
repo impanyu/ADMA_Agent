@@ -88,7 +88,7 @@
 
     "ADMA_search_string":{
         "type":"ADMA_search_string",
-        "description":"ADMA_search_string is the search string of the search on ADMA.",
+        "description":"ADMA_search_string is the search string of the search on ADMA. This value is a single world extracted from user's instruction, or a single world related to the user's instruction.",
         "output_from":[],
         "input_to":["ADMA_search"],
         "value":""
@@ -226,15 +226,8 @@
         "description":"Given a ADMA meta data, return the url on adma.",
         "input":["ADMA_meta_data"],
         "output":["ADMA_url"]
-    },
-
-    "ADMA_search_string_generator":{
-        "type":"method",
-        "call_condition": "",
-        "description":"Given the user_instruction, return the search string for the ADMA search.",
-        "input":["user_instruction"],
-        "output":["ADMA_search_string"]
     }
+
 
 
 
