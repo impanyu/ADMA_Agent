@@ -653,8 +653,6 @@ def main():
 
  
     program_controller = st.session_state.program_controller
-
- 
     initializer = st.session_state.initializer
 
 

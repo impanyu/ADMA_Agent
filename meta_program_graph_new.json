@@ -278,7 +278,7 @@
     "frontend_download_file":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a local file path, download the file to the local file path.",
+        "description":"Given a local file path, download the file to the local file path. If the user asked to download a file, you should call this method.",
         "input":["local_file_path"],
         "output":[]
     }
