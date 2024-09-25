@@ -473,7 +473,7 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
             meta_program_graph["ADMA_API_file_path"]["value"] = Realm5_generate_file_url(date_str)
             
             print(meta_program_graph["ADMA_API_file_path"]["value"])
-            meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["Realm5_generate_file_url&date_str"]["description"]+"\n"
+            meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["Realm5_date_str"]["description"]+"\n"
             meta_program_graph["ADMA_API_file_path"]["description"] += f"ADMA_API_file_path is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
 
         elif next_task["method"] == "ADMA_download_file":
