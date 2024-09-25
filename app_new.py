@@ -74,7 +74,7 @@ output_type = {
                         "properties": {
                             "output_type": {
                                 "type": "string",
-                                "enum": ["string", "map","url","file","data"],
+                                "enum": ["string", "map","url","file","data","object"],
                                 "description": "The type of the output."
                             }
                         },
@@ -156,12 +156,13 @@ class final_output_typer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, map,  url, file, data."
+        self.system_prompt += "The type should be one of the following: string, map,  url, file, data,object."
         self.system_prompt += "In meta program graph, if you see local_file_path contains a file path and you are asked to draw a map, you should output the type as map."
         self.system_prompt += "In meta program graph, if you see local_file_path contains some path, you should output the type as file. Except the following cases:"
         self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the realm5 data and asked to plot the data, you should output the type as data."
         self.system_prompt += "In meta program graph, if you see local_file_path contains a file path of the soil data, you should output the type as data."
         self.system_prompt += "In meta program graph, if you see a ADMA_url contains a url, you should output the type as url."
+        self.system_prompt += "In meta program graph, if you see a meta data, you should output the type as object."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
