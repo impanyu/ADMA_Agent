@@ -233,7 +233,7 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
         elif next_task["method"] == "frontend_plot_weather_data":
             result = {"type": "plot_Realm5_data","output": meta_program_graph["local_file_path"]["value"]}
             break
-        elif next_task["method"] == "frontend_field_bourndary_map":
+        elif next_task["method"] == "frontend_field_boundary_map":
             result = {"type": "map","output": meta_program_graph["local_file_path"]["value"]}
             break
         elif next_task["method"] == "frontend_JD_ENREEC_field_list_printer":

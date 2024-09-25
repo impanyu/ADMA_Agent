@@ -59,7 +59,7 @@
         "type":"local file path",
         "description":"local_file_path is the file path of the file on the serv.",
         "output_from":["JD_ENREEC_boundary_in_field","ADMA_download_file","Reaml5_format_data_for_plot"],
-        "input_to":["frontend_JD_ENREEC_field_list_printer","frontend_field_bourndary_map","Realm5_format_data_for_plot"],
+        "input_to":["frontend_JD_ENREEC_field_list_printer","frontend_field_boundary_map","frontend_plot_weather_data","frontend_download_file","Realm5_format_data_for_plot"],
         "value":""
     },
     "JD_ENREEC_field_name":{
@@ -259,7 +259,7 @@
         "output":[]
     },
 
-    "frontend_field_bourndary_map":{
+    "frontend_field_boundary_map":{
         "type":"method",
         "call_condition": "",
         "description":"Given a local file path containing boundary of JD ENREEC field, show the boundary on a map.",
@@ -278,7 +278,7 @@
     "frontend_download_file":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a local file path, download the file to the local file path. If the user asked to download a file, you should call this method.",
+        "description":"Given a local file path, download the file to the local file path. Note: if the user asked to download a file and you have the local file path, you should call this method.",
         "input":["local_file_path"],
         "output":[]
     }
