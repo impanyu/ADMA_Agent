@@ -117,6 +117,7 @@ class controller:
         self.system_prompt = "You are a program controller. The user will tell you what they want to do."
         self.system_prompt += "You'll be given a sequence of methods, which has been executed in the previous steps. Try to find the method that should be executed in next step."
         self.system_prompt += "Try your best to explore the meta program graph in a depth-first manner. Make full use of the methods you have in meta program graph."
+        self.system_prompt += "Check each method in the meta program graph, check the value of each variable in the input list of each method, or set the value of some variable based on the instruction of the user. Choose the most appropriate method which once called will move the status towards the goal of user's instruction."
         self.system_prompt += "Given the following meta program graph which contains the information of each method and each variable, you need to decide if you should call any method and if yes, the method to call."
         self.system_prompt += 'If you find enough information in current meta program graph to answer user\'s question, you should make no method call and you should only output a json with the following format: {"method": "None","args": []}, with no other extra word at all.'
         self.system_prompt += 'Else if you do not find enough information in current meta program graph to answer user\'s question, you need to output a json with the following format: {"method": "the name of the method to call","args": [{"name": "the name of the argument", "value": "the value of the argument"},...]}, with no other extra word at all.'
@@ -157,10 +158,10 @@ class final_output_typer:
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
         self.system_prompt += "The type should be one of the following: string, list, map, number, UI, object, url, file,data."
         self.system_prompt += "If you see a boundary file path and asked to draw a map, you should output the type as map."
-        self.system_prompt += "If you see a file path, you should output the type as file."
+        self.system_prompt += "If you see a file path, you should output the type as file. Except the following cases:"
         self.system_prompt += "If you see a file path of the realm5 data and asked to plot the data, you should output the type as data."
         self.system_prompt += "If you see a file path of the soil data, you should output the type as data."
-        self.system_prompt += "If you see a menu url, you should output the type as url."
+        self.system_prompt += "If you see a adma url, you should output the type as url."
 
     def output_type(self, user_instruction):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
@@ -174,6 +175,47 @@ class final_output_typer:
             temperature=temperature,
         )
         return json.loads(response.choices[0].message.content)
+    
+
+class ADMA_search_string_generator:
+    def __init__(self):
+
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.system_prompt = "Given the user's instruction, you need to extract a search string for the ADMA search."
+
+
+    def generate_search_string(self, user_instruction):
+
+
+        response = self.client.beta.chat.completions.parse(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": self.system_prompt},
+                      {"role": "user", "content": user_instruction}],
+            temperature=temperature,
+        )
+        return response.choices[0].message.content
+
+class ADMA_recommender:
+    def __init__(self):
+
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.system_prompt = "Given the user's instruction and a json string of list of meta data, you need to recommend top 1 meta data that best match the user's instruction."
+        self.system_prompt += " Note: only output the best meta data json string, starting with { and ending with }, with no other word or information."
+
+
+    def recommend(self, user_instruction, meta_data_list):
+        meta_data_list_string = json.dumps(meta_data_list)
+        system_prompt = self.system_prompt + "The meta data list is: " + meta_data_list_string
+
+
+        response = self.client.beta.chat.completions.parse(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": user_instruction}],
+            temperature=temperature,
+        )
+        return json.loads(response.choices[0].message.content)    
+
 
 # return a string
 class final_output_formatter:
@@ -282,7 +324,7 @@ def create_map(lat,lng):
     return map_obj
 
 
-def get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,max_iter=10):
+def get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,search_string_generator,adma_recommender,max_iter=10):
 
     while max_iter > 0:
         max_iter -= 1
@@ -296,201 +338,213 @@ def get_answer(prompt,meta_program_graph,program_controller,output_formatter,out
         if next_task["method"] == "None":
             break
         
-        elif next_task["method"] == "ADMA_list_directory_contents":
-            if "ADMA_list_directory_contents&dir_path" in args_dict and not args_dict["ADMA_list_directory_contents&dir_path"] == "DEFAULT":
-                dir_path = args_dict["ADMA_list_directory_contents&dir_path"]
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = dir_path
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] = f"ADMA_list_directory_contents&dir_path is the path of the directory on the ADMA system, and set to {dir_path}."
+        elif next_task["method"] == "ADMA_list_directory":
+            # this should be changed to use an agent to set the value based on user's instruction
+            if "ADMA_API_file_path" in args_dict and not args_dict["ADMA_API_file_path"] == "DEFAULT":
+                dir_path = args_dict["ADMA_API_file_path"]
+                meta_program_graph["ADMA_API_file_path"]["value"] = dir_path
+                meta_program_graph["ADMA_API_file_path"]["description"] += f"ADMA_API_file_path is a path of the directory on the ADMA system. Current value set by controller."
             else:
-                dir_path = meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"]
+                dir_path = meta_program_graph["ADMA_API_file_path"]["value"]
             # update the value of the output list
-            meta_program_graph["ADMA_list_directory_contents&output_list"]["value"] = ADMA_list_directory_contents(dir_path)
+            meta_program_graph["ADMA_API_file_path_list"]["value"] = ADMA_list_dir(dir_path)
 
             # update the description of the output list
-            meta_program_graph["ADMA_list_directory_contents&output_list"]["description"] = meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"]+"\n"
-            meta_program_graph["ADMA_list_directory_contents&output_list"]["description"] += f"ADMA_list_directory_contents&output_list is a list of paths under the directory {dir_path} in the ADMA system."
+            meta_program_graph["ADMA_API_file_path_list"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            meta_program_graph["ADMA_API_file_path_list"]["description"] += f"ADMA_API_file_path_list is a list of paths under the directory {dir_path} in the ADMA system."
 
         elif next_task["method"] == "ADMA_get_meta_data":
-            if "ADMA_get_meta_data&path" in args_dict and not args_dict["ADMA_get_meta_data&path"] == "DEFAULT":
-                path = args_dict["ADMA_get_meta_data&path"] 
-                meta_program_graph["ADMA_get_meta_data&path"]["value"] = path
-                meta_program_graph["ADMA_get_meta_data&path"]["description"] = f"ADMA_get_meta_data&path is the path of the file or directory on the ADMA system, and set to {path}."
+            # this should be changed to use an agent to set the value based on user's instruction
+
+            if "ADMA_API_file_path" in args_dict and not args_dict["ADMA_API_file_path"] == "DEFAULT":
+                path = args_dict["ADMA_API_file_path"] 
+                meta_program_graph["ADMA_API_file_path"]["value"] = path
+                meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the file or directory on the ADMA system. Current value set by controller."
             else:
-                path = meta_program_graph["ADMA_get_meta_data&path"]["value"]
+                path = meta_program_graph["ADMA_API_file_path"]["value"]
             # update the value of the meta data
-            meta_program_graph["ADMA_get_meta_data&meta_data"]["value"] = ADMA_get_meta_data(path)
+            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_get_meta_data(path)
             # update the description of the meta data
-            meta_program_graph["ADMA_get_meta_data&meta_data"]["description"] = meta_program_graph["ADMA_get_meta_data&path"]["description"]+"\n"
-            meta_program_graph["ADMA_get_meta_data&meta_data"]["description"] += f"ADMA_get_meta_data&meta_data is the meta data of the file or directory {path} in the ADMA system."
+            meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            meta_program_graph["ADMA_meta_data"]["description"] += f"ADMA_meta_data is the meta data of the file or directory {path} in the ADMA system."
 
 
-        elif next_task["method"] == "iter_list_1":
+        elif next_task["method"] == "ADMA_API_file_path_list_iterator":
+            # this should be changed to use an agent to set the value based on user's instruction
 
-            if "ADMA_list_directory_contents&output_list_current_index" in args_dict and not args_dict["ADMA_list_directory_contents&output_list_current_index"] == "DEFAULT":
-                index = args_dict["ADMA_list_directory_contents&output_list_current_index"]
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["description"] = f"ADMA_list_directory_contents&output_list_current_index is the index of the file or directory in the ADMA system, and set to {index}."
+
+            if "ADMA_API_file_path_list_index" in args_dict and not args_dict["ADMA_API_file_path_list_index"] == "DEFAULT":
+                index = args_dict["ADMA_API_file_path_list_index"]
+                meta_program_graph["ADMA_API_file_path_list_index"]["value"] = index
+                meta_program_graph["ADMA_API_file_path_list_index"]["description"] = f"ADMA_API_file_path_list_index is the index for the ADMA_API_file_path_list, and current value set by controller."
             else:
-                index = meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"]
+                index = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
 
-            output_list = meta_program_graph["ADMA_list_directory_contents&output_list"]["value"]
+            output_list = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
 
             
 
             if index < len(output_list):
                 # update the value of the path
-                meta_program_graph["ADMA_get_meta_data&path"]["value"] = os.path.join("/",*output_list[index].split("/")[3:])
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index + 1
-                print(meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"])
+                meta_program_graph["ADMA_API_file_path"]["value"] = output_list[index]
+                meta_program_graph["ADMA_API_file_path_list_index"]["value"] = index + 1
+                #print(meta_program_graph["ADMA_API_file_path_list_index"]["value"])
 
                 # update the description of the path
-                meta_program_graph["ADMA_get_meta_data&path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
-                meta_program_graph["ADMA_get_meta_data&path"]["description"] += f"ADMA_get_meta_data&path is path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
+                meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["ADMA_API_file_path_list"]["description"]+"\n"
+                meta_program_graph["ADMA_API_file_path"]["description"] += f"ADMA_API_file_path is path of the file or directory at the index {index} of ADMA_API_file_path_list."
 
-        elif next_task["method"] == "iter_list_2":
-
-            if "ADMA_list_directory_contents&output_list_current_index" in args_dict and not args_dict["ADMA_list_directory_contents&output_list_current_index"] == "DEFAULT":
-                index = args_dict["ADMA_list_directory_contents&output_list_current_index"]
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["description"] = f"ADMA_list_directory_contents&output_list_current_index is the index of the file or directory in the ADMA system, and set to {index}."
-            else:
-                index = meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"]
-            
-            output_list = meta_program_graph["ADMA_list_directory_contents&output_list"]["value"]
-            
-            if index < len(output_list):
-                # update the value of the path
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["value"] = os.path.join("/",*output_list[index].split("/")[3:])
-                meta_program_graph["ADMA_list_directory_contents&output_list_current_index"]["value"] = index + 1
-                # update the description of the path
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] = meta_program_graph["ADMA_list_directory_contents&output_list"]["description"]+"\n"
-                meta_program_graph["ADMA_list_directory_contents&dir_path"]["description"] += f"ADMA_list_directory_contents&dir_path is the path of the file or directory at the index {index} of ADMA_list_directory_contents&output_list."
-            
+       
         elif next_task["method"] == "ADMA_push_to_meta_data_list":
             
-            meta_data = meta_program_graph["ADMA_get_meta_data&meta_data"]["value"]
+            meta_data = meta_program_graph["ADMA_meta_data"]["value"]
             #push the meta data to the list
             #meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(meta_data)
             # append a deep copy of the meta data
-            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(copy.deepcopy(meta_data))
-            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] = meta_program_graph["ADMA_get_meta_data&meta_data"]["description"]+"\n"
-            meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["description"] += f"ADMA_push_to_meta_data_list&output_list is a list of meta data of the file or folder on the ADMA server."
+            meta_program_graph["ADMA_meta_data_list"]["value"].append(copy.deepcopy(meta_data))
+            meta_program_graph["ADMA_meta_data_list"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
+            meta_program_graph["ADMA_meta_data_list"]["description"] += f"ADMA_meta_data_list is a list of meta data of the file or folder on the ADMA server."
 
         elif next_task["method"] == "ADMA_menu_option":
-            if "ADMA_menu_option&menu_name" in args_dict and not args_dict["ADMA_menu_option&menu_name"] == "DEFAULT":
-                menu_name = args_dict["ADMA_menu_option&menu_name"]
-                meta_program_graph["ADMA_menu_option&menu_name"]["value"] = menu_name
-                meta_program_graph["ADMA_menu_option&menu_name"]["description"] = f"ADMA_menu_option&menu_name is the name of the menu on the ADMA server, and set to {menu_name}."
-            else:
-                menu_name = meta_program_graph["ADMA_menu_option&menu_name"]["value"]
+            # this should be changed to use an agent to set the value based on user's instruction
 
-            if "ADMA_menu_option&path" in args_dict and not args_dict["ADMA_menu_option&path"] == "DEFAULT":
-                path = args_dict["ADMA_menu_option&path"]
-                meta_program_graph["ADMA_menu_option&path"]["value"] = path
-                meta_program_graph["ADMA_menu_option&path"]["description"] = f"ADMA_menu_option&path is the path of the menu on the ADMA server, and set to {path}."
+            if "ADMA_menu_name" in args_dict and not args_dict["ADMA_menu_name"] == "DEFAULT":
+                menu_name = args_dict["ADMA_menu_name"]
+                meta_program_graph["ADMA_menu_name"]["value"] = menu_name
+                meta_program_graph["ADMA_menu_name"]["description"] = f"ADMA_menu_name is the name of the menu on the ADMA server, and current value set by the controller."
             else:
-                path = meta_program_graph["ADMA_menu_option&path"]["value"]
+                menu_name = meta_program_graph["ADMA_menu_name"]["value"]
 
-            meta_program_graph["ADMA_menu_option&menu_url"]["value"] = ADMA_menu_option(menu_name,path)
-            print(meta_program_graph["ADMA_menu_option&menu_url"]["value"])
-            meta_program_graph["ADMA_menu_option&menu_url"]["description"] = meta_program_graph["ADMA_menu_option&menu_name"]["description"]+"\n"
-            meta_program_graph["ADMA_menu_option&menu_url"]["description"] += meta_program_graph["ADMA_menu_option&path"]["description"]+"\n"
-            meta_program_graph["ADMA_menu_option&menu_url"]["description"] = f"ADMA_menu_option&menu_url is the url of the menu on the ADMA server."
+            if "ADMA_API_file_path" in args_dict and not args_dict["ADMA_API_file_path"] == "DEFAULT":
+                path = args_dict["ADMA_API_file_path"]
+                meta_program_graph["ADMA_API_file_path"]["value"] = path
+                meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the file or directory on the ADMA server, and current value set by controller."
+            else:
+                path = meta_program_graph["ADMA_API_file_path"]["value"]
+
+            meta_program_graph["ADMA_url"]["value"] = ADMA_menu_option(menu_name,path)
+            print(meta_program_graph["ADMA_url"]["value"])
+            meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_menu_name"]["description"]+"\n"
+            meta_program_graph["ADMA_url"]["description"] += meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is the url of the menu on the ADMA server."
         
         elif next_task["method"] == "JD_ENREEC_boundary_in_field":
-            if "JD_ENREEC_boundary_in_field&field_id" in args_dict and not args_dict["JD_ENREEC_boundary_in_field&field_id"] == "DEFAULT":
-                field_id = args_dict["JD_ENREEC_boundary_in_field&field_id"]
-                meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"] = field_id
-                meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] = f"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC, and set to {field_id}."
+            # this should be changed to use an agent to set the value based on user's instruction
+            if "JD_ENREEC_field_id" in args_dict and not args_dict["JD_ENREEC_field_id"] == "DEFAULT":
+                field_id = args_dict["JD_ENREEC_field_id"]
+                meta_program_graph["JD_ENREEC_field_id"]["value"] = field_id
+                meta_program_graph["JD_ENREEC_field_id"]["description"] = f"JD_ENREEC_field_id is the id of the field in ENREEC, and current value set by controller."
             else:
-                field_id = meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"]
+                field_id = meta_program_graph["JD_ENREEC_field_id"]["value"]
             
-            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["value"] = json.loads(query_ENREEC_boundary_in_field(field_id))["path"]
+            meta_program_graph["local_file_path"]["value"] = json.loads(query_ENREEC_boundary_in_field(field_id))["path"]
 
-            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["description"] = meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"]+"\n"
-            meta_program_graph["JD_ENREEC_boundary_in_field&boundary"]["description"] += f"JD_ENREEC_boundary_in_field&boundary is the boundary of the field {field_id} in ENREEC."
+            meta_program_graph["local_file_path"]["description"] = meta_program_graph["JD_ENREEC_field_id"]["description"]+"\n"
+            meta_program_graph["local_file_path"]["description"] += f"local_file_path is the boundary of the field {field_id} in ENREEC."
         
         elif next_task["method"] == "JD_ENREEC_fields":
             fields_file_path = query_ENREEC_fields_file()
-            meta_program_graph["JD_ENREEC_fields&fields_file_path"]["value"] = fields_file_path
-            meta_program_graph["JD_ENREEC_fields&fields_file_path"]["description"] = f"JD_ENREEC_fields&fields_file_path is the json file path of all the fields in ENREEC from John Deere, in which the key is the field_id and the value is the field name."
+            meta_program_graph["local_file_path"]["value"] = fields_file_path
+            meta_program_graph["local_file_path"]["description"] = f"local_file_path is the json file path containing all the fields in ENREEC from John Deere."
 
         elif next_task["method"] == "JD_ENREEC_field_id_from_name":
-            if "JD_ENREEC_field_id_from_name&field_name" in args_dict and not args_dict["JD_ENREEC_field_id_from_name&field_name"] == "DEFAULT":
-                field_name = args_dict["JD_ENREEC_field_id_from_name&field_name"]
-                meta_program_graph["JD_ENREEC_field_id_from_name&field_name"]["value"] = field_name
-                meta_program_graph["JD_ENREEC_field_id_from_name&field_name"]["description"] = f"JD_ENREEC_field_id_from_name&field_name is the name of the field in ENREEC from John Deere, and set to {field_name}."
+            # this should be changed to use an agent to set the value based on user's instruction
+            if "JD_ENREEC_field_name" in args_dict and not args_dict["JD_ENREEC_field_name"] == "DEFAULT":
+                field_name = args_dict["JD_ENREEC_field_name"]
+                meta_program_graph["JD_ENREEC_field_name"]["value"] = field_name
+                meta_program_graph["JD_ENREEC_field_name"]["description"] = f"JD_ENREEC_field_name is the name of the field in ENREEC from John Deere, and current value set by controller."
             else:
-                field_name = meta_program_graph["JD_ENREEC_field_id_from_name&field_name"]["value"]
+                field_name = meta_program_graph["JD_ENREEC_field_name"]["value"]
                 
-            meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["value"] = field_id_from_name(field_name)
-            meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_name"]["description"]+"\n"
-            meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"] += f"JD_ENREEC_field_id_from_name&field_id is the id of the field {field_name} in ENREEC from John Deere."
-            # for convenience, assign the value of JD_ENREEC_field_id_from_name&field_id to JD_ENREEC_boundary_in_field&field_id
-            # but we should depend on controller to route to JD_ENREEC_field_id_assign_1
-            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["value"]
-            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"]+"\n"
-            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] += f"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere."
-            
-        elif next_task["method"] == "JD_ENREEC_field_id_assign_1":
-            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["value"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["value"]
-            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] = meta_program_graph["JD_ENREEC_field_id_from_name&field_id"]["description"]+"\n"
-            meta_program_graph["JD_ENREEC_boundary_in_field&field_id"]["description"] += f"JD_ENREEC_boundary_in_field&field_id is the id of the field in ENREEC from John Deere."
-        
-        elif next_task["method"] == "Realm5_generate_file_url":
-            if "Realm5_generate_file_url&date_str" in args_dict and not args_dict["Realm5_generate_file_url&date_str"] == "DEFAULT":
-                date_str = args_dict["Realm5_generate_file_url&date_str"]
-                meta_program_graph["Realm5_generate_file_url&date_str"]["value"] = date_str
-                meta_program_graph["Realm5_generate_file_url&date_str"]["description"] = f"Realm5_generate_file_url&date_str is the date string of the file to be generated in Realm5, and set to {date_str}."
-            else:
-                date_str = meta_program_graph["Realm5_generate_file_url&date_str"]["value"]
+            meta_program_graph["JD_ENREEC_field_id"]["value"] = field_id_from_name(field_name)
+            meta_program_graph["JD_ENREEC_field_id"]["description"] = meta_program_graph["JD_ENREEC_field_name"]["description"]+"\n"
+            meta_program_graph["JD_ENREEC_field_id"]["description"] += f"JD_ENREEC_field_id is the id of the field {field_name} in ENREEC from John Deere."
 
-            meta_program_graph["ADMA_download_file&file_url"]["value"] = Realm5_generate_file_url(date_str)
-            print(meta_program_graph["ADMA_download_file&file_url"]["value"])
-            meta_program_graph["ADMA_download_file&file_url"]["description"] = meta_program_graph["Realm5_generate_file_url&date_str"]["description"]+"\n"
-            meta_program_graph["ADMA_download_file&file_url"]["description"] += f"ADMA_download_file&file_url is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
+            
+        elif next_task["method"] == "Realm5_generate_file_url":
+            # this should be changed to use an agent to set the value based on user's instruction
+            if "Realm5_date_str" in args_dict and not args_dict["Realm5_date_str"] == "DEFAULT":
+                date_str = args_dict["Realm5_date_str"]
+                meta_program_graph["Realm5_date_str"]["value"] = date_str
+                meta_program_graph["Realm5_date_str"]["description"] = f"Realm5_date_str is the date string of the file to be generated in Realm5, and current value set by controller."
+            else:
+                date_str = meta_program_graph["Realm5_date_str"]["value"]
+
+            meta_program_graph["ADMA_API_file_path"]["value"] = Realm5_generate_file_url(date_str)
+            print(meta_program_graph["ADMA_API_file_path"]["value"])
+            meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["Realm5_generate_file_url&date_str"]["description"]+"\n"
+            meta_program_graph["ADMA_API_file_path"]["description"] += f"ADMA_API_file_path is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
 
         elif next_task["method"] == "ADMA_download_file":
-            if "ADMA_download_file&file_url" in args_dict and not args_dict["ADMA_download_file&file_url"] == "DEFAULT":
-                file_url = args_dict["ADMA_download_file&file_url"]
-                meta_program_graph["ADMA_download_file&file_url"]["value"] = file_url
-                meta_program_graph["ADMA_download_file&file_path"]["description"] = f"ADMA_download_file&file_path is the url of the file to be downloaded on ADMA, and set to {file_path}."
+            # this should be changed to use an agent to set the value based on user's instruction
+            if "ADMA_API_file_path" in args_dict and not args_dict["ADMA_API_file_path"] == "DEFAULT":
+                file_url = args_dict["ADMA_API_file_path"]
+                meta_program_graph["ADMA_API_file_path"]["value"] = file_url
+                meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the url of the file to be downloaded on ADMA, and current value set by controller."
             else:
-                file_url = meta_program_graph["ADMA_download_file&file_url"]["value"]
+                file_url = meta_program_graph["ADMA_API_file_path"]["value"]
             
-            meta_program_graph["ADMA_download_file&local_file_path"]["value"] = ADMA_download_file(file_url)
-            print(meta_program_graph["ADMA_download_file&local_file_path"]["value"])
-            meta_program_graph["ADMA_download_file&local_file_path"]["description"] = meta_program_graph["ADMA_download_file&file_url"]["description"]+"\n"
-            meta_program_graph["ADMA_download_file&local_file_path"]["description"] += f"ADMA_download_file&local_file_path is the local file path of the file to be downloaded on ADMA."
+            meta_program_graph["local_file_path"]["value"] = ADMA_download_file(file_url)
+            print(meta_program_graph["local_file_path"]["value"])
+            meta_program_graph["local_file_path"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            meta_program_graph["local_file_path"]["description"] += f"local_file_path is the downloaded local file path of {file_url} from ADMA."
 
-            # for convenience, assign the value of ADMA_download_file&downloaded_file_path to Realm5_format_data_for_plot&file_path
-            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["value"] = meta_program_graph["ADMA_download_file&local_file_path"]["value"]
-            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] = meta_program_graph["ADMA_download_file&local_file_path"]["description"]+"\n"
-            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] += f"Realm5_format_data_for_plot&local_file_path is the local file path of the file to be plotted in Realm5."
-
-
-        elif next_task["method"] == "Realm5_assign_file_path":
-            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["value"] = meta_program_graph["ADMA_download_file&local_file_path"]["value"]
-            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] = meta_program_graph["ADMA_download_file&local_file_path"]["description"]+"\n"
-            meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"] += f"Realm5_format_data_for_plot&local_file_path is the local file path of the file to be plotted in Realm5."
 
         elif next_task["method"] == "Realm5_format_data_for_plot":
+            # this should be changed to use an agent to set the value based on user's instruction
 
-            if "Realm5_format_data_for_plot&variable_names" in args_dict and not args_dict["Realm5_format_data_for_plot&variable_names"] == "DEFAULT":
-                variable_names = args_dict["Realm5_format_data_for_plot&variable_names"]
+            if "Realm5_variable_names" in args_dict and not args_dict["Realm5_variable_names"] == "DEFAULT":
+                variable_names = args_dict["Realm5_variable_names"]
                 variable_names = json.loads(variable_names.replace("'",'"'))
-                meta_program_graph["Realm5_format_data_for_plot&variable_names"]["value"] = variable_names
-                meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"] = f"Realm5_format_data_for_plot&variable_names is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure']."
+                meta_program_graph["Realm5_variable_names"]["value"] = variable_names
+                meta_program_graph["Realm5_variable_names"]["description"] = f"Realm5_variable_names is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure']."
             else:
-                variable_names = meta_program_graph["Realm5_format_data_for_plot&variable_names"]["value"]
+                variable_names = meta_program_graph["Realm5_variable_names"]["value"]
             
             
-            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["value"],variable_names)
-            print(meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["value"])
-            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] = meta_program_graph["Realm5_format_data_for_plot&local_file_path"]["description"]+"\n"
-            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] += meta_program_graph["Realm5_format_data_for_plot&variable_names"]["description"]+"\n"
-            meta_program_graph["Realm5_format_data_for_plot&formatted_data_file_path"]["description"] += f"Realm5_format_data_for_plot&formatted_data_file_path is the file path of the formatted json data for plot."
+            meta_program_graph["local_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["local_file_path"]["value"],variable_names)
+            print(meta_program_graph["local_file_path"]["value"])
+            meta_program_graph["local_file_path"]["description"] = meta_program_graph["local_file_path"]["description"]+"\n"
+            meta_program_graph["local_file_path"]["description"] += meta_program_graph["Realm5_variable_names"]["description"]+"\n"
+            meta_program_graph["local_file_path"]["description"] += f"local_file_path is the file path of the formatted Realm5 data for plot."
 
+        elif next_task["method"] == "ADMA_search":
+            # this should be changed to use an agent to set the value based on user's instruction
+            if "ADMA_search_string" in args_dict and not args_dict["ADMA_search_string"] == "DEFAULT":
+                search_string = args_dict["ADMA_search_string"]
+                meta_program_graph["ADMA_search_string"]["value"] = search_string
+                meta_program_graph["ADMA_search_string"]["description"] = f"ADMA_search_string is the search string of the search on ADMA, and current value set by controller."
+            else:
+                search_string = meta_program_graph["ADMA_search_string"]["value"]
+            
+            if "ADMA_API_file_path" in args_dict and not args_dict["ADMA_API_file_path"] == "DEFAULT":
+                path = args_dict["ADMA_API_file_path"]
+                meta_program_graph["ADMA_API_file_path"]["value"] = path
+                meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the directory on the ADMA system, and current value set by controller."
+            else:
+                path = meta_program_graph["ADMA_API_file_path"]["value"]
+            
+            meta_program_graph["ADMA_API_file_path_list"]["value"] = ADMA_search(path,search_string)
+            print(meta_program_graph["ADMA_API_file_path_list"]["value"])
+            meta_program_graph["ADMA_API_file_path_list"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
+            meta_program_graph["ADMA_API_file_path_list"]["description"] += f"ADMA_API_file_path_list is a list of paths under the directory {path} in the ADMA system."
+
+        elif next_task["method"] == "ADMA_search_string_generator":
+            meta_program_graph["ADMA_search_string"]["value"] = search_string_generator.generate_search_string(prompt)
+
+            meta_program_graph["ADMA_search_string"]["description"] = f"ADMA_search_string is the search string of the search on ADMA, generated by the search_string_generator from user's instruction."
+
+        elif next_task["method"] == "ADMA_recommender":
+            meta_program_graph["ADMA_meta_data_list"]["value"] = adma_recommender.recommend(prompt,meta_program_graph["ADMA_meta_data_list"]["value"])
+
+        elif next_task["method"] == "ADMA_url_extractor":
+            
+            meta_program_graph["ADMA_url"]["value"] = ADMA_url_extractor(meta_program_graph["ADMA_meta_data"]["value"])
+            meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
+            meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is the url of the file or directory on ADMA."
+                
+                
+                
     final_output_type = output_typer.output_type(prompt)
     print(final_output_type)
     output = output_formatter.format_output(prompt,final_output_type["output_type"])
@@ -649,12 +703,17 @@ def main():
         st.session_state.output_formatter = final_output_formatter(meta_program_graph)
     if 'output_typer' not in st.session_state:
         st.session_state.output_typer = final_output_typer(meta_program_graph)
-    
+    if 'ADMA_search_string_generator' not in st.session_state:
+        st.session_state.search_string_generator = ADMA_search_string_generator()
+    if 'ADMA_recommender' not in st.session_state:
+        st.session_state.adma_recommender = ADMA_recommender()
 
  
     program_controller = st.session_state.program_controller
     output_formatter = st.session_state.output_formatter
     output_typer = st.session_state.output_typer
+    search_string_generator = st.session_state.search_string_generator
+    adma_recommender = st.session_state.adma_recommender
 
     program_controller.executed_methods = []
     program_controller.meta_program_graph = meta_program_graph
@@ -689,7 +748,7 @@ def main():
       st.chat_message("user",avatar="👨‍🎓").write(prompt)
 
       # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-      response = get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,max_iter=20)
+      response = get_answer(prompt,meta_program_graph,program_controller,output_formatter,output_typer,search_string_generator,adma_recommender,max_iter=20)
 
       ai_reply(response)
 

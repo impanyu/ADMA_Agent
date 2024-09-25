@@ -48,6 +48,17 @@ def ADMA_list_directory_contents(dir_path):
         return response.json()  # Assuming the API returns a JSON list of paths
     else:
         return f"Failed to list directory: {dir_path}, Status code: {response.status_code}, {response.text}"
+    
+def ADMA_list_dir(dir_path):
+    """Return the list of paths under the directory dir_path on the ADMA server, the return path is in ADMA API file path format"""
+    list_url = f"{root_url}/api/list/?target_path={dir_path}"
+    response = requests.get(list_url)
+    if response.status_code == 200:
+        list_of_paths = response.json()
+        result = ["/".join(path.split("/")[3:]) for path in list_of_paths]
+        return result
+    else:
+        return []
        
     
 
@@ -167,3 +178,47 @@ def ADMA_menu_option(menu_name,path=""):
         if menu_name == "files":
             result += f"/{path}"
     return result
+
+
+
+# URL of the API endpoiont for listing dir structure
+from urllib.parse import urlencode
+def ADMA_search(root_dir, search_box, category=["All"], mode=["All"], format=["All"], label=["All"], realtime=["All"], time_range=["start","end"], spatial_range=["southwest","northeast"]):
+    """Search the files or folders under root_dir """
+    params = {
+        'root_dir': root_dir,
+        'search_box': search_box,
+        'category': category,
+        'mode': mode,
+        'form': format,
+        'label': label,
+        'realtime': realtime,
+        'time_range': time_range,
+        'spatial_range': spatial_range,
+
+    }
+
+    # Remove empty lists to avoid sending empty parameters
+    params = {k: v for k, v in params.items() if v}
+
+    # Construct the URL with properly encoded parameters
+    list_url = f"{root_url}/api/search/?{urlencode(params, doseq=True)}"
+    print(list_url)
+
+
+    response = requests.get(list_url, headers=headers)
+    if response.status_code == 200:
+        return response.json()[:5]  # Assuming the API returns a JSON list of meta data, only return 5 results
+    else:
+        print(f"Failed to search directory: {root_dir}, Status code: {response.status_code}, {response.text}")
+        return []
+
+
+def ADMA_url_extractor(meta_data):
+    """Extract the ADMA url from the ADMA meta data"""
+    # the abs_path is in the absolute path format of /data/username/ag_data/.../file_name, extract the path starting from the username directory
+    # return the url for the path on adma
+    abs_path = meta_data["abs_path"]
+    root_dir = "https://adma.hopto.org/files.html?current_path="
+    adma_web_path = "/".join(abs_path.split("/")[2:])
+    return f"{root_dir}{adma_web_path}"
