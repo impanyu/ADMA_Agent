@@ -206,7 +206,7 @@ def ADMA_search(root_dir, search_box, category=["All"], mode=["All"], format=["A
     print(list_url)
 
 
-    response = requests.get(list_url, headers=headers)
+    response = requests.get(list_url)
     if response.status_code == 200:
         return response.json()[:5]  # Assuming the API returns a JSON list of meta data, only return 5 results
     else:
