@@ -74,7 +74,7 @@ output_type = {
                         "properties": {
                             "output_type": {
                                 "type": "string",
-                                "enum": ["string", "list", "map","number","UI","object","url","file","data"],
+                                "enum": ["string", "map","number","UI","object","url","file","data"],
                                 "description": "The type of the output."
                             }
                         },
@@ -156,7 +156,7 @@ class final_output_typer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "You are a output typer. The user will tell you what they want to do. Given the following meta program graph which contains the information of each variable, you need to output the type of the output."
-        self.system_prompt += "The type should be one of the following: string, list, map, number, UI, object, url, file,data."
+        self.system_prompt += "The type should be one of the following: string, map, number, UI, object, url, file,data."
         self.system_prompt += "If you see a boundary file path and asked to draw a map, you should output the type as map."
         self.system_prompt += "If you see a file path, you should output the type as file. Except the following cases:"
         self.system_prompt += "If you see a file path of the realm5 data and asked to plot the data, you should output the type as data."
