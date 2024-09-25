@@ -125,7 +125,7 @@ class controller:
         self.system_prompt += "You'll be given a sequence of methods, which has been executed in the previous steps. Try to find the method that should be executed in next step."
         self.system_prompt += "The meta program graph is a directed graph, which has two types of nodes, method nodes and variable nodes. Each node may have incoming edges and outgoing edges."
 
-        self.system_prompt += "Try to explore the meta program graph in a depth-first manner, if there's no method in current exploration path, try to find a new method to call."
+        #self.system_prompt += "Try to explore the meta program graph in a depth-first manner, if there's no method in current exploration path, try to find a new method to call."
         self.system_prompt += "Check each method in the meta program graph, check the value and description of each variable in the input list of each method. Choose the most appropriate method which can use these variables as input, and which once called will move the status towards the goal of user's instruction."
         #self.system_prompt += "You only need to observe the value and description of these variables: ADMA_url and local_file_path"
         #self.system_prompt += 'If you are confident you can answer user\'s instruction, based on these variables, you should make no further method call and you should only output a json with the following format: {"method": "None"}, with no other extra word at all.'
