@@ -182,7 +182,7 @@ class ADMA_search_string_generator:
     def __init__(self):
 
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.system_prompt = "Given the user's instruction, you need to extract a search string for the ADMA search."
+        self.system_prompt = "Given the user's instruction, you need to extract some 1 keyword contained in the instruction or 1 keyword that is closed to the user's instruction."
 
 
     def generate_search_string(self, user_instruction):
