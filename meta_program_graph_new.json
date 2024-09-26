@@ -36,10 +36,10 @@
     },
     "ADMA_url":{
         "type":"ADMA url",
-        "description":"ADMA_url is the url of the menu on the ADMA server.",
+        "description":"ADMA_url is the url of the main page on the ADMA.",
         "output_from":["ADMA_menu_option","ADMA_url_extractor"],
         "input_to":["frontend_ADMA_url_browser"],
-        "value":""
+        "value":"https://adma.hopto.org"
     },
     "ADMA_menu_name":{
         "type":"ADMA menu name",
