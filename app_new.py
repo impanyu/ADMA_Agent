@@ -138,6 +138,7 @@ class controller:
         self.system_prompt += 'When you decide which method to call, you need to check the whole meta program graph to make sure you do not miss any information.'
         #self.system_prompt += "If you want to plot the data, you need to make sure 'tmp/Realm5_formatted_data.json' is the value of local_file_path in the meta program graph. "
         self.system_prompt += "When user request go to somewhere, try your best to find ways to get the adma url. "
+        self.system_prompt += "If you see Chinese, first translate it to English."
         #self.system_prompt += "Note: only call a method, if all the variables in the input list of this method have value. "
 
     def get_next_task(self,user_instruction):
@@ -177,6 +178,7 @@ class meta_program_graph_initializer:
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
         self.system_prompt += "For ADMA_menu_name, it should be one of the following: search, share_with_me, files, data, models, tools, collections, documentation, api. When user asked for going to public data, you should set this to 'shared_with_me', when user asked to go to file or folder followed by a path, you should set this menu name to 'files'. If the user asked root folder, you should set the path to empty string."
         self.system_prompt += "If you see a file name or a path, you should set the value of ADMA_API_file_path to the file name or the path."
+        self.system_prompt += "If you see Chinese, first translate it to English."
         self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
 
         
