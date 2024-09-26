@@ -295,7 +295,7 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
                 #meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["ADMA_API_file_path_list"]["description"]+"\n"
                 meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is path of the file or directory at the index {index} of ADMA_API_file_path_list."
 
-                meta_program_graph["ADMA_meta_data_list_index"]["description"] = f"ADMA_API_file_path_list_iterator should be called several times until the value of ADMA_API_file_path_list_index is equal to {len(meta_program_graph['ADMA_API_file_path_list']['value'])}."
+                meta_program_graph["ADMA_API_file_path_list_index"]["description"] = f"ADMA_API_file_path_list_iterator should be called several times until the value of ADMA_API_file_path_list_index is equal to {len(meta_program_graph['ADMA_API_file_path_list']['value'])}."
 
        
         elif next_task["method"] == "ADMA_push_to_meta_data_list":
