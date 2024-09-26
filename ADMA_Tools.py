@@ -103,10 +103,10 @@ def ADMA_download_file(dir_path):
     response = requests.get(download_url)
 
     if response.status_code == 200:
-        rd = uuid.uuid4()
-        with open(f"tmp/{rd}_{os.path.basename(dir_path)}", "wb") as f:
+        #rd = uuid.uuid4()
+        with open(f"tmp/{os.path.basename(dir_path)}", "wb") as f:
             f.write(response.content)
-        result =  f"tmp/{rd}_{os.path.basename(dir_path)}"
+        result =  f"tmp/{os.path.basename(dir_path)}"
         return result
         #return response.text
     else:
