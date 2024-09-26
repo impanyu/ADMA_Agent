@@ -426,7 +426,7 @@ def ai_reply(response, if_history=False):
         with open(response["output"]) as f:        
             data = f.read()
           
-        st.download_button(label="Download",data=data,file_name=os.path.basename(response["output"]))
+        st.download_button(label="Download",data=data,file_name=os.path.basename(response["output"]),key=uuid.uuid4())
         return
     elif response["type"] == "plot_Realm5_data":
         if not os.path.exists(response["output"]):
