@@ -423,7 +423,8 @@ def ai_reply(response, if_history=False):
         if not os.path.exists(response["output"]):
             st.chat_message("assistant", avatar="🤖").write("No data found for the field")
             return
-        with open(response["output"]) as f:        
+  
+        with open(response["output"],"rb") as f:
             data = f.read()
           
         st.download_button(label="Download",data=data,file_name=os.path.basename(response["output"]),key=uuid.uuid4())
