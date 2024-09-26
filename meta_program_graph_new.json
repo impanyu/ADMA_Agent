@@ -138,7 +138,7 @@
     "ADMA_menu_option":{
         "type":"method",
         "call_condition": "",
-        "description":"Given a menu name and a path, return the url of the menu on the ADMA server. ",
+        "description":"Given a menu name and a path, return the corresponding url of on the ADMA server. ",
         "input":["ADMA_menu_name","ADMA_API_file_path"],
         "output":["ADMA_url"]
     },
