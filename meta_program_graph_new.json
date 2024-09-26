@@ -39,7 +39,7 @@
         "description":"ADMA_url is the url of the menu on the ADMA server.",
         "output_from":["ADMA_menu_option","ADMA_url_extractor"],
         "input_to":["frontend_ADMA_url_browser"],
-        "value":"http://adma.hopto.org"
+        "value":"https://adma.hopto.org"
     },
     "ADMA_menu_name":{
         "type":"ADMA menu name",
