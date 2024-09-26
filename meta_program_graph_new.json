@@ -36,7 +36,7 @@
     },
     "ADMA_url":{
         "type":"ADMA url",
-        "description":"ADMA_url is the url for the menu: search on the ADMA.",
+        "description":"ADMA_url is the url for the search page on the ADMA.",
         "output_from":["ADMA_menu_option","ADMA_url_extractor"],
         "input_to":["frontend_ADMA_url_browser"],
         "value":"https://adma.hopto.org"
