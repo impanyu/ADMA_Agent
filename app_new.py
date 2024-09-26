@@ -176,6 +176,7 @@ class meta_program_graph_initializer:
         self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate any information."
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
         self.system_prompt += "For ADMA_menu_name, it should be one of the following: search, share_with_me, files, data, models, tools, collections, documentation, api. When user asked for going to public data, you should set this to 'shared_with_me', when user asked to go to file or folder followed by a path, you should set this menu name to 'files'. If the user asked root folder, you should set the path to empty string."
+        self.system_prompt += "If you see a file name or a path, you should set the value of ADMA_API_file_path to the file name or the path."
         self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
 
         
