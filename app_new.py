@@ -486,6 +486,7 @@ def ai_reply(response, if_history=False):
 
                 return
             else:
+                print(path)
                 rings = boundary["values"][0]["multipolygons"][0]["rings"]
             
             all_ring_coordinates = []
