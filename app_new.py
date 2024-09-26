@@ -263,8 +263,8 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             meta_program_graph["ADMA_API_file_path_list"]["value"] = ADMA_list_dir(dir_path)
 
             # update the description of the output list
-            meta_program_graph["ADMA_API_file_path_list"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
-            meta_program_graph["ADMA_API_file_path_list"]["description"] += f"ADMA_API_file_path_list is a list of paths under the directory {dir_path} in the ADMA system."
+            #meta_program_graph["ADMA_API_file_path_list"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            meta_program_graph["ADMA_API_file_path_list"]["description"] = f"ADMA_API_file_path_list is a list of paths under the directory {dir_path} in the ADMA system."
 
         elif next_task["method"] == "ADMA_get_meta_data":
 
@@ -273,8 +273,8 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             print(f"ADMA_API_file_path: {path}")
             meta_program_graph["ADMA_meta_data"]["value"] = ADMA_get_meta_data(path)
             # update the description of the meta data
-            meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
-            meta_program_graph["ADMA_meta_data"]["description"] += f"ADMA_meta_data is the meta data of the file or directory {path} in the ADMA system."
+            #meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            meta_program_graph["ADMA_meta_data"]["description"] = f"ADMA_meta_data is the meta data of the file or directory {path} in the ADMA system."
 
 
         elif next_task["method"] == "ADMA_API_file_path_list_iterator":
@@ -292,8 +292,8 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
                 #print(meta_program_graph["ADMA_API_file_path_list_index"]["value"])
 
                 # update the description of the path
-                meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["ADMA_API_file_path_list"]["description"]+"\n"
-                meta_program_graph["ADMA_API_file_path"]["description"] += f"ADMA_API_file_path is path of the file or directory at the index {index} of ADMA_API_file_path_list."
+                #meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["ADMA_API_file_path_list"]["description"]+"\n"
+                meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is path of the file or directory at the index {index} of ADMA_API_file_path_list."
 
        
         elif next_task["method"] == "ADMA_push_to_meta_data_list":
@@ -303,8 +303,10 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             #meta_program_graph["ADMA_push_to_meta_data_list&output_list"]["value"].append(meta_data)
             # append a deep copy of the meta data
             meta_program_graph["ADMA_meta_data_list"]["value"].append(copy.deepcopy(meta_data))
-            meta_program_graph["ADMA_meta_data_list"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
-            meta_program_graph["ADMA_meta_data_list"]["description"] += f"ADMA_meta_data_list is a list of meta data of the file or folder on the ADMA server."
+            #meta_program_graph["ADMA_meta_data_list"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
+            api_path = "/".join(meta_data["abs_path"].split("/")[3:])
+            meta_program_graph["ADMA_meta_data_list"]["description"] += f"The meta data of {api_path} on the ADMA server was just added to the list."
+            meta_program_graph["ADMA_meta_data_list"]["description"] += f"Now the length of the list is {len(meta_program_graph['ADMA_meta_data_list']['value'])}."
 
         elif next_task["method"] == "ADMA_menu_option":
       
@@ -314,9 +316,13 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
 
             meta_program_graph["ADMA_url"]["value"] = ADMA_menu_option(menu_name,path)
             print(meta_program_graph["ADMA_url"]["value"])
-            meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_menu_name"]["description"]+"\n"
-            meta_program_graph["ADMA_url"]["description"] += meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
-            meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is a url on the ADMA server."
+            #meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_menu_name"]["description"]+"\n"
+            #meta_program_graph["ADMA_url"]["description"] += meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            if menu_name == "files":
+                meta_program_graph["ADMA_url"]["description"] = f"ADMA_url is a url for the directory {path} under the root folder on the ADMA server."
+            else:
+                meta_program_graph["ADMA_url"]["description"] = f"ADMA_url is a url for the menu {menu_name} on the ADMA server."
+                
         
         elif next_task["method"] == "JD_ENREEC_boundary_in_field":
 
@@ -324,8 +330,8 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             
             meta_program_graph["local_file_path"]["value"] = json.loads(query_ENREEC_boundary_in_field(field_id))["path"]
 
-            meta_program_graph["local_file_path"]["description"] = meta_program_graph["JD_ENREEC_field_id"]["description"]+"\n"
-            meta_program_graph["local_file_path"]["description"] += f"local_file_path is the boundary of the field {field_id} in ENREEC."
+            #meta_program_graph["local_file_path"]["description"] = meta_program_graph["JD_ENREEC_field_id"]["description"]+"\n"
+            meta_program_graph["local_file_path"]["description"] = f"local_file_path is the boundary file for the field with field id {field_id} in ENREEC."
         
         elif next_task["method"] == "JD_ENREEC_fields":
             fields_file_path = query_ENREEC_fields_file()
@@ -337,8 +343,8 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             field_name = meta_program_graph["JD_ENREEC_field_name"]["value"]
                 
             meta_program_graph["JD_ENREEC_field_id"]["value"] = field_id_from_name(field_name)
-            meta_program_graph["JD_ENREEC_field_id"]["description"] = meta_program_graph["JD_ENREEC_field_name"]["description"]+"\n"
-            meta_program_graph["JD_ENREEC_field_id"]["description"] += f"JD_ENREEC_field_id is the id of the field {field_name} in ENREEC from John Deere."
+            #meta_program_graph["JD_ENREEC_field_id"]["description"] = meta_program_graph["JD_ENREEC_field_name"]["description"]+"\n"
+            meta_program_graph["JD_ENREEC_field_id"]["description"] = f"JD_ENREEC_field_id is the field id of the field {field_name} in ENREEC from John Deere."
 
             
         elif next_task["method"] == "Realm5_generate_file_url":
@@ -347,18 +353,18 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
 
             meta_program_graph["ADMA_API_file_path"]["value"] = Realm5_generate_file_url(date_str)
             
-            print(meta_program_graph["ADMA_API_file_path"]["value"])
-            meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["Realm5_date_str"]["description"]+"\n"
-            meta_program_graph["ADMA_API_file_path"]["description"] += f"ADMA_API_file_path is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
+            #print(meta_program_graph["ADMA_API_file_path"]["value"])
+            #meta_program_graph["ADMA_API_file_path"]["description"] = meta_program_graph["Realm5_date_str"]["description"]+"\n"
+            meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the url of the Reaml5 file on ADMA for {date_str} to be downloaded."
 
         elif next_task["method"] == "ADMA_download_file":
   
             file_url = meta_program_graph["ADMA_API_file_path"]["value"]
             
             meta_program_graph["local_file_path"]["value"] = ADMA_download_file(file_url)
-            print(meta_program_graph["local_file_path"]["value"])
-            meta_program_graph["local_file_path"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
-            meta_program_graph["local_file_path"]["description"] += f"local_file_path is the downloaded local file path of {file_url} from ADMA."
+            #print(meta_program_graph["local_file_path"]["value"])
+            #meta_program_graph["local_file_path"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
+            meta_program_graph["local_file_path"]["description"] = f"local_file_path is the downloaded local file path of {file_url} from ADMA."
 
 
         elif next_task["method"] == "Realm5_format_data_for_plot":
@@ -369,10 +375,10 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             meta_program_graph["local_file_path"]["value"] = Realm5_format_data_for_plot(meta_program_graph["local_file_path"]["value"],variable_names)
             if not meta_program_graph["local_file_path"]["value"] == old_path:
 
-                print(meta_program_graph["local_file_path"]["value"])
-                meta_program_graph["local_file_path"]["description"] = meta_program_graph["local_file_path"]["description"]+"\n"
-                meta_program_graph["local_file_path"]["description"] += meta_program_graph["Realm5_variable_name_list"]["description"]+"\n"
-                meta_program_graph["local_file_path"]["description"] += f"local_file_path is the file path of the formatted Realm5 data for plot."
+                #print(meta_program_graph["local_file_path"]["value"])
+                #meta_program_graph["local_file_path"]["description"] = meta_program_graph["local_file_path"]["description"]+"\n"
+                #meta_program_graph["local_file_path"]["description"] += meta_program_graph["Realm5_variable_name_list"]["description"]+"\n"
+                meta_program_graph["local_file_path"]["description"] = f"local_file_path is the file path of the formatted Realm5 data for variables {variable_names}."
 
         elif next_task["method"] == "ADMA_search":
        
@@ -382,16 +388,17 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             path = meta_program_graph["ADMA_API_file_path"]["value"]
             
             meta_program_graph["ADMA_meta_data"]["value"] = ADMA_search(path,search_string)
-            print(meta_program_graph["ADMA_meta_data"]["value"])
-            meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
-            meta_program_graph["ADMA_meta_data"]["description"] += f"ADMA_meta_data is the meta data of the file or folder on the ADMA system under the directory {path}."
+            #print(meta_program_graph["ADMA_meta_data"]["value"])
+            #meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
+            meta_program_graph["ADMA_meta_data"]["description"] = f"ADMA_meta_data is the meta data of the file or folder on the ADMA system searched by {search_string}."
 
        
         elif next_task["method"] == "ADMA_url_extractor":
             
             meta_program_graph["ADMA_url"]["value"] = ADMA_url_extractor(meta_program_graph["ADMA_meta_data"]["value"])
-            meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
-            meta_program_graph["ADMA_url"]["description"] += f"ADMA_url is the url of the file or directory on ADMA."
+            #meta_program_graph["ADMA_url"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
+            #api_path = "/".join(meta_program_graph["ADMA_meta_data"]["value"]["abs_path"].split("/")[3:])
+            meta_program_graph["ADMA_url"]["description"] = f"ADMA_url is the url of the file or directory on ADMA."
 
 
         #print(f"ADMA_url: {meta_program_graph['ADMA_url']['value']}, local_file_path: {meta_program_graph['local_file_path']['value']}")
