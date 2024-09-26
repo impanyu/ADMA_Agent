@@ -330,7 +330,7 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
             if menu_name == "files":
                 meta_program_graph["ADMA_url"]["description"] = f"ADMA_url is a url for the directory {path} under the root folder on the ADMA server."
             else:
-                meta_program_graph["ADMA_url"]["description"] = f"ADMA_url is a url for the menu {menu_name} on the ADMA server."
+                meta_program_graph["ADMA_url"]["description"] = f"ADMA_url is a url for the menu: {menu_name} on the ADMA server."
                 
         
         elif next_task["method"] == "JD_ENREEC_boundary_in_field":

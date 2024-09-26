@@ -36,7 +36,7 @@
     },
     "ADMA_url":{
         "type":"ADMA url",
-        "description":"ADMA_url is the url of the main page on the ADMA.",
+        "description":"ADMA_url is the url for the menu: search on the ADMA.",
         "output_from":["ADMA_menu_option","ADMA_url_extractor"],
         "input_to":["frontend_ADMA_url_browser"],
         "value":"https://adma.hopto.org"
@@ -222,7 +222,7 @@
     "frontend_ADMA_url_browser":{
         "type":"method",
         "call_condition": "",
-        "description":"Given an url, open the url in a web browser.",
+        "description":"Given an url, open the url in a web browser. Make sure the url is what the user asked for.",
         "input":["ADMA_url"],
         "output":[]
     },
