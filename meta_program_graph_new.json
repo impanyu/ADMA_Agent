@@ -116,8 +116,8 @@
     },
     "ADMA_API_file_path_list_iterator":{
         "type":"method",
-        "call_condition": "Do not call this method if ADMA_API_file_path_list_index is greater than the length of ADMA_API_file_path_list",
-        "description":"Given a list of ADMA API file path and an index, return the path at the index and increase the index by 1.",
+        "call_condition": "Do not call this method if ADMA_API_file_path_list_index is greater than the length of ADMA_API_file_path_list. ADMA_API_file_path_list_iterator should be called several times until the value of ADMA_API_file_path_list_index is equal to the length of ADMA_API_file_path_list.",
+        "description":"Given a list of ADMA API file path and an index, return the path at the index and increase the index by 1. ",
         "input":["ADMA_API_file_path_list","ADMA_API_file_path_list_index"],
         "output":["ADMA_API_file_path","ADMA_API_file_path_list_index"]
     },
