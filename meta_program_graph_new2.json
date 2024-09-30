@@ -1,0 +1,300 @@
+{
+    "ADMA_API_file_path":{
+        "type":"ADMA API file path",
+        "description":"ADMA_API_file_path is a path of the directory on the ADMA system. The format should be like path/to/directory, with 0 or more / in the path. when user asked to go to file or folder followed by a path, you should set this to the path.",
+        "output_from":["ADMA_API_file_path_list_iterator","Realm5_generate_file_url"],
+        "input_to":["ADMA_list_directory","ADMA_get_meta_data","ADMA_menu_option","ADMA_search","ADMA_download_file"],
+        "value":""
+    },
+    "ADMA_meta_data":{
+        "type":"ADMA meta data",
+        "description":"ADMA_meta_data is the meta data of the file or folder on the ADMA server.",
+        "output_from":["ADMA_get_meta_data","ADMA_search"],
+        "input_to":["ADMA_url_extractor","ADMA_push_to_meta_data_list","output_ADMA_meta_data_printer"],
+        "value":{}
+    },
+    "ADMA_API_file_path_list":{
+        "type":"list of ADMA API file path",
+        "description":"ADMA_API_file_path_list is a list of paths in the ADMA system.",
+        "output_from":["ADMA_list_directory"],
+        "input_to":["ADMA_API_file_path_list_iterator","output_ADMA_API_file_path_list_printer"],
+        "value":[]
+    },
+    "ADMA_API_file_path_list_index":{
+        "type":"integer",
+        "description":"ADMA_API_file_path_list_index is the current index of ADMA_API_file_path_list.",
+        "output_from":[],
+        "input_to":["ADMA_API_file_path_list_iterator"],
+        "value":0
+    },
+    "ADMA_meta_data_list":{
+        "type":"list of ADMA meta data",
+        "description":"ADMA_meta_data_list is a list of ADMA meta data of the file or folder on the ADMA server.",
+        "output_from":["ADMA_push_to_meta_data_list"],
+        "input_to":["output_ADMA_meta_data_list_printer"],
+        "value":[]
+    },
+    "ADMA_url":{
+        "type":"ADMA url",
+        "description":"ADMA_url is the url for the search page on the ADMA.",
+        "output_from":["ADMA_menu_option","ADMA_url_extractor"],
+        "input_to":["output_ADMA_url_browser"],
+        "value":"https://adma.hopto.org"
+    },
+    "ADMA_menu_name":{
+        "type":"ADMA menu name",
+        "description":"ADMA_menu_name is the name of the menu on the ADMA server. ",
+        "output_from":[],
+        "input_to":["ADMA_menu_option"],
+        "value":""
+    },
+    "JD_ENREEC_field_id":{
+        "type":"JD field id",
+        "description":"JD_ENREEC_field_id is the id of the field in ENREEC from John Deere. Note, this field_id is a long string, like 514a1e63-0000-1000-4052-e1e1e1263770, which is different from the field name, like 1863.",
+        "output_from":["JD_ENREEC_field_id_from_name"],
+        "input_to":["JD_ENREEC_boundary_in_field"],
+        "value":""
+    },
+    "local_file_path":{
+        "type":"local file path",
+        "description":"local_file_path is the file path of the file on the serv.",
+        "output_from":["JD_ENREEC_boundary_in_field","ADMA_download_file","Reaml5_format_data_for_plot"],
+        "input_to":["output_JD_ENREEC_field_list_printer","output_field_boundary_map","output_plot_weather_data","output_download_file","Realm5_format_data_for_plot"],
+        "value":""
+    },
+    "JD_ENREEC_field_name":{
+        "type":"string",
+        "description":"JD_ENREEC_field_name is the name of the field in ENREEC from John Deere.",
+        "output_from":[],
+        "input_to":["JD_ENREEC_field_id_from_name"],
+        "value":""
+    },
+
+    "Realm5_variable_name_list":{
+        "type":"Realm5 variable name list",
+        "description":"Realm5_variable_name_list is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure'].",
+        "output_from":[],
+        "input_to":["Realm5_format_data_for_plot"],
+        "value":["temperature"]
+    },
+
+    "Realm5_date_str":{
+        "type":"date string",
+        "description":"Realm5_date_str is the date string in the format of 'YYYY-MM-DD'.",
+        "output_from":[],
+        "input_to":["Realm5_generate_file_url"],
+        "value":"2024-01-01"
+    },
+
+    "ADMA_search_string":{
+        "type":"ADMA_search_string",
+        "description":"ADMA_search_string is the search string of the search on ADMA. This value is a single world extracted from user's instruction, or a single world related to the user's instruction.",
+        "output_from":[],
+        "input_to":["ADMA_search"],
+        "value":""
+    },
+
+    "user_instruction":{
+        "type":"user instruction",
+        "description":"user_instruction is the instruction of the user.",
+        "output_from":[],
+        "input_to":[],
+        "value":""
+    },
+
+    
+
+
+
+
+    "ADMA_list_directory": {
+        "type":"method",
+        "call_condition": "",
+        "description": "Given a ADMA API file path of directory on ADMA, return the list of paths for all the subdirectories and files under the directory.",
+        "input":["ADMA_API_file_path"],
+        "output":["ADMA_API_file_path_list"]
+    },
+    "ADMA_API_file_path_list_iterator":{
+        "type":"method",
+        "call_condition": "Do not call this method if ADMA_API_file_path_list_index is greater than the length of ADMA_API_file_path_list. Otherwise,ADMA_API_file_path_list_iterator should be called several times until the value of ADMA_API_file_path_list_index is equal to the length of ADMA_API_file_path_list.",
+        "description":"Given a list of ADMA API file path and an index, return the path at the index and increase the index by 1. ",
+        "input":["ADMA_API_file_path_list","ADMA_API_file_path_list_index"],
+        "output":["ADMA_API_file_path","ADMA_API_file_path_list_index"]
+    },
+    "ADMA_get_meta_data":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a path on ADMA, return the meta data of the path on the ADMA server. ",
+        "input":["ADMA_API_file_path"],
+        "output":["ADMA_meta_data"]
+    },
+    "ADMA_push_to_meta_data_list":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a meta data, push the meta data to the list.",
+        "input":["ADMA_meta_data"],
+        "output":["ADMA_meta_data_list"]
+    },
+    "ADMA_menu_option":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a menu name and ADMA API file path, return the corresponding url of on the ADMA server. ",
+        "input":["ADMA_menu_name","ADMA_API_file_path"],
+        "output":["ADMA_url"]
+    },
+
+
+ 
+
+    "JD_ENREEC_boundary_in_field":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a field_id, return the file path of the boundary of the field in ENREEC from John Deere. ",
+        "input":["JD_ENREEC_field_id"],
+        "output":["local_file_path"]
+    },
+ 
+    
+
+
+    "JD_ENREEC_fields":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Return a file path of a json file that contains all the fields in ENREEC from John Deere.",
+        "input":[],
+        "output":["local_file_path"]
+    },
+ 
+    "JD_ENREEC_field_id_from_name":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a field name, return the field_id of the field in ENREEC from John Deere.",
+        "input":["JD_ENREEC_field_name"],
+        "output":["JD_ENREEC_field_id"]
+    },
+
+
+    "Realm5_format_data_for_plot":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path containing the raw realm5 weather data file and a list variable names, return the file path of the formatted json data for plot. Note: Only call this if this file indeed contains the realm5 weather data file. Make sure to call this method after ADMA_download_file, if you want to plot the data later.",
+        "input":["local_file_path","Realm5_variable_name_list"],
+        "output":["local_file_path"]
+    },
+
+
+    "Realm5_generate_file_url":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a date string, return the ADMA API file path of the raw realm5 weather data file. The date string should be in the format of 'YYYY-MM-DD'.",
+        "input":["Realm5_date_str"],
+        "output":["ADMA_API_file_path"]
+    },
+ 
+
+    "ADMA_download_file":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a ADMA API file path on ADMA, download the file and return the local file path of the downloaded file.",
+        "input":["ADMA_API_file_path"],
+        "output":["local_file_path"]
+    },
+    
+    
+
+    "ADMA_search":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a ADMA API file path as root directory, and a search content, return the list of meta data for all the folders or directories under the root directory.",
+        "input":["ADMA_API_file_path","ADMA_search_string"],
+        "output":["ADMA_meta_data"]
+    },
+ 
+
+    "ADMA_url_extractor":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a ADMA meta data, return the url on adma.",
+        "input":["ADMA_meta_data"],
+        "output":["ADMA_url"]
+    },
+
+    "output_ADMA_url_browser":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given an url, open the url in a web browser. Make sure the url is what the user asked for.",
+        "input":["ADMA_url"],
+        "output":[]
+    },
+
+    "output_ADMA_API_file_path_list_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a list of ADMA API file path, print the file path in a list format.",
+        "input":["ADMA_API_file_path_list"],
+        "output":[]
+    },
+
+    "output_ADMA_meta_data_list_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a list of ADMA meta data, print the meta data in a list format.",
+        "input":["ADMA_meta_data_list"],
+        "output":[]
+    },
+
+    "output_ADMA_meta_data_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a ADMA meta data, print the meta data in a readable format.",
+        "input":["ADMA_meta_data"],
+        "output":[]
+    },
+
+    "output_JD_ENREEC_field_list_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path containing a json file of JD ENREEC fields, print the file content in a readable format.",
+        "input":["local_file_path"],
+        "output":[]
+    },
+
+    "output_field_boundary_map":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path containing boundary of JD ENREEC field, show the boundary on a map.",
+        "input":["local_file_path"],
+        "output":[]
+    },
+
+    "output_plot_weather_data":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path containing the formatted realm5 weather data file, plot the weather data. Note: Only call this method if you have the formatted realm5 weather data file instead of raw realm5 weather data file.",
+        "input":["local_file_path"],
+        "output":[]
+    },
+
+    "output_download_file":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path, download the file to the local file path. Note: if the user asked to download a file and you have the local file path, you should call this method.",
+        "input":["local_file_path"],
+        "output":[]
+    }
+
+
+
+
+
+
+    
+    
+    
+
+
+    
+    
+
+ 
+}
