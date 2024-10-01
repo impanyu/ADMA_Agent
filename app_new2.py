@@ -116,7 +116,8 @@ initializer_output = {
 
 
 class controller:
-    def __init__(self,meta_program_graph,executed_methods):
+    def __init__(self,meta_program_graph,executed_methods,user_instruction=""):
+        self.user_instruction = user_instruction
         self.meta_program_graph = meta_program_graph
         self.executed_methods = executed_methods
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -140,7 +141,7 @@ class controller:
         self.system_prompt += "If you see Chinese, first translate it to English."
         #self.system_prompt += "Note: only call a method, if all the variables in the input list of this method have value. "
 
-    def get_next_task(self,user_instruction):
+    def get_next_task(self):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
         system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
         #self.meta_program_graph["ADMA_list_directory_contents&output_list"]
@@ -149,7 +150,7 @@ class controller:
             model="gpt-4o-2024-08-06",
            
             messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": user_instruction}],
+                      {"role": "user", "content": self.user_instruction}],
             response_format= controller_output,
             temperature=temperature,
         )
@@ -162,7 +163,8 @@ class controller:
 
                                 
 class meta_program_graph_initializer:
-    def __init__(self,meta_program_graph):
+    def __init__(self,meta_program_graph,user_instruction=""):
+        self.user_instruction = user_instruction
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
@@ -178,13 +180,13 @@ class meta_program_graph_initializer:
 
         
 
-    def initialize_meta_program_graph(self, user_instruction):
+    def initialize_meta_program_graph(self):
 
 
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
             messages=[{"role": "system", "content": self.system_prompt},
-                      {"role": "user", "content": user_instruction}],
+                      {"role": "user", "content": self.user_instruction}],
             response_format= initializer_output,
             temperature=temperature,
         )
@@ -210,15 +212,42 @@ def create_map(lat,lng):
                      subdomains=["mt0", "mt1", "mt2", "mt3"]).add_to(map_obj)
     return map_obj
 
+def get_next_task(program_controller):
+    if program_controller.executed_methods == []:
+        next_task = {"method":"variable_initializer"}
+    elif program_controller.executed_methods[-1][:5] == "input":
+        next_task = {"method":"variable_initializer"}
+    else:
+        next_task = program_controller.get_next_task()
 
-def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter=10):
-    if len(program_controller.executed_methods) == 0: # start a new instruction
+    return next_task
 
-        initialized_variables = initializer.initialize_meta_program_graph(prompt)
-        print(initialized_variables)
-        for variable in initialized_variables:
-            if initialized_variables[variable] != "DEFAULT":
-                meta_program_graph[variable]["value"] = initialized_variables[variable]
+def get_answer(prompt,max_iter=10):
+
+    if 'program_controller' not in st.session_state:
+        with open("meta_program_graph_new2.json") as f:
+            meta_program_graph = json.load(f)
+        executed_methods = []
+        st.session_state.program_controller = controller(meta_program_graph,executed_methods,prompt)
+        st.session_state.initializer = meta_program_graph_initializer(meta_program_graph,prompt)
+    
+
+    program_controller = st.session_state.program_controller
+    initializer = st.session_state.initializer
+
+    # start a new instruction
+    if len(program_controller.executed_methods) == 0:
+
+        program_controller.user_instruction = prompt
+        initializer.user_instruction = prompt
+    # continue with the former instruction
+    else:
+        initializer.user_instruction += prompt
+
+
+    
+
+
     result = {}
 
 
@@ -226,12 +255,22 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
     while max_iter >= 0:
         print(meta_program_graph["local_file_path"]["value"])
         max_iter -= 1
-        next_task = program_controller.get_next_task(prompt)
+        #next_task = program_controller.get_next_task()
+        next_task = get_next_task(program_controller)
         print(next_task)
+
+        if next_task["method"] == "variable_initializer":
+            # initialize the meta program graph
+            initialized_variables = initializer.initialize_meta_program_graph()
+            print(initialized_variables)
+            for variable in initialized_variables:
+                if initialized_variables[variable] != "DEFAULT":
+                    meta_program_graph[variable]["value"] = initialized_variables[variable]
+
 
 
         # process different methods
-        if next_task["method"] == "output_download_file":
+        elif next_task["method"] == "output_download_file":
             result = {"type": "download","output": meta_program_graph["local_file_path"]["value"]}
             break
         elif next_task["method"] == "output_plot_weather_data":
@@ -413,12 +452,18 @@ def get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter
     
     if max_iter <0:
         result = {"type": "error","output": "I cannot find the answer to your question. Please try again."}
-    if next_task["method"][:6] == "output":
+    # if there's an output, clear the executed methods, the meta program graph and the user_instruction, which means current instruction is finished
+    if next_task["method"][:6] == "output" or max_iter < 0:
         program_controller.exectuted_methods = []
-        with open("meta_program_graph_new.json") as f:
+        with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
         program_controller.meta_program_graph = meta_program_graph
         initializer.meta_program_graph = meta_program_graph
+        program_controller.user_instruction = ""
+        initializer.user_instruction = ""
+
+
+   
 
 
 
@@ -572,24 +617,6 @@ def main():
     #with open("meta_program_graph_new.json") as f:
     #    meta_program_graph = json.load(f)
 
-    
-    
-    
-    if 'program_controller' not in st.session_state:
-        with open("meta_program_graph_new.json") as f:
-            meta_program_graph = json.load(f)
-        executed_methods = []
-        st.session_state.program_controller = controller(meta_program_graph,executed_methods)
-        st.session_state.initializer = meta_program_graph_initializer(meta_program_graph)
-    
-
- 
-    program_controller = st.session_state.program_controller
-    initializer = st.session_state.initializer
-
-
-
-
 
 
     #upload file
@@ -618,7 +645,7 @@ def main():
       st.chat_message("user",avatar="👨‍🎓").write(prompt)
 
       # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-      response = get_answer(prompt,meta_program_graph,program_controller,initializer,max_iter=30)
+      response = get_answer(prompt,max_iter=30)
 
       ai_reply(response)
 
