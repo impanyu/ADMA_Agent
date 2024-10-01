@@ -587,7 +587,7 @@ def ai_reply(response, if_history=False):
     elif response["type"] == "google_drive_file_list":
         with st.chat_message("assistant", avatar="🤖"):
             if not response["output"]:
-                st.write("No files found in your Google Drive.")
+                st.write("No files found.")
             else:
                 st.write("The files in your Google Drive are:")
                 for file in response["output"]:
