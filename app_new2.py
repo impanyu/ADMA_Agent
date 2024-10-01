@@ -313,7 +313,7 @@ def get_answer(prompt,max_iter=10):
             meta_program_graph["Google_drive_credentials"]["value"] = google_drive_generate_credentials(meta_program_graph["Google_drive_redirect_url"]["value"],username)
 
         elif next_task["method"] == "Google_drive_list_directory":
-            meta_program_graph["Google_drive_file_path_list"]["value"] = google_drive_list(meta_program_graph["Google_drive_credentials"]["value"])
+            meta_program_graph["Google_drive_file_path_list"]["value"] = google_drive_list(meta_program_graph["Google_drive_credentials"]["value"],meta_program_graph["Google_drive_file_path"]["value"])
 
         elif next_task["method"] == "output_Google_drive_file_path_list_printer":
             result = {"type": "google_drive_file_list","output": meta_program_graph["Google_drive_file_path_list"]["value"]}

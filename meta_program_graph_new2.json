@@ -121,7 +121,7 @@
         "type":"Google Drive file path",
         "description":"Google_drive_file_path is the path of the file on the Google Drive.",
         "output_from":[],
-        "input_to":["Google_drive_download_file"],
+        "input_to":["Google_drive_download_file","Google_drive_list_directory"],
         "value":""
     },
 
@@ -349,8 +349,8 @@
     "Google_drive_list_directory":{
         "type":"method",
         "call_condition": "Only call this if you have non empty Google_drive_credentials.",
-        "description":"Given a Google Drive credentials, return the list of paths for all the subdirectories and files under the directory of Google drive.",
-        "input":["Google_drive_credentials"],
+        "description":"Given a Google Drive credentials and a file path on Google drive, return the list of paths for all the subdirectories and files under the directory of Google drive.",
+        "input":["Google_drive_credentials","Google_drive_file_path"],
         "output":["Google_drive_file_path_list"]
     },
 

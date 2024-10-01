@@ -39,11 +39,15 @@ def google_drive_generate_credentials(redirect_url,username):
 
 
 
-def google_drive_list(credential_file):
+def google_drive_list(credential_file,file_path):
     # Load the credentials from the session.
     if not os.path.exists(credential_file):
         return []
     credentials = Credentials.from_authorized_user_file(credential_file,SCOPES)
+
+    file = google_drive_find_file_by_path(credential_file, file_path)
+
+    parent_id = file['id']
 
 
 
@@ -52,12 +56,13 @@ def google_drive_list(credential_file):
 
     # Call the Drive v3 API.
     #results = service.files().list(q="'root' in parents",pageSize=100, fields="nextPageToken, files(id, name,size,webViewLink,modifiedTime, createdTime, mimeType)").execute()
-    results = service.files().list(q="'root' in parents",pageSize=100, fields="nextPageToken, files(name,webViewLink,modifiedTime, createdTime)").execute()
+    results = service.files().list(q="'{parent_id}' in parents",pageSize=100, fields="nextPageToken, files(name,webViewLink,modifiedTime, createdTime)").execute()
     items = results.get('files', [])
 
     return items
 
 def google_drive_download_file(credential_file, file_path):
+    #file_path is in the format of folder1/folder2/folder3/filename
     file_name = os.path.basename(file_path)
     destination = f"tmp/{file_name}"
     if not os.path.exists(credential_file):
