@@ -252,6 +252,7 @@ def get_answer(prompt,max_iter=10):
 
 
     result = {}
+    print(meta_program_graph["Realm5_date_str"]["value"])
 
 
 
@@ -265,7 +266,7 @@ def get_answer(prompt,max_iter=10):
         if next_task["method"] == "variable_initializer":
             # initialize the meta program graph
             initialized_variables = initializer.initialize_meta_program_graph()
-            print(initialized_variables)
+            #print(initialized_variables)
             for variable in initialized_variables:
                 if initialized_variables[variable] != "DEFAULT":
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
