@@ -686,6 +686,7 @@ def main():
           #st.chat_message("assistant", avatar="🤖").write(message['content'])
 
     if google_drive_connect_executed:
+        prompt = ""
         # Update chat history with user message
         user_message = {"role": "user",  "content": f"{prompt}"}
         st.session_state['chat_history'].append(user_message)
