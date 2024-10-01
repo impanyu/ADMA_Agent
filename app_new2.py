@@ -702,7 +702,7 @@ def main():
     else:
     
         prompt = st.chat_input("Ask Me Anything About Your AgData")
-        if prompt != "":
+        if prompt:
 
         
 
