@@ -299,7 +299,7 @@
     "input_date_string":{
         "type":"method",
         "call_condition": "If there's no valid date string in the Realm5_date_str, call this method.",
-        "description":"Given the date string from the user, return the date string in the format of 'YYYY-MM-DD', which will be used for locating Realm5 data.",
+        "description":"Given the date string from the user, initialize Realm5_date_str in the format of 'YYYY-MM-DD'",
         "input":[],
         "output":["Realm5_date_str"]
     }
