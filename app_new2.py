@@ -771,6 +771,8 @@ def main():
     display_chat_history()
 
     prompt = st.chat_input("Ask Me Anything About Your AgData")
+    if not prompt:
+        prompt = ""
     prompt += st.session_state["button_prompt"]
     st.session_state["button_prompt"] = ""
 
