@@ -774,7 +774,7 @@ def main():
     if not prompt:
         prompt = ""
     prompt += st.session_state["button_prompt"]
-    st.session_state["button_prompt"] = ""
+    
 
     print(prompt)
 
