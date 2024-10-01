@@ -685,9 +685,8 @@ def main():
           ai_reply(message['content'],if_history=True)
           #st.chat_message("assistant", avatar="🤖").write(message['content'])
 
-    if google_drive_connect_executed:
+     if google_drive_connect_executed:
         # Update chat history with user message
-        prompt = ""
         user_message = {"role": "user",  "content": f"{prompt}"}
         st.session_state['chat_history'].append(user_message)
         st.chat_message("user",avatar="👨‍🎓").write(prompt)
@@ -700,23 +699,25 @@ def main():
         
         bot_message = {"role": "assistant","content": response}
         st.session_state['chat_history'].append(bot_message)
+    else:
     
+        prompt = st.chat_input("Ask Me Anything About Your AgData")
 
+        
 
-    elif prompt := st.chat_input("Ask Me Anything About Your AgData"):
-      # Update chat history with user message
-      user_message = {"role": "user",  "content": f"{prompt}"}
-      st.session_state['chat_history'].append(user_message)
-      st.chat_message("user",avatar="👨‍🎓").write(prompt)
+        # Update chat history with user message
+        user_message = {"role": "user",  "content": f"{prompt}"}
+        st.session_state['chat_history'].append(user_message)
+        st.chat_message("user",avatar="👨‍🎓").write(prompt)
 
-      # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-      response = get_answer(prompt,max_iter=30)
+        # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
+        response = get_answer(prompt,max_iter=30)
 
-      ai_reply(response)
+        ai_reply(response)
 
-      
-      bot_message = {"role": "assistant","content": response}
-      st.session_state['chat_history'].append(bot_message)
+        
+        bot_message = {"role": "assistant","content": response}
+        st.session_state['chat_history'].append(bot_message)
 
 
 
