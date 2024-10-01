@@ -101,15 +101,11 @@ def google_drive_download_file(credential_file, file_path):
         suffix = mime_type_of_file.split('/')[1]
         destination = f"tmp/{file_name}.{suffix}"
 
-    request = service.files().export_media(fileId=file_id, mimeType=mime_type_of_file)
+        request = service.files().export_media(fileId=file_id, mimeType=mime_type_of_file)
+    else:
+        request = service.files().get_media(fileId=file_id)
 
     
-
-    
-
-    
-
-
     # Create a file object to write the file to.
     fh = io.FileIO(destination, 'wb')
 
