@@ -348,7 +348,7 @@
 
     "Google_drive_list_directory":{
         "type":"method",
-        "call_condition": "",
+        "call_condition": "Only call this if you have non empty Google_drive_credentials.",
         "description":"Given a Google Drive credentials, return the list of paths for all the subdirectories and files under the directory of Google drive.",
         "input":["Google_drive_credentials"],
         "output":["Google_drive_file_path_list"]
