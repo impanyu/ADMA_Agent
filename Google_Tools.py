@@ -32,7 +32,6 @@ def google_drive_generate_credentials(redirect_url,username):
 
     credentials = Credentials.from_authorized_user_file(credential_file, SCOPES)
 
-
     if credentials and credentials.expired and credentials.refresh_token:
         credentials.refresh(Request())
 
