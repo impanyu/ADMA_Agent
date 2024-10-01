@@ -591,16 +591,24 @@ def ai_reply(response, if_history=False):
             st.write("No files found.")
         else:
             st.write("The files in your Google Drive are:")
-            st.divider()
+            st.markdown("<style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style>", unsafe_allow_html=True)
+            
             #for file in response["output"]:
                 #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
             #    st.write(f"[{file['name']}]({file['webViewLink']})")
-            col1, col2 = st.columns([10, 1])
+            col1, col2, col3, col4, col5, col6 = st.columns([2,2,2,2,1,2])
             with col1:
-                st.markdown(f"```"
-                        f"{'Name'.ljust(30)}  {'Owner'.ljust(20)}  {'CreatedTime'.ljust(20)}  {'ModifiedTime'.ljust(20)}  {'Size'.ljust(20)}"
-                        f"```")
+                st.markdown(f"{'Name'} ")
             with col2:
+                st.markdown(f"{'Owner'}")
+            with col3:
+                st.markdown(f"{'Created Time'}")
+            with col4:
+                st.markdown(f"{'Last Modified'}")
+            with col5:
+                st.markdown(f"{'Size'}")
+
+            with col6:
                 st.markdown("Upload")
             
             #html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
@@ -614,10 +622,18 @@ def ai_reply(response, if_history=False):
                     size = ""
 
                 # Set up two columns: one for text and one for the button
-                col1, col2 = st.columns([10, 1])
+                col1, col2, col3, col4, col5, col6 = st.columns([2,2,2,2,1,2])
                 with col1:
-                    st.markdown(f"[{file['name'].ljust(30)}]({file['webViewLink']})  {file['owners'][0]['displayName'].ljust(20)}  {file['createdTime'].ljust(20)}  {file['modifiedTime'].ljust(20)}  {size.ljust(20)}")
+                    st.markdown(f"[{file['name'].ljust(30)}]({file['webViewLink']})  ")
                 with col2:
+                    st.markdown(f"{file['owners'][0]['displayName']}")
+                with col3:
+                    st.markdown(f"{file['createdTime']}")
+                with col4:
+                    st.markdown(f"{file['modifiedTime']}")
+                with col5:
+                    st.markdown(f"{size}")
+                with col6:
                     google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"]["value"].strip("/")
                     google_drive_file_path += "/"+file["name"]
                     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -626,7 +642,7 @@ def ai_reply(response, if_history=False):
                         print(st.session_state["button_prompt"])
                         print("button clicked")
 
-                st.divider() 
+                
                 
                 
                 #html_code += f'<tr><td><a href="{file["webViewLink"]}" target="_blank">{file["name"]}</a></td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{size}</td></tr><tr>'
