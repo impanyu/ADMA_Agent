@@ -621,6 +621,7 @@ def ai_reply(response, if_history=False):
                     if button:
                         st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA."
                         print(st.session_state["button_prompt"])
+                        print("button clicked")
 
                 st.divider() 
                 
