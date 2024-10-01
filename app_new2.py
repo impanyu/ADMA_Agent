@@ -145,6 +145,7 @@ class controller:
         #self.system_prompt += "If you want to plot the data, you need to make sure 'tmp/Realm5_formatted_data.json' is the value of local_file_path in the meta program graph. "
         self.system_prompt += "When user request go to somewhere, try your best to find ways to get the adma url. "
         self.system_prompt += "If you see Chinese, first translate it to English."
+        self.system_prompt += "You can only call the methods which exist in the meta program graph. "
         #self.system_prompt += "Note: only call a method, if all the variables in the input list of this method have value. "
 
     def get_next_task(self):
