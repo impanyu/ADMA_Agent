@@ -24,7 +24,7 @@ def google_drive_auth():
     return auth_url
 
 def google_drive_generate_credentials(redirect_url):
-    credential_file = "/tmp/credentials.json"
+    credential_file = "/tmp/google_drive_credential.json"
     while not os.path.exists(credential_file):
         pass
 

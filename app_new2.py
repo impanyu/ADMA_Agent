@@ -23,7 +23,7 @@ import os
 from Realm5_Tools import *
 import pandas as pd
 from Soil import *
-from google import *
+from Google_Tools import *
 
 temperature = 0.2
 
@@ -277,6 +277,10 @@ def get_answer(prompt,max_iter=10):
 
         elif next_task["method"] == "input_date_string":
             result = {"type": "input_date_string","output": "Please input a date string for Realm5."} 
+            break
+
+        elif next_task["method"] == "Google_drive_connect":
+            result = {"type": "url","output": google_drive_auth()}
             break
 
 
