@@ -233,10 +233,12 @@ def ADMA_url_extractor(meta_data):
 
 def ADMA_upload_file(local_file, server_path):
     filename = os.path.basename(local_file)
-    upload_url = f"{root_url}/api/upload/?target_path={server_path}"
+    upload_url = f"{root_url}/api/upload/"
     # The file to be uploaded
     files = {'file': open(local_file, 'rb')}
     # Additional data
+    if server_path == "":
+        server_path = "/"
     data = {'target_path': server_path}
     # Sending the POST request to upload the file
     response = requests.post(upload_url,files=files, data=data)
