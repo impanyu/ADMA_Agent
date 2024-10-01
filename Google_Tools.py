@@ -72,6 +72,8 @@ def google_drive_download_file(credential_file, file_path):
 
     # Search for the file by path
     file = google_drive_find_file_by_path(credential_file, file_path)
+    print(f"Downloading file: {file_path}")
+
 
     if file == None:
         return ""
