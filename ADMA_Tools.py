@@ -240,10 +240,11 @@ def ADMA_upload_file(local_file, server_path):
     
     if server_path == "":
         server_path = "/"
-        print(f"Uploading file: {local_file} to {server_path}")
+        
     data = {'target_path': server_path}
     # Sending the POST request to upload the file
-    response = requests.post(upload_url,files=files, data=data)
+    import requests
+    response = requests.post(upload_url, headers=headers, files=files, data=data)
 
     if response.status_code == 201:
         return server_path
