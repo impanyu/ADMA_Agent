@@ -39,7 +39,7 @@ def google_drive_list(credential_file):
     service = build('drive', 'v3', credentials=credentials)
 
     # Call the Drive v3 API.
-    results = service.files().list(pageSize=100, fields="nextPageToken, files(id, name,size,webViewLink,modifiedTime, createdTime, mimeType)").execute()
+    results = service.files().list(q="'root' in parents",pageSize=100, fields="nextPageToken, files(id, name,size,webViewLink,modifiedTime, createdTime, mimeType)").execute()
     items = results.get('files', [])
 
     return items
