@@ -22,8 +22,8 @@ def google_drive_auth(username):
     # Redirect the user to the Google OAuth2 authorization page.
     return auth_url
 
-def google_drive_generate_credentials(redirect_url):
-    credential_file = "/tmp/google_drive_credential.json"
+def google_drive_generate_credentials(redirect_url,username):
+    credential_file = f"/tmp/google_drive_credential_{username}.json"
     while not os.path.exists(credential_file):
         pass
 

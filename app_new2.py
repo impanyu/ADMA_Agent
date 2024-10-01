@@ -232,6 +232,8 @@ def get_next_task(program_controller):
 
 def get_answer(prompt,max_iter=10):
 
+    username = "ypan12"
+
     if 'program_controller' not in st.session_state:
         with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
@@ -286,7 +288,7 @@ def get_answer(prompt,max_iter=10):
             if program_controller.meta_program_graph["Google_drive_redirect_url"]["value"] != "":
                 continue
 
-            username = "ypan12"
+            
             meta_program_graph["Google_drive_redirect_url"]["value"] = google_drive_auth(username)
             result = {"type": "google_drive_url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
             ai_reply(result)
@@ -295,7 +297,7 @@ def get_answer(prompt,max_iter=10):
             
 
         elif next_task["method"] == "Google_drive_generate_credentials":
-            meta_program_graph["Google_drive_credentials"]["value"] = google_drive_generate_credentials(meta_program_graph["Google_drive_redirect_url"]["value"])
+            meta_program_graph["Google_drive_credentials"]["value"] = google_drive_generate_credentials(meta_program_graph["Google_drive_redirect_url"]["value"],username)
 
         elif next_task["method"] == "Google_drive_list_directory":
             meta_program_graph["Google_drive_file_path_list"]["value"] = google_drive_list(meta_program_graph["Google_drive_credentials"]["value"])
