@@ -508,8 +508,9 @@ def ai_reply(response, if_history=False):
         st.chat_message("assistant", avatar="🤖").write(response["output"])
         return
     elif response["type"] == "google_drive_url":
-        st.chat_message("assistant").write("Please click the following link to connect to Google Drive:")
-        st.markdown(f"{response['output']}")
+        with st.chat_message("assistant"):
+            st.write("Please click the following link to connect to Google Drive:")
+            st.markdown(f"{response['output']}")
         return
 
 
