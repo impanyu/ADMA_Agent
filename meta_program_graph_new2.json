@@ -340,7 +340,7 @@
 
     "Google_drive_connect":{
         "type":"method",
-        "call_condition": "Call this if the value of Google_drive_redirect_url is empty.",
+        "call_condition": "Only call this if the value of Google_drive_redirect_url is empty.",
         "description":"Connect to Google Drive, and return the credentials.",
         "input":[],
         "output":["Google_drive_redirect_url"]
