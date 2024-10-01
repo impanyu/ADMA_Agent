@@ -9,7 +9,7 @@ import os
 # SCOPES should include the required permissions for your app.
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
-def google_drive_auth(request):
+def google_drive_auth():
     # Create the flow using the client_secrets.json file.
     flow = Flow.from_client_secrets_file(
         'client_secret.json',
@@ -21,7 +21,14 @@ def google_drive_auth(request):
     auth_url, _ = flow.authorization_url(prompt='consent')
 
     # Redirect the user to the Google OAuth2 authorization page.
-    return redirect(auth_url)
+    return auth_url
+
+def google_drive_generate_credentials(redirect_url):
+    credential_file = "/tmp/credentials.json"
+    while not os.path.exists(credential_file):
+        pass
+
+    return credential_file
 
 
 

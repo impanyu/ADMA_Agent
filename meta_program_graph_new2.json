@@ -105,7 +105,7 @@
     "Google_drive_credentials":{
         "type":"local file path",
         "description":"Google_drive_credentials is the file for the credentials of the Google Drive.",
-        "output_from":["Google_drive_connect"],
+        "output_from":["Google_drive_generate_credentials"],
         "input_to":["Google_download_file","Google_drive_list_directory"],
         "value":""
     },
@@ -125,6 +125,13 @@
         "value":""
     },
 
+    "Google_drive_redirect_url":{
+        "type":"Google Drive redirect url",
+        "description":"Google_drive_redirect_url is the url for the Google Drive.",
+        "output_from":["Google_drive_connect"],
+        "input_to":["Google_drive_generate_credentials"],
+        "value":""
+    },
     
 
 
@@ -336,7 +343,7 @@
         "call_condition": "",
         "description":"Connect to Google Drive, and return the credentials.",
         "input":[],
-        "output":["Google_drive_credentials"]
+        "output":["Google_drive_redirect_url"]
     },
 
     "Google_drive_list_directory":{
@@ -361,6 +368,14 @@
         "description":"Given a Google Drive file path and Google Drive Credentials, download the file and return the local file path of the downloaded file.",
         "input":["Google_drive_file_path","Google_drive_credentials"],
         "output":["local_file_path"]
+    },
+
+    "Google_drive_generate_credentials":{
+        "type":"method",
+        "call_condition": "call this only if you have the Google_drive_redirect_url.",
+        "description":"Given Google drive redirect url, return the Google drive credentials.",
+        "input":["Google_drive_redirect_url"],
+        "output":["Google_drive_credentials"]
     }
 
     
