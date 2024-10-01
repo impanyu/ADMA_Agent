@@ -283,6 +283,9 @@ def get_answer(prompt,max_iter=10):
             break
 
         elif next_task["method"] == "Google_drive_connect":
+            if program_controller.meta_program_graph["Google_drive_redirect_url"]["value"] != "":
+                continue
+
             meta_program_graph["Google_drive_redirect_url"]["value"] = google_drive_auth()
             result = {"type": "google_drive_url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
             ai_reply(result)
