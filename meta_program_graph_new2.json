@@ -1,4 +1,8 @@
 {
+   
+
+
+
     "ADMA_API_file_path":{
         "type":"ADMA API file path",
         "description":"ADMA_API_file_path is a path of the directory on the ADMA system. The format should be like path/to/directory, with 0 or more / in the path. when user asked to go to file or folder followed by a path, you should set this to the path.",
@@ -98,13 +102,20 @@
         "type":"user instruction",
         "description":"user_instruction is the instruction of the user.",
         "output_from":[],
-        "input_to":[],
+        "input_to":["variable_initializer"],
         "value":""
     },
 
     
 
 
+    "variable_initializer":{
+        "type":"method",
+        "call_condition":"",
+        "description":"variable_initializer tries its best to initialize the value of the variables in the output list.",
+        "input":["user_instruction"],
+        "output":["ADMA_search_string","JD_ENREEC_field_name","Realm5_date_str","JD_ENREEC_field_id","ADMA_menu_name","ADMA_API_file_path"]
+    },
 
 
     "ADMA_list_directory": {
@@ -292,6 +303,8 @@
         "input":[],
         "output":["Realm5_date_str"]
     }
+
+
 
 
 

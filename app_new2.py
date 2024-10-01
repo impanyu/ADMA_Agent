@@ -116,8 +116,8 @@ initializer_output = {
 
 
 class controller:
-    def __init__(self,meta_program_graph,executed_methods,user_instruction=""):
-        self.user_instruction = user_instruction
+    def __init__(self,meta_program_graph,executed_methods):
+
         self.meta_program_graph = meta_program_graph
         self.executed_methods = executed_methods
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -145,12 +145,13 @@ class controller:
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
         system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
         #self.meta_program_graph["ADMA_list_directory_contents&output_list"]
+        user_instruction = self.meta_program_graph["user_instruction"]["value"]
 
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
            
             messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": self.user_instruction}],
+                      {"role": "user", "content": user_instruction}],
             response_format= controller_output,
             temperature=temperature,
         )
@@ -163,8 +164,8 @@ class controller:
 
                                 
 class meta_program_graph_initializer:
-    def __init__(self,meta_program_graph,user_instruction=""):
-        self.user_instruction = user_instruction
+    def __init__(self,meta_program_graph):
+        
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
@@ -181,12 +182,13 @@ class meta_program_graph_initializer:
         
 
     def initialize_meta_program_graph(self):
+        user_instruction = self.meta_program_graph["user_instruction"]["value"]
 
 
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
             messages=[{"role": "system", "content": self.system_prompt},
-                      {"role": "user", "content": self.user_instruction}],
+                      {"role": "user", "content": user_instruction}],
             response_format= initializer_output,
             temperature=temperature,
         )
@@ -228,8 +230,8 @@ def get_answer(prompt,max_iter=10):
         with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
         executed_methods = []
-        st.session_state.program_controller = controller(meta_program_graph,executed_methods,prompt)
-        st.session_state.initializer = meta_program_graph_initializer(meta_program_graph,prompt)
+        st.session_state.program_controller = controller(meta_program_graph,executed_methods)
+        st.session_state.initializer = meta_program_graph_initializer(meta_program_graph)
     
 
     program_controller = st.session_state.program_controller
@@ -238,11 +240,10 @@ def get_answer(prompt,max_iter=10):
     # start a new instruction
     if len(program_controller.executed_methods) == 0:
 
-        program_controller.user_instruction = prompt
-        initializer.user_instruction = prompt
+        program_controller.meta_program_graph["user_instruction"]["value"] = prompt
     # continue with the former instruction
     else:
-        initializer.user_instruction += prompt
+        program_controller.meta_program_graph["user_instruction"]["value"] += prompt
 
 
     
