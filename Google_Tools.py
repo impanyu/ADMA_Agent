@@ -58,7 +58,7 @@ def google_drive_list(credential_file,file_path):
 
     # Call the Drive v3 API.
     #results = service.files().list(q="'root' in parents",pageSize=100, fields="nextPageToken, files(id, name,size,webViewLink,modifiedTime, createdTime, mimeType)").execute()
-    results = service.files().list(q="'{parent_id}' in parents",pageSize=100, fields="nextPageToken, files(name,webViewLink,modifiedTime, createdTime)").execute()
+    results = service.files().list(q=f"'{parent_id}' in parents",pageSize=100, fields="nextPageToken, files(name,webViewLink,modifiedTime, createdTime)").execute()
     items = results.get('files', [])
 
     return items
