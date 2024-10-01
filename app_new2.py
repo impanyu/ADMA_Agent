@@ -464,8 +464,7 @@ def get_answer(prompt,max_iter=10):
             meta_program_graph = json.load(f)
         program_controller.meta_program_graph = meta_program_graph
         initializer.meta_program_graph = meta_program_graph
-        program_controller.user_instruction = ""
-        initializer.user_instruction = ""
+
 
 
    
