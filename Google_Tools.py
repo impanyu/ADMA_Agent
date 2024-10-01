@@ -64,6 +64,7 @@ def google_drive_list(credential_file,file_path):
     return items
 
 def google_drive_download_file(credential_file, file_path):
+    file_path = file_path.strip("/")
     #file_path is in the format of folder1/folder2/folder3/filename
     file_name = os.path.basename(file_path)
     destination = f"tmp/{file_name}"
@@ -124,6 +125,7 @@ def google_drive_download_file(credential_file, file_path):
 
 
 def google_drive_find_file_by_path(credential_file, file_path):
+    file_path = file_path.strip("/")
     # Load the credentials.
     credentials = Credentials.from_authorized_user_file(credential_file, SCOPES)
 

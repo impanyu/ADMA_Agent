@@ -590,13 +590,18 @@ def ai_reply(response, if_history=False):
             st.write("No files found.")
         else:
             st.write("The files in your Google Drive are:")
+            st.divider()
             #for file in response["output"]:
                 #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
             #    st.write(f"[{file['name']}]({file['webViewLink']})")
-
+            col1, col2 = st.columns([10, 1])
+            with col1:
+                st.write(f"{"Name".ljust(30)}  {"Owner".ljust(20)}  {'CreatedTime'.ljust(20)}  {'ModifiedTime'.ljust(20)}  {"Size".ljust(20)}")
+            with col2:
+                st.write("Upload")
             
-            html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
-            html_code += '<tbody>'
+            #html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
+            #html_code += '<tbody>'
             for file in response["output"]:
                 if  "Untitled" in file["name"]:
                     continue
@@ -604,10 +609,24 @@ def ai_reply(response, if_history=False):
                     size = str(int(int(file["size"])/1000)) +"KB"
                 else:
                     size = ""
+
+                # Set up two columns: one for text and one for the button
+                col1, col2 = st.columns([10, 1])
+                with col1:
+                    st.write(f"[{file['name'].ljust(30)}]({file['webViewLink']})  {file['owners'][0]['displayName'].ljust(20)}  {file['createdTime'].ljust(20)}  {file['modifiedTime'].ljust(20)}  {size.ljust(20)}")
+                with col2:
+                    google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"].strip("/")
+                    google_drive_file_path += "/"+file["name"]
+                    button = st.button("Upload to ADMA")
+                    if button:
+                        st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA."
+
+                st.divider() 
                 
-                html_code += f'<tr><td><a href="{file["webViewLink"]}" target="_blank">{file["name"]}</a></td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{size}</td></tr><tr>'
-            html_code +='</tbody></table></body></html>'
-            st.components.v1.html(html_code, width=1240)
+                
+                #html_code += f'<tr><td><a href="{file["webViewLink"]}" target="_blank">{file["name"]}</a></td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{size}</td></tr><tr>'
+            #html_code +='</tbody></table></body></html>'
+            #st.components.v1.html(html_code, width=1240)
 
 
 
@@ -744,15 +763,24 @@ def main():
 
     # Initialize the session state for chat history if it does not exist
     if 'chat_history' not in st.session_state:
-      st.session_state['chat_history'] = []
+        st.session_state['chat_history'] = []
+
+    if 'buttons' not in st.session_state:
+        st.session_state['button_prompt'] = ""
 
     display_chat_history()
+
+    prompt = st.chat_input("Ask Me Anything About Your AgData")
+    prompt += st.session_state["button_prompt"]
+    st.session_state["button_prompt"] = ""
+
+    
     
 
 
 
     
-    if prompt := st.chat_input("Ask Me Anything About Your AgData"):
+    if prompt:
   
         # Update chat history with user message
         user_message = {"role": "user",  "content": f"{prompt}"}
