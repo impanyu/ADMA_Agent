@@ -72,17 +72,30 @@ def google_drive_download_file(credential_file, file_path):
 
     # Search for the file by path
     file = google_drive_find_file_by_path(credential_file, file_path)
-    print(f"Downloading file: {file_path}")
+    mime_type_of_file = file['mimeType']
+    file_id = file['id']
+    #print(f"Downloading file: {file_path}")
+    if mime_type_of_file.startswith('application/vnd.google-apps'):
+        if not mime_type:
+            # Set default export mime type based on Google file type
+            mime_type = {
+                'application/vnd.google-apps.document': 'application/pdf',  # Google Docs -> PDF
+                'application/vnd.google-apps.spreadsheet': 'text/csv',  # Google Sheets -> CSV
+                'application/vnd.google-apps.presentation': 'application/pdf',  # Google Slides -> PDF
+            }.get(mime_type_of_file, 'application/pdf')  # Default to PDF if unknown
+
+        request = service.files().export_media(fileId=file_id, mimeType=mime_type)
+
+    else:
+        # For non-Google Docs files (e.g., PDFs, images), use get_media to download
+        request = service.files().get_media(fileId=file_id)
 
 
     if file == None:
         return ""
 
-    file_id = file['id']
     
 
-    # Request the file from Google Drive.
-    request = service.files().get_media(fileId=file_id)
 
     # Create a file object to write the file to.
     fh = io.FileIO(destination, 'wb')
@@ -129,7 +142,7 @@ def google_drive_find_file_by_path(credential_file, file_path):
     # Now search for the final file in the last folder.
     file_name = path_parts[-1]
     query = f"name = '{file_name}' and '{parent_id}' in parents"
-    results = service.files().list(q=query, fields="files(id, name, webViewLink)").execute()
+    results = service.files().list(q=query, fields="files(id, name, webViewLink, mimeType)").execute()
     items = results.get('files', [])
 
     if not items:
