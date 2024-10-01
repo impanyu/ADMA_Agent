@@ -462,6 +462,7 @@ def get_answer(prompt,max_iter=10):
         result = {"type": "error","output": "I cannot find the answer to your question. Please try again."}
     # if there's an output, clear the executed methods, the meta program graph and the user_instruction, which means current instruction is finished
     if next_task["method"][:6] == "output" or max_iter < 0:
+        print("clear")
         program_controller.exectuted_methods = []
         with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
