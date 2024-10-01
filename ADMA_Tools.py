@@ -237,15 +237,16 @@ def ADMA_upload_file(local_file, server_path):
     # The file to be uploaded
     files = {'file': open(local_file, 'rb')}
     # Additional data
-    print(f"Uploading file: {local_file} to {server_path}")
+    
     if server_path == "":
         server_path = "/"
+        print(f"Uploading file: {local_file} to {server_path}")
     data = {'target_path': server_path}
     # Sending the POST request to upload the file
     response = requests.post(upload_url,files=files, data=data)
 
     if response.status_code == 201:
-        return os.path.join(server_path,filename)
+        return server_path
     else:
         print(f"Failed to upload file: {local_file}, Status code: {response.status_code}, {response.text}")
         return ""
