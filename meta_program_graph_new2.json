@@ -288,7 +288,7 @@
     "input_date_string":{
         "type":"method",
         "call_condition": "",
-        "description":"Given the date string from the user, return the date string in the format of 'YYYY-MM-DD'.",
+        "description":"Given the date string from the user, return the date string in the format of 'YYYY-MM-DD', which will be used for locating Realm5 data.",
         "input":[],
         "output":["Realm5_date_str"]
     }

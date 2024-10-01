@@ -267,6 +267,10 @@ def get_answer(prompt,max_iter=10):
                 if initialized_variables[variable] != "DEFAULT":
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
 
+        elif next_task["method"] == "input_date_string":
+            result = {"type": "input_date_string","output": "Please input a date string for Realm5."} 
+            break
+
 
 
         # process different methods
@@ -471,7 +475,12 @@ def get_answer(prompt,max_iter=10):
     return result
 
 def ai_reply(response, if_history=False):
-    if response["type"] == "error":
+    if response["type"] == "input_date_string":
+        st.chat_message("assistant", avatar="🤖").write(response["output"])
+        return
+
+
+    elif response["type"] == "error":
         st.chat_message("assistant", avatar="🤖").write(response["output"])
         return
     elif response["type"] == "download":
