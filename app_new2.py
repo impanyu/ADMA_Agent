@@ -282,6 +282,7 @@ def get_answer(prompt,max_iter=10):
         elif next_task["method"] == "Google_drive_connect":
             meta_program_graph["Google_drive_redirect_url"]["value"] = google_drive_auth()
             result = {"type": "url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
+            break
             
 
         elif next_task["method"] == "Google_drive_generate_credentials":
