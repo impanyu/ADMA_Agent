@@ -303,7 +303,7 @@ def get_answer(prompt,max_iter=10):
             meta_program_graph["Google_drive_file_path_list"]["value"] = google_drive_list(meta_program_graph["Google_drive_credentials"]["value"])
 
         elif next_task["method"] == "output_Google_drive_file_path_list_printer":
-            result = {"type": "object","output": meta_program_graph["Google_drive_file_path_list"]["value"]}
+            result = {"type": "google_drive_file_list","output": meta_program_graph["Google_drive_file_path_list"]["value"]}
             break
 
 
@@ -556,6 +556,12 @@ def ai_reply(response, if_history=False):
     elif response["type"] == "object":
 
         st.json(response["output"],expanded=False)
+
+    elif response["type"] == "google_drive_file_list":
+        for file in response["output"]:
+            st.markdown(f"<a href={file["webViewLink"]}>{file['name']}</a>",unsafe_allow_html=True)
+
+        #st.json(response["output"],expanded=False)
 
 
   
