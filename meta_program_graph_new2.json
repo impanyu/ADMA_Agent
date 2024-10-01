@@ -87,7 +87,7 @@
         "description":"Realm5_date_str is the date string in the format of 'YYYY-MM-DD'.",
         "output_from":["input_date_string"],
         "input_to":["Realm5_generate_file_url"],
-        "value":"2024-01-01"
+        "value":""
     },
 
     "ADMA_search_string":{
