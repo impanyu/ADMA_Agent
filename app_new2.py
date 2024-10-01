@@ -254,7 +254,7 @@ def get_answer(prompt,max_iter=10):
 
 
     while max_iter >= 0:
-        print(meta_program_graph["local_file_path"]["value"])
+        #print(meta_program_graph["local_file_path"]["value"])
         max_iter -= 1
         #next_task = program_controller.get_next_task()
         next_task = get_next_task(program_controller)
