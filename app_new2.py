@@ -585,27 +585,27 @@ def ai_reply(response, if_history=False):
         st.json(response["output"],expanded=False)
 
     elif response["type"] == "google_drive_file_list":
-        with st.chat_message("assistant", avatar="🤖"):
-            if not response["output"]:
-                st.write("No files found.")
-            else:
-                st.write("The files in your Google Drive are:")
-                #for file in response["output"]:
-                    #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
-                #    st.write(f"[{file['name']}]({file['webViewLink']})")
+        
+        if not response["output"]:
+            st.write("No files found.")
+        else:
+            st.write("The files in your Google Drive are:")
+            #for file in response["output"]:
+                #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
+            #    st.write(f"[{file['name']}]({file['webViewLink']})")
 
+            
+            html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
+            html_code += '<tbody>'
+            for file in response["output"]:
+                if "size" in file:
+                    size = str(int(int(file["size"])/1000)) +"KB"
+                else:
+                    size = ""
                 
-                html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
-                html_code += '<tbody>'
-                for file in response["output"]:
-                    if "size" in file:
-                        size = str(int(int(file["size"])/1000)) +"KB"
-                    else:
-                        size = ""
-                 
-                    html_code += f'<tr><td><a href="{file["webViewLink"]}" target="_blank">{file["name"]}</a></td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{size}</td></tr><tr>'
-                html_code +='</tbody></table></body></html>'
-                st.components.v1.html(html_code, width=1240, height=790)
+                html_code += f'<tr><td><a href="{file["webViewLink"]}" target="_blank">{file["name"]}</a></td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{size}</td></tr><tr>'
+            html_code +='</tbody></table></body></html>'
+            st.components.v1.html(html_code, width=1240, height=790)
 
 
 
