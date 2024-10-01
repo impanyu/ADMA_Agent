@@ -267,7 +267,7 @@ def get_answer(prompt,max_iter=10):
             print(initialized_variables)
             for variable in initialized_variables:
                 if initialized_variables[variable] != "DEFAULT":
-                    meta_program_graph[variable]["value"] = initialized_variables[variable]
+                    program_controller.meta_program_graph[variable]["value"] = initialized_variables[variable]
 
         elif next_task["method"] == "input_date_string":
             result = {"type": "input_date_string","output": "Please input a date string for Realm5."} 
