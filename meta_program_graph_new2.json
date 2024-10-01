@@ -1,13 +1,9 @@
 {
-   
-
-
-
     "ADMA_API_file_path":{
         "type":"ADMA API file path",
         "description":"ADMA_API_file_path is a path of the directory on the ADMA system. The format should be like path/to/directory, with 0 or more / in the path. when user asked to go to file or folder followed by a path, you should set this to the path.",
-        "output_from":["ADMA_API_file_path_list_iterator","Realm5_generate_file_url"],
-        "input_to":["ADMA_list_directory","ADMA_get_meta_data","ADMA_menu_option","ADMA_search","ADMA_download_file"],
+        "output_from":["ADMA_API_file_path_list_iterator","Realm5_generate_file_url","ADMA_upload_file"],
+        "input_to":["ADMA_list_directory","ADMA_get_meta_data","ADMA_menu_option","ADMA_search","ADMA_download_file","ADMA_upload_file"],
         "value":""
     },
     "ADMA_meta_data":{
@@ -62,8 +58,8 @@
     "local_file_path":{
         "type":"local file path",
         "description":"local_file_path is the file path of the file on the serv.",
-        "output_from":["JD_ENREEC_boundary_in_field","ADMA_download_file","Reaml5_format_data_for_plot"],
-        "input_to":["output_JD_ENREEC_field_list_printer","output_field_boundary_map","output_plot_weather_data","output_download_file","Realm5_format_data_for_plot"],
+        "output_from":["JD_ENREEC_boundary_in_field","ADMA_download_file","Reaml5_format_data_for_plot","Google_drive_download_file"],
+        "input_to":["output_JD_ENREEC_field_list_printer","output_field_boundary_map","output_plot_weather_data","output_download_file","Realm5_format_data_for_plot","ADMA_upload_file"],
         "value":""
     },
     "JD_ENREEC_field_name":{
@@ -110,7 +106,22 @@
         "type":"local file path",
         "description":"Google_drive_credentials is the file for the credentials of the Google Drive.",
         "output_from":["Google_drive_connect"],
-        "input_to":[],
+        "input_to":["Google_download_file","Google_drive_list_directory"],
+        "value":""
+    },
+
+    "Google_drive_file_path_list":{
+        "type":"Google Drive file path list",
+        "description":"Google_drive_file_path_list is a list of paths in the Google Drive.",
+        "output_from":["Google_drive_list_directory"],
+        "input_to":["output_Google_drive_file_path_list_printer"],
+        "value":[]
+    },
+    "Google_drive_file_path":{
+        "type":"Google Drive file path",
+        "description":"Google_drive_file_path is the path of the file on the Google Drive.",
+        "output_from":[],
+        "input_to":["Google_drive_download_file"],
         "value":""
     },
 
@@ -218,6 +229,13 @@
         "input":["ADMA_API_file_path"],
         "output":["local_file_path"]
     },
+    "ADMA_upload_file":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a local file path and ADMA API file path, upload the file to the ADMA API file path on ADMA server and then return the ADMA API file path of the uploaded file.",
+        "input":["local_file_path","ADMA_API_file_path"],
+        "output":["ADMA_API_file_path"]
+    },
     
     
 
@@ -319,6 +337,30 @@
         "description":"Connect to Google Drive, and return the credentials.",
         "input":[],
         "output":["Google_drive_credentials"]
+    },
+
+    "Google_drive_list_directory":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a Google Drive credentials, return the list of paths for all the subdirectories and files under the directory of Google drive.",
+        "input":["Google_drive_credentials"],
+        "output":["Google_drive_file_path_list"]
+    },
+
+    "output_Google_drive_file_path_list_printer":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a list of Google Drive file path, print the file path in a list format.",
+        "input":["Google_drive_file_path_list"],
+        "output":[]
+    },
+
+    "Google_drive_download_file":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Given a Google Drive file path and Google Drive Credentials, download the file and return the local file path of the downloaded file.",
+        "input":["Google_drive_file_path","Google_drive_credentials"],
+        "output":["local_file_path"]
     }
 
     
