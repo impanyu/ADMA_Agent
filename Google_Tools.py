@@ -8,12 +8,12 @@ import os
 # SCOPES should include the required permissions for your app.
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
-def google_drive_auth():
+def google_drive_auth(username):
     # Create the flow using the client_secrets.json file.
     flow = Flow.from_client_secrets_file(
         '/tmp/google_drive_client_secret.json',
         scopes=SCOPES,
-        redirect_uri='https://adma.hopto.org/api/google_drive_auth_callback/'
+        redirect_uri=f'https://adma.hopto.org/api/google_drive_auth_callback/?username={username}'
     )
 
     # Get the authorization URL.
