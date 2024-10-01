@@ -495,7 +495,7 @@ def get_answer(prompt,max_iter=10):
         with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
         # keep the google drive redirect url for this session
-        google_drive_redirect_url = meta_program_graph["Google_drive_redirect_url"]
+        google_drive_redirect_url = program_controller.meta_program_graph["Google_drive_redirect_url"]
         program_controller.meta_program_graph = meta_program_graph
         initializer.meta_program_graph = meta_program_graph
         program_controller.meta_program_graph["Google_drive_redirect_url"] = google_drive_redirect_url
