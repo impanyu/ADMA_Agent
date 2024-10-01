@@ -220,7 +220,7 @@ def get_next_task(program_controller):
         program_controller.executed_methods.append("variable_initializer")
     elif program_controller.executed_methods[-1][:5] == "input":
         next_task = {"method":"variable_initializer"}
-        #program_controller.executed_methods.append("variable_initializer")
+        program_controller.executed_methods.append("variable_initializer")
     else:
         next_task = program_controller.get_next_task()
 
