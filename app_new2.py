@@ -603,7 +603,7 @@ def ai_reply(response, if_history=False):
                     else:
                         size = ""
                  
-                    html_code += f'<tr><td><a href="{file["webViewLink"]}">{file["name"]}</a></td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{size}</td></tr><tr>'
+                    html_code += f'<tr><td><a href="{file["webViewLink"]}" target="_blank">{file["name"]}</a></td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{size}</td></tr><tr>'
                 html_code +='</tbody></table></body></html>'
                 st.components.v1.html(html_code, width=1240, height=790)
 
