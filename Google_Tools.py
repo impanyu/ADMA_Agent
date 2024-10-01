@@ -46,6 +46,8 @@ def google_drive_list(credential_file,file_path):
     credentials = Credentials.from_authorized_user_file(credential_file,SCOPES)
 
     file = google_drive_find_file_by_path(credential_file, file_path)
+    if file == None:
+        return []
 
     parent_id = file['id']
 
@@ -81,6 +83,9 @@ def google_drive_download_file(credential_file, file_path):
 
     # Search for the file by path
     file = google_drive_find_file_by_path(credential_file, file_path)
+    if file == None:
+        return ""
+    
     mime_type_of_file = file['mimeType']
     file_id = file['id']
     #print(f"Downloading file: {file_path}")
@@ -99,8 +104,7 @@ def google_drive_download_file(credential_file, file_path):
 
     
 
-    if file == None:
-        return ""
+    
 
     
 
