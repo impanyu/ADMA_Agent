@@ -48,8 +48,8 @@ def google_drive_list(credential_file,file_path):
     file = google_drive_find_file_by_path(credential_file, file_path)
     if file == None:
         parent_id = 'root'
-
-    parent_id = file['id']
+    else:
+        parent_id = file['id']
 
 
 
