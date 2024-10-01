@@ -293,9 +293,10 @@ def get_answer(prompt,max_iter=10):
                 continue
 
             credential_file = f"/tmp/google_drive_credential_{username}.json"
-            credentials = Credentials.from_authorized_user_file(credential_file,SCOPES)
-            if credentials:
-                continue
+            if os.path.exists(credential_file):
+                credentials = Credentials.from_authorized_user_file(credential_file,SCOPES)
+                if credentials:
+                    continue
 
             
 

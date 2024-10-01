@@ -41,8 +41,9 @@ def google_drive_generate_credentials(redirect_url,username):
 
 def google_drive_list(credential_file):
     # Load the credentials from the session.
+    if not os.path.exists(credential_file):
+        return []
     credentials = Credentials.from_authorized_user_file(credential_file,SCOPES)
-    from google.auth.transport.requests import Request
 
 
 
@@ -59,10 +60,13 @@ def google_drive_list(credential_file):
 def google_drive_download_file(credential_file, file_path):
     file_name = os.path.basename(file_path)
     destination = f"tmp/{file_name}"
-    
+    if not os.path.exists(credential_file):
+        return ""
 
     # Load the credentials from the session.
     credentials = Credentials.from_authorized_user_file(credential_file, SCOPES)
+
+
     
 
 
