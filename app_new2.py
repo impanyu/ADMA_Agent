@@ -598,7 +598,8 @@ def ai_reply(response, if_history=False):
                 html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
                 html_code += '<tbody>'
                 for file in response["output"]:
-                    html_code += f'<tr><td>{file["name"]}</td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{file["size"]}</td></tr><tr>'
+                 
+                    html_code += f'<tr><td>{file["name"]}</td><td>{file["owners"][0]["displayName"]}</td><td>{file["createdTime"]}</td><td>{file["modifiedTime"]}</td><td>{file.get("size","")}</td></tr><tr>'
                 html_code +='</tbody></table></body></html>'
                 st.components.v1.html(html_code, width=1240, height=790)
 
