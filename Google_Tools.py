@@ -76,20 +76,17 @@ def google_drive_download_file(credential_file, file_path):
     file_id = file['id']
     #print(f"Downloading file: {file_path}")
     if mime_type_of_file.startswith('application/vnd.google-apps'):
-        if not mime_type:
-            # Set default export mime type based on Google file type
-            mime_type = {
-                'application/vnd.google-apps.document': 'application/pdf',  # Google Docs -> PDF
-                'application/vnd.google-apps.spreadsheet': 'text/csv',  # Google Sheets -> CSV
-                'application/vnd.google-apps.presentation': 'application/pdf',  # Google Slides -> PDF
-            }.get(mime_type_of_file, 'application/pdf')  # Default to PDF if unknown
+        
+        # Set default export mime type based on Google file type
+        mime_type_of_file = {
+            'application/vnd.google-apps.document': 'application/pdf',  # Google Docs -> PDF
+            'application/vnd.google-apps.spreadsheet': 'text/csv',  # Google Sheets -> CSV
+            'application/vnd.google-apps.presentation': 'application/pdf',  # Google Slides -> PDF
+        }.get(mime_type_of_file, 'application/pdf')  # Default to PDF if unknown
 
-        request = service.files().export_media(fileId=file_id, mimeType=mime_type)
+    request = service.files().export_media(fileId=file_id, mimeType=mime_type_of_file)
 
-    else:
-        # For non-Google Docs files (e.g., PDFs, images), use get_media to download
-        request = service.files().get_media(fileId=file_id)
-
+    
 
     if file == None:
         return ""
