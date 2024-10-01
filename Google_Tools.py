@@ -13,11 +13,11 @@ def google_drive_auth(username):
     flow = Flow.from_client_secrets_file(
         '/tmp/google_drive_client_secret.json',
         scopes=SCOPES,
-        redirect_uri=f'https://adma.hopto.org/api/google_drive_auth_callback/?username={username}'
+        redirect_uri=f'https://adma.hopto.org/api/google_drive_auth_callback/≈'
     )
 
     # Get the authorization URL.
-    auth_url, _ = flow.authorization_url(prompt='consent')
+    auth_url, _ = flow.authorization_url(prompt='consent',state = f"username={username}")
 
     # Redirect the user to the Google OAuth2 authorization page.
     return auth_url
