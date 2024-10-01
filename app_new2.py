@@ -597,9 +597,9 @@ def ai_reply(response, if_history=False):
             #    st.write(f"[{file['name']}]({file['webViewLink']})")
             col1, col2 = st.columns([10, 1])
             with col1:
-                st.write(f"{'Name'.ljust(30)}  {'Owner'.ljust(20)}  {'CreatedTime'.ljust(20)}  {'ModifiedTime'.ljust(20)}  {'Size'.ljust(20)}")
+                st.markdown(f"{'Name'.ljust(30)}  {'Owner'.ljust(20)}  {'CreatedTime'.ljust(20)}  {'ModifiedTime'.ljust(20)}  {'Size'.ljust(20)}")
             with col2:
-                st.write("Upload")
+                st.markdown("Upload")
             
             #html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
             #html_code += '<tbody>'
@@ -614,12 +614,12 @@ def ai_reply(response, if_history=False):
                 # Set up two columns: one for text and one for the button
                 col1, col2 = st.columns([10, 1])
                 with col1:
-                    st.write(f"[{file['name'].ljust(30)}]({file['webViewLink']})  {file['owners'][0]['displayName'].ljust(20)}  {file['createdTime'].ljust(20)}  {file['modifiedTime'].ljust(20)}  {size.ljust(20)}")
+                    st.markdown(f"[{file['name'].ljust(30)}]({file['webViewLink']})  {file['owners'][0]['displayName'].ljust(20)}  {file['createdTime'].ljust(20)}  {file['modifiedTime'].ljust(20)}  {size.ljust(20)}")
                 with col2:
                     google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"]["value"].strip("/")
                     google_drive_file_path += "/"+file["name"]
                     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    if st.button("Upload to ADMA",key=f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA.  current time: {current_time}",type="primary"):
+                    if st.button("Upload to ADMA",key=f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA. current time: {current_time}",type="primary"):
                         st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA."
                         print(st.session_state["button_prompt"])
                         print("button clicked")
