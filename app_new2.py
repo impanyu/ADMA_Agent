@@ -285,7 +285,9 @@ def get_answer(prompt,max_iter=10):
         elif next_task["method"] == "Google_drive_connect":
             meta_program_graph["Google_drive_redirect_url"]["value"] = google_drive_auth()
             result = {"type": "google_drive_url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
-            break
+            ai_reply(result)
+            bot_message = {"role": "assistant","content": result}
+            st.session_state['chat_history'].append(bot_message)
             
 
         elif next_task["method"] == "Google_drive_generate_credentials":
@@ -506,8 +508,8 @@ def ai_reply(response, if_history=False):
         st.chat_message("assistant", avatar="🤖").write(response["output"])
         return
     elif response["type"] == "google_drive_url":
-        st.write("Please click the following link to connect to Google Drive:")
-        st.markdown(f"[Google Drive]{response['output']}")
+        st.chat_message("assistant").write("Please click the following link to connect to Google Drive:")
+        st.markdown(f"{response['output']}")
         return
 
 
@@ -607,7 +609,17 @@ def ai_reply(response, if_history=False):
             
             folium_static(m,height=600,width=1200)
 
-        
+
+
+def display_chat_history():
+    # Display chat history
+    for message in st.session_state['chat_history']:
+      if message['role'] == "user":
+          # avatar is a emoji
+          st.chat_message("user",avatar="👨‍🎓").write(message['content'])
+      elif message['role'] == "assistant":
+          ai_reply(message['content'],if_history=True)
+          #st.chat_message("assistant", avatar="🤖").write(message['content'])  
 
 def main():
  
@@ -646,13 +658,7 @@ def main():
         unsafe_allow_html=True
     )
 
-    google_drive_connect_executed = False
-
-    if 'program_controller' in st.session_state:
-        program_controller = st.session_state.program_controller
-        if program_controller.executed_methods != []:
-            if program_controller.executed_methods[-1] == "Google_drive_connect":
-                google_drive_connect_executed = True
+    
 
 
 
@@ -676,20 +682,14 @@ def main():
     if 'chat_history' not in st.session_state:
       st.session_state['chat_history'] = []
 
-    # Display chat history
-    for message in st.session_state['chat_history']:
-      if message['role'] == "user":
-          # avatar is a emoji
-          st.chat_message("user",avatar="👨‍🎓").write(message['content'])
-      elif message['role'] == "assistant":
-          ai_reply(message['content'],if_history=True)
-          #st.chat_message("assistant", avatar="🤖").write(message['content'])
+    display_chat_history()
+    
 
-    print("1")
 
-    if google_drive_connect_executed:
-        print("2")
-        prompt = ""
+
+    
+    if prompt := st.chat_input("Ask Me Anything About Your AgData"):
+  
         # Update chat history with user message
         user_message = {"role": "user",  "content": f"{prompt}"}
         st.session_state['chat_history'].append(user_message)
@@ -703,27 +703,10 @@ def main():
         
         bot_message = {"role": "assistant","content": response}
         st.session_state['chat_history'].append(bot_message)
-    else:
-        print("3")
-    
-        if prompt := st.chat_input("Ask Me Anything About Your AgData"):
-            print("4")
 
-        
 
-            # Update chat history with user message
-            user_message = {"role": "user",  "content": f"{prompt}"}
-            st.session_state['chat_history'].append(user_message)
-            st.chat_message("user",avatar="👨‍🎓").write(prompt)
 
-            # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-            response = get_answer(prompt,max_iter=30)
-
-            ai_reply(response)
-
-            
-            bot_message = {"role": "assistant","content": response}
-            st.session_state['chat_history'].append(bot_message)
+   
 
 
 
