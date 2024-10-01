@@ -586,10 +586,14 @@ def ai_reply(response, if_history=False):
 
     elif response["type"] == "google_drive_file_list":
         with st.chat_message("assistant", avatar="🤖"):
-            st.write("The files in your Google Drive are:")
-            for file in response["output"]:
-                #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
-                st.write(f"[{file['name']}]({file['webViewLink']})")
+            if not response["output"]:
+                st.write("No files found in your Google Drive.")
+            else:
+                st.write("The files in your Google Drive are:")
+                for file in response["output"]:
+                    #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
+                    st.write(f"[{file['name']}]({file['webViewLink']})")
+        
 
 
         #st.json(response["output"],expanded=False)
