@@ -87,6 +87,8 @@ def google_drive_download_file(credential_file, file_path):
             'application/vnd.google-apps.spreadsheet': 'text/csv',  # Google Sheets -> CSV
             'application/vnd.google-apps.presentation': 'application/pdf',  # Google Slides -> PDF
         }.get(mime_type_of_file, 'application/pdf')  # Default to PDF if unknown
+        suffix = mime_type_of_file.split('/')[1]
+        destination = f"tmp/{file_name}.{suffix}"
 
     request = service.files().export_media(fileId=file_id, mimeType=mime_type_of_file)
 
