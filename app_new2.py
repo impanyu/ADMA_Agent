@@ -615,7 +615,7 @@ def ai_reply(response, if_history=False):
                 with col1:
                     st.write(f"[{file['name'].ljust(30)}]({file['webViewLink']})  {file['owners'][0]['displayName'].ljust(20)}  {file['createdTime'].ljust(20)}  {file['modifiedTime'].ljust(20)}  {size.ljust(20)}")
                 with col2:
-                    google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"].strip("/")
+                    google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"]["value"].strip("/")
                     google_drive_file_path += "/"+file["name"]
                     button = st.button("Upload to ADMA")
                     if button:
