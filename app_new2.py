@@ -287,7 +287,7 @@ def get_answer(prompt,max_iter=10):
                 continue
 
             meta_program_graph["Google_drive_redirect_url"]["value"] = google_drive_auth()
-            result = {"type": "url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
+            result = {"type": "google_drive_url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
             ai_reply(result)
             bot_message = {"role": "assistant","content": result}
             st.session_state['chat_history'].append(bot_message)
