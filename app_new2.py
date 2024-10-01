@@ -559,7 +559,9 @@ def ai_reply(response, if_history=False):
 
     elif response["type"] == "google_drive_file_list":
         for file in response["output"]:
-            st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
+            #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
+            st.write(f"[{file['name']}]({file['webViewLink']})")
+
 
         #st.json(response["output"],expanded=False)
 
