@@ -107,9 +107,13 @@ initializer_output = {
                     "items": {
                         "type": "string"
                     }
+                },
+                "Google_drive_file_path": {
+                    "type": "string",
+                    "description": "Google_drive_file_path."
                 }
             },
-            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list"],
+            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path"],
             "additionalProperties": False   
         }
     }
