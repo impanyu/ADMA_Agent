@@ -646,6 +646,14 @@ def main():
         unsafe_allow_html=True
     )
 
+    google_drive_connect_executed = False
+
+    if 'program_controller' in st.session_state:
+        program_controller = st.session_state.program_controller
+        if program_controller.executed_methods != []:
+            if program_controller.executed_methods[-1] == "Google_drive_connect":
+                google_drive_connect_executed = True
+
 
 
     #st.sidebar.title("Control Panel")
@@ -677,8 +685,10 @@ def main():
           ai_reply(message['content'],if_history=True)
           #st.chat_message("assistant", avatar="🤖").write(message['content'])
 
+    
 
-    if prompt := st.chat_input("Ask Me Anything About Your AgData"):
+
+    if prompt := st.chat_input("Ask Me Anything About Your AgData") or google_drive_connect_executed:
       # Update chat history with user message
       user_message = {"role": "user",  "content": f"{prompt}"}
       st.session_state['chat_history'].append(user_message)
