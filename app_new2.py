@@ -597,7 +597,9 @@ def ai_reply(response, if_history=False):
             #    st.write(f"[{file['name']}]({file['webViewLink']})")
             col1, col2 = st.columns([10, 1])
             with col1:
-                st.markdown(f"{'Name'.ljust(30)}  {'Owner'.ljust(20)}  {'CreatedTime'.ljust(20)}  {'ModifiedTime'.ljust(20)}  {'Size'.ljust(20)}")
+                st.markdown(f"```"
+                        f"{'Name'.ljust(30)}  {'Owner'.ljust(20)}  {'CreatedTime'.ljust(20)}  {'ModifiedTime'.ljust(20)}  {'Size'.ljust(20)}"
+                        f"```")
             with col2:
                 st.markdown("Upload")
             
