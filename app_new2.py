@@ -306,6 +306,17 @@ def get_answer(prompt,max_iter=10):
             result = {"type": "google_drive_file_list","output": meta_program_graph["Google_drive_file_path_list"]["value"]}
             break
 
+        elif next_task["method"] == "Google_drive_download_file":
+            
+            meta_program_graph["local_file_path"]["value"] = google_drive_download_file(meta_program_graph["Google_drive_credentials"]["value"],meta_program_graph["Google_drive_file_path"]["value"])
+            meta_program_graph["local_file_path"]["description"] = f"local_file_path is the downloaded local file path of {meta_program_graph['Google_drive_file_path']['value']} from Google Drive."
+        
+        elif next_task["method"] == "ADMA_upload_file":
+            if not meta_program_graph["local_file_path"]["value"]:
+                continue
+            meta_program_graph["ADMA_API_file_path"]["value"] = ADMA_upload_file(meta_program_graph["local_file_path"]["value"],meta_program_graph["ADMA_API_file_path"]["value"])
+            meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the uploaded file {meta_program_graph['local_file_path']['value']} on the ADMA server."
+
 
 
         # process different methods
@@ -527,7 +538,10 @@ def ai_reply(response, if_history=False):
         st.chat_message("assistant", avatar="🤖").write(response["output"])
         return
     elif response["type"] == "download":
-        if not os.path.exists(response["output"]):
+        if not response["output"]:
+            st.chat_message("assistant", avatar="🤖").write("No data found.")
+            return
+        elif not os.path.exists(response["output"]):
             st.chat_message("assistant", avatar="🤖").write("No data found for the field")
             return
   

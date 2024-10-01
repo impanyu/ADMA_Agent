@@ -228,3 +228,21 @@ def ADMA_url_extractor(meta_data):
     root_dir = "https://adma.hopto.org/files.html?current_path="
     adma_web_path = "/".join(abs_path.split("/")[2:])
     return f"{root_dir}{adma_web_path}"
+
+
+
+def ADMA_upload_file(local_file, server_path):
+    filename = os.path.basename(local_file)
+    upload_url = f"{root_url}/api/upload/?target_path={server_path}"
+    # The file to be uploaded
+    files = {'file': open(local_file, 'rb')}
+    # Additional data
+    data = {'target_path': server_path}
+    # Sending the POST request to upload the file
+    response = requests.post(upload_url, headers=headers, files=files, data=data)
+
+    if response.status_code == 201:
+        return os.path.join(server_path,filename)
+    else:
+        print(f"Failed to upload file: {local_file}, Status code: {response.status_code}, {response.text}")
+        return ""
