@@ -30,6 +30,12 @@ def google_drive_generate_credentials(redirect_url,username):
     while not os.path.exists(credential_file):
         pass
 
+    credentials = Credentials.from_authorized_user_file(credential_file, SCOPES)
+
+
+    if credentials and credentials.expired and credentials.refresh_token:
+        credentials.refresh(Request())
+
     return credential_file
 
 
@@ -39,8 +45,7 @@ def google_drive_list(credential_file):
     credentials = Credentials.from_authorized_user_file(credential_file,SCOPES)
     from google.auth.transport.requests import Request
 
-    if credentials and credentials.expired and credentials.refresh_token:
-            credentials.refresh(Request())
+
 
     # Create a service object using the credentials.
     service = build('drive', 'v3', credentials=credentials)
@@ -61,8 +66,7 @@ def google_drive_download_file(credential_file, file_path):
     credentials = Credentials.from_authorized_user_file(credential_file, SCOPES)
     
 
-    if credentials and credentials.expired and credentials.refresh_token:
-        credentials.refresh(Request())
+
 
     # Create a service object using the credentials.
     service = build('drive', 'v3', credentials=credentials)
@@ -98,8 +102,6 @@ def google_drive_find_file_by_path(credential_file, file_path):
     credentials = Credentials.from_authorized_user_file(credential_file, SCOPES)
 
 
-    if credentials and credentials.expired and credentials.refresh_token:
-        credentials.refresh(Request())
 
     # Create a service object using the credentials.
     service = build('drive', 'v3', credentials=credentials)
