@@ -237,6 +237,7 @@ def ADMA_upload_file(local_file, server_path):
     # The file to be uploaded
     files = {'file': open(local_file, 'rb')}
     # Additional data
+    print(f"Uploading file: {local_file} to {server_path}")
     if server_path == "":
         server_path = "/"
     data = {'target_path': server_path}
