@@ -617,7 +617,7 @@ def ai_reply(response, if_history=False):
                 with col2:
                     google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"]["value"].strip("/")
                     google_drive_file_path += "/"+file["name"]
-                    if st.button("Upload to ADMA",key=f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA.",type="primary"):
+                    if st.button("Upload to ADMA",key=str(uuid.uuid4()),type="primary"):
                         st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA."
                         print(st.session_state["button_prompt"])
                         print("button clicked")
