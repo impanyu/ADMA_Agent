@@ -222,6 +222,9 @@ def get_next_task(program_controller):
     elif program_controller.executed_methods[-1][:5] == "input":
         next_task = {"method":"variable_initializer"}
         program_controller.executed_methods.append("variable_initializer")
+    elif program_controller.executed_methods[-1] == "Google_drive_connect":
+        next_task = {"method":"Google_drive_generate_credentials"}
+        program_controller.executed_methods.append("Google_drive_generate_credentials")
     else:
         next_task = program_controller.get_next_task()
 
