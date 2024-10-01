@@ -688,7 +688,7 @@ def main():
     
 
 
-    if prompt := st.chat_input("Ask Me Anything About Your AgData") or google_drive_connect_executed:
+    if google_drive_connect_executed or prompt := st.chat_input("Ask Me Anything About Your AgData") :
       # Update chat history with user message
       user_message = {"role": "user",  "content": f"{prompt}"}
       st.session_state['chat_history'].append(user_message)
