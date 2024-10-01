@@ -11,7 +11,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 def google_drive_auth():
     # Create the flow using the client_secrets.json file.
     flow = Flow.from_client_secrets_file(
-        'client_secret.json',
+        '/tmp/google_drive_client_secret.json',
         scopes=SCOPES,
         redirect_uri='https://adma.hopto.org/google_drive_auth_callback'
     )
