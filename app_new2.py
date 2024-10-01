@@ -290,7 +290,7 @@ def get_answer(prompt,max_iter=10):
 
             credential_file = f"/tmp/google_drive_credential_{username}.json"
             credentials = Credentials.from_authorized_user_file(credential_file,SCOPES)
-            if credentials and (not credentials.expired):
+            if credentials:
                 continue
 
             
