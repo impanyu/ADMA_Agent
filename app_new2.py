@@ -288,6 +288,7 @@ def get_answer(prompt,max_iter=10):
             if program_controller.meta_program_graph["Google_drive_redirect_url"]["value"] != "":
                 continue
 
+            print(f"Google_drive_redirect_url: {meta_program_graph['Google_drive_redirect_url']['value']}")
             
             meta_program_graph["Google_drive_redirect_url"]["value"] = google_drive_auth(username)
             result = {"type": "google_drive_url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
