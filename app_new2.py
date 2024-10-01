@@ -217,6 +217,7 @@ def create_map(lat,lng):
 def get_next_task(program_controller):
     if program_controller.executed_methods == []:
         next_task = {"method":"variable_initializer"}
+        program_controller.executed_methods.append("variable_initializer")
     elif program_controller.executed_methods[-1][:5] == "input":
         next_task = {"method":"variable_initializer"}
     else:
