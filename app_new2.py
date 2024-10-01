@@ -598,6 +598,8 @@ def ai_reply(response, if_history=False):
             html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
             html_code += '<tbody>'
             for file in response["output"]:
+                if  "Untitled" in file["name"]:
+                    continue
                 if "size" in file:
                     size = str(int(int(file["size"])/1000)) +"KB"
                 else:
