@@ -284,7 +284,7 @@ def get_answer(prompt,max_iter=10):
 
         elif next_task["method"] == "Google_drive_connect":
             meta_program_graph["Google_drive_redirect_url"]["value"] = google_drive_auth()
-            result = {"type": "url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
+            result = {"type": "google_drive_url","output": meta_program_graph["Google_drive_redirect_url"]["value"]}
             break
             
 
@@ -504,6 +504,10 @@ def get_answer(prompt,max_iter=10):
 def ai_reply(response, if_history=False):
     if response["type"] == "input_date_string":
         st.chat_message("assistant", avatar="🤖").write(response["output"])
+        return
+    elif response["type"] == "google_drive_url":
+        st.write("Please click the following link to connect to Google Drive:")
+        st.markdown(f"[Google Drive]{response['output']}")
         return
 
 
