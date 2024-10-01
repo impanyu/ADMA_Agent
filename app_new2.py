@@ -702,8 +702,8 @@ def main():
         st.session_state['chat_history'].append(bot_message)
     else:
     
-        prompt = st.chat_input("Ask Me Anything About Your AgData")
-        if prompt:
+        if prompt := st.chat_input("Ask Me Anything About Your AgData"):
+      
 
         
 
