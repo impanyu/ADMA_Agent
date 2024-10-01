@@ -106,6 +106,14 @@
         "value":""
     },
 
+    "Google_drive_credentials":{
+        "type":"local file path",
+        "description":"Google_drive_credentials is the file for the credentials of the Google Drive.",
+        "output_from":["Google_drive_connect"],
+        "input_to":[],
+        "value":""
+    },
+
     
 
 
@@ -302,7 +310,18 @@
         "description":"Given the date string from the user, initialize Realm5_date_str in the format of 'YYYY-MM-DD'",
         "input":[],
         "output":["Realm5_date_str"]
+    },
+
+
+    "Google_drive_connect":{
+        "type":"method",
+        "call_condition": "",
+        "description":"Connect to Google Drive, and return the credentials.",
+        "input":[],
+        "output":["Google_drive_credentials"]
     }
+
+    
 
 
 
