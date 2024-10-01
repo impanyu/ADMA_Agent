@@ -776,6 +776,8 @@ def main():
     prompt += st.session_state["button_prompt"]
     st.session_state["button_prompt"] = ""
 
+    print(prompt)
+
     
     
 
