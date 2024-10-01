@@ -685,7 +685,10 @@ def main():
           ai_reply(message['content'],if_history=True)
           #st.chat_message("assistant", avatar="🤖").write(message['content'])
 
+    print("1")
+
     if google_drive_connect_executed:
+        print("2")
         prompt = ""
         # Update chat history with user message
         user_message = {"role": "user",  "content": f"{prompt}"}
@@ -701,9 +704,10 @@ def main():
         bot_message = {"role": "assistant","content": response}
         st.session_state['chat_history'].append(bot_message)
     else:
+        print("3")
     
         if prompt := st.chat_input("Ask Me Anything About Your AgData"):
-      
+            print("4")
 
         
 
