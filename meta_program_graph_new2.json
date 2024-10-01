@@ -127,7 +127,7 @@
 
     "Google_drive_redirect_url":{
         "type":"Google Drive redirect url",
-        "description":"Google_drive_redirect_url is the url for the Google Drive.",
+        "description":"Google_drive_redirect_url is the url for the authenticating Google Drive.",
         "output_from":["Google_drive_connect"],
         "input_to":["Google_drive_generate_credentials"],
         "value":""
