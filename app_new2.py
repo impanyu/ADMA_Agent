@@ -245,7 +245,7 @@ def get_next_task(program_controller):
     else:
         next_task = program_controller.get_next_task()
 
-    result = {"type": "middle_instruction","output": f"Call method: {next_task['method']}"}
+    result = {"type": "middle_instruction","output": f"{next_task['method']}"}
     ai_reply(result)
     bot_message = {"role": "assistant","content": result}
     st.session_state['chat_history'].append(bot_message)
@@ -591,7 +591,7 @@ def get_answer(prompt,max_iter=10):
 
 def ai_reply(response, if_history=False):
     if response["type"] == "middle_instruction":
-        st.markdown(f"###### :green[{response['output']}]")
+        st.markdown(f"###### Call method: :green[{response['output']}]")
         return
     elif response["type"] == "message":
         st.chat_message("assistant", avatar="🤖").write(response["output"])
