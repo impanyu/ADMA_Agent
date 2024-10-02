@@ -185,7 +185,7 @@ class meta_program_graph_initializer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
-        self.system_prompt += "Note: If the user's instruction contains required information, you can set the value of the variable based on the information. Otherwise, just set the value of the variable as NONE."
+        
         #self.system_prompt += "Note: only initialize the variables purely based on the user's instruction, and do not fabricate any information or check the value in meta program graph."
         self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate any information."
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
@@ -194,6 +194,7 @@ class meta_program_graph_initializer:
         self.system_prompt += "If you see Chinese, first translate it to English."
         self.system_prompt += "If the user ask for token on adma, you should set ADMA_menu_name to 'api'."
         self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+        self.system_prompt += "Note: If the user's instruction contains required information, you can set the value of the variable based on the information. Otherwise, just set the value of the variable as NONE."
 
         
 
