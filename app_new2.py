@@ -620,7 +620,7 @@ def ai_reply(response, if_history=False):
                     size = ""
 
                 # Set up two columns: one for text and one for the button
-                col1, col2, col3, col4, col5, col6 = st.columns([3,2,2,2,1])
+                col1, col2, col3, col4, col5 = st.columns([3,2,2,2,1])
                 with col1:
                     st.markdown(f"[{file['name'].ljust(30)}]({file['webViewLink']})  ")
                 with col2:
