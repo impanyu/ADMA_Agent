@@ -373,7 +373,7 @@
     
     "input_username":{
         "type":"method",
-        "call_condition": "If username is empty string, before calling any method which requires username, call this method to ask user input.",
+        "call_condition": "If username is empty string, you must call this method to ask user input.",
         "description":"Given the username from the user, initialize username.",
         "input":[],
         "output":["username"]
