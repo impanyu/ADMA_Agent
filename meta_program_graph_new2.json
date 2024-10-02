@@ -11,7 +11,7 @@
         "type":"ADMA API token",
         "description":"ADMA_API_token is the security token for calling ADMA API.",
         "output_from":["input_ADMA_API_token","variable_initializer"],
-        "input_to":["ADMA_search","ADMA_list_directory","ADMA_get_meta_data","ADMA_download_file","ADMA_upload_file"],
+        "input_to":["ADMA_search","ADMA_list_directory","ADMA_get_meta_data","ADMA_download_file","ADMA_upload_file"]
         "value":""
     },
 
@@ -410,24 +410,6 @@
         "input":["Google_drive_redirect_url","username"],
         "output":["Google_drive_credentials"]
     }
-
-    
-
-
-
-
-
-
-
-
-
-    
-    
-    
-
-
-    
-    
 
  
 }
