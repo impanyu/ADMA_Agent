@@ -156,7 +156,7 @@ class controller:
         self.system_prompt += "If you see Chinese, first translate it to English."
         self.system_prompt += "You can only call the methods which exist in the meta program graph. "
         #self.system_prompt += "Note: only call a method, if all the variables in the input list of this method have value. "
-        self.system_prompt += "Also, when it is needed, you can call variable_initializer any time, to modify the value of some variable, based on current user's instruction."
+        self.system_prompt += "Also, when it is needed, you can call variable_initializer any time, to modify the value of some variable, based on current user's instruction and current status of meta program graph."
 
     def get_next_task(self):
         system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
