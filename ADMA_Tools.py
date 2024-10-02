@@ -251,7 +251,7 @@ def ADMA_upload_file(local_file, server_path, token):
     response = requests.post(upload_url, headers=headers, files=files, data=data)
 
     if response.status_code == 201:
-        return server_path
+        return server_path.strp("/")+filename
     else:
         print(f"Failed to upload file: {local_file}, Status code: {response.status_code}, {response.text}")
         return ""
