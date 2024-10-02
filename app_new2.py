@@ -197,7 +197,7 @@ class meta_program_graph_initializer:
         self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
         self.system_prompt += "Note: If the user's instruction contains required information, you can set the value of the variable based on the information. "
         self.system_prompt += "Note: If you can not find the value of a variable from the user's instruction, you must set the value to 'NA'."
-        "
+   
 
         
 
