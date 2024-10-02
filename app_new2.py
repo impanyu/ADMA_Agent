@@ -185,7 +185,7 @@ class meta_program_graph_initializer:
         self.meta_program_graph = meta_program_graph
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
-        self.system_prompt += "If the user's instruction contains related information, you can set the value based on the information. Otherwise, just set it to the json string of the current value of the variable in the meta program graph."
+        self.system_prompt += "If the user's instruction contains related information, you can set the value based on the information. Otherwise, just set it to 'NA'."
         #self.system_prompt += "Note: only initialize the variables purely based on the user's instruction, and do not fabricate any information or check the value in meta program graph."
         self.system_prompt += "Only initialize the variables purely based on the user's instruction, and do not fabricate any information."
         self.system_prompt += "For Realm5_variable_name_list, you need to initialize it as a list of realm5 variable names, which introduced in the description of Realm5_variable_name_list in the meta program graph."
@@ -292,7 +292,7 @@ def get_answer(prompt,max_iter=10):
             initialized_variables = initializer.initialize_meta_program_graph()
             print(initialized_variables)
             for variable in initialized_variables:
-                if initialized_variables[variable] != "" or initialized_variables[variable] != []:
+                if initialized_variables[variable] != "NA" :
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
 
         elif next_task["method"] == "input_date_string":
