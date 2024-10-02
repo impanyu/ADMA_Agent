@@ -636,8 +636,7 @@ def ai_reply(response, if_history=False):
                         
 
         
-        bot_message = {"role": "assistant","content": response}
-        st.session_state['chat_history'].append(bot_message)
+   
 
                 
                 
