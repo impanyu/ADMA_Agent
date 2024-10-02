@@ -596,7 +596,7 @@ def ai_reply(response, if_history=False):
             #for file in response["output"]:
                 #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
             #    st.write(f"[{file['name']}]({file['webViewLink']})")
-            col1, col2, col3, col4, col5, col6 = st.columns([3,2,2,2,1,2])
+            col1, col2, col3, col4, col5 = st.columns([3,2,2,2,1])
             with col1:
                 st.markdown(f"{'Name'} ")
             with col2:
@@ -607,9 +607,10 @@ def ai_reply(response, if_history=False):
                 st.markdown(f"{'Last Modified'}")
             with col5:
                 st.markdown(f"{'Size'}")
-
+            '''
             with col6:
                 st.markdown("Upload")
+            '''
             
             #html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
             #html_code += '<tbody>'
@@ -633,6 +634,7 @@ def ai_reply(response, if_history=False):
                     st.markdown(f"{file['modifiedTime']}")
                 with col5:
                     st.markdown(f"{size}")
+                '''
                 with col6:
                     if not size == "":
                         google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"]["value"].strip("/")
@@ -642,21 +644,8 @@ def ai_reply(response, if_history=False):
                             st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA, then go to the ADMA root page."
                             print(st.session_state["button_prompt"])
                             print("button clicked")
-                            prompt = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA, then go to the ADMA root page."
-                            # Update chat history with user message
-                            user_message = {"role": "user",  "content": f"{prompt}"}
-                            st.session_state['chat_history'].append(user_message)
-                            st.chat_message("user",avatar="👨‍🎓").write(prompt)
-
-                            # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
-                            response = get_answer(prompt,max_iter=30)
-
-                            ai_reply(response)
-
-                            
-                            bot_message = {"role": "assistant","content": response}
-                            st.session_state['chat_history'].append(bot_message)
-                            
+                '''
+   
                         
 
         
