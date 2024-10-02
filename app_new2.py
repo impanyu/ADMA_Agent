@@ -534,7 +534,7 @@ def get_answer(prompt,max_iter=10):
    
             path = meta_program_graph["ADMA_API_file_path"]["value"]
             
-            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_search(path,search_string,token)
+            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_search(token,path,search_string)
             #print(meta_program_graph["ADMA_meta_data"]["value"])
             #meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
             meta_program_graph["ADMA_meta_data"]["description"] = f"ADMA_meta_data is the meta data of the file or folder on the ADMA system searched by {search_string}."
