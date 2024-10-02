@@ -266,7 +266,7 @@ def get_answer(prompt,max_iter=10):
         program_controller.meta_program_graph["user_instruction"]["value"] = prompt
     # continue with the former instruction
     else:
-        program_controller.meta_program_graph["user_instruction"]["value"] += prompt
+        program_controller.meta_program_graph["user_instruction"]["value"] += program_controller.meta_program_graph["next_prompt"]["value"]+prompt
 
 
     meta_program_graph = program_controller.meta_program_graph
@@ -297,13 +297,16 @@ def get_answer(prompt,max_iter=10):
 
         elif next_task["method"] == "input_date_string":
             result = {"type": "message","output": "Please input a date string for Realm5."} 
+            program_controller.meta_program_graph["next_prompt"]["value"] = "The data string for Realm5 is: "
             break
 
         elif next_task["method"] == "input_ADMA_API_token":
             result = {"type": "message","output": "Please input your token for ADMA API."}
+            program_controller.meta_program_graph["next_prompt"]["value"] = "The token for ADMA API is: "
             break
         elif next_task["method"] == "input_username":
             result = {"type": "message","output": "Please input your username."}
+            program_controller.meta_program_graph["next_prompt"]["value"] = "The username is: "
             break
 
         elif next_task["method"] == "Google_drive_connect":
@@ -560,9 +563,14 @@ def get_answer(prompt,max_iter=10):
             meta_program_graph = json.load(f)
         # keep the google drive redirect url for this session
         google_drive_redirect_url = program_controller.meta_program_graph["Google_drive_redirect_url"]
+        username = program_controller.meta_program_graph["username"]["value"]
+        ADMA_API_token = program_controller.meta_program_graph["ADMA_API_token"]["value"]
+
         program_controller.meta_program_graph = meta_program_graph
         initializer.meta_program_graph = meta_program_graph
         program_controller.meta_program_graph["Google_drive_redirect_url"] = google_drive_redirect_url
+        program_controller.meta_program_graph["username"]["value"] = username
+        program_controller.meta_program_graph["ADMA_API_token"]["value"] = ADMA_API_token
 
 
 

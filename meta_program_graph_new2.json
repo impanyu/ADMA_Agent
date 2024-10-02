@@ -1,4 +1,13 @@
 {
+    "next_prompt":{
+        "type":"string",
+        "description":" This variable is used to keep the prompt for the next step across user interaction.",
+        "output_from":[],
+        "input_to":[],
+        "value":""
+    },
+    
+    
     "username":{
         "type":"string",
         "description":" the username of the user.",
