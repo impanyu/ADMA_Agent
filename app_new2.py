@@ -410,7 +410,7 @@ def get_answer(prompt,max_iter=10):
             # append a deep copy of the meta data
             meta_program_graph["ADMA_meta_data_list"]["value"].append(copy.deepcopy(meta_data))
             #meta_program_graph["ADMA_meta_data_list"]["description"] = meta_program_graph["ADMA_meta_data"]["description"]+"\n"
-            api_path = "/".join(meta_data["abs_path"].split("/")[3:])
+            #api_path = "/".join(meta_data["abs_path"].split("/")[3:])
             #meta_program_graph["ADMA_meta_data_list"]["description"] += f"The meta data of {api_path} on the ADMA server was just added to the list."
             meta_program_graph["ADMA_meta_data_list"]["description"] = f"Now the length of the list is {len(meta_program_graph['ADMA_meta_data_list']['value'])}. Normally, the length of the list should be equal to {len(meta_program_graph['ADMA_API_file_path_list']['value'])}."
             
