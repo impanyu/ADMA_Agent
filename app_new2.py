@@ -363,7 +363,7 @@ def get_answer(prompt,max_iter=10):
             if not os.path.exists(meta_program_graph["local_file_path"]["value"]):
                 continue
             meta_program_graph["ADMA_API_file_path"]["value"] = ADMA_upload_file(meta_program_graph["local_file_path"]["value"],meta_program_graph["ADMA_API_file_path"]["value"],meta_program_graph["ADMA_API_token"]["value"])
-            meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the uploaded file {meta_program_graph['local_file_path']['value']} on the ADMA server."
+            meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the already uploaded file {meta_program_graph['local_file_path']['value']} on the ADMA server."
 
 
 
