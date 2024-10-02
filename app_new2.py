@@ -645,7 +645,7 @@ def ai_reply(response, if_history=False):
         if not response["output"]:
             st.write("No files found.")
         else:
-            st.write("The files in your Google Drive are:")
+            st.markdown("#### The files in your Google Drive are:")
             st.markdown("<style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style>", unsafe_allow_html=True)
             
             #for file in response["output"]:
