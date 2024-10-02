@@ -252,7 +252,7 @@ def ADMA_upload_file(local_file, server_path, token):
 
     if response.status_code == 201:
         if server_path == "/":
-            return server_path+filename
+            return filename
         else:
             return server_path.strip("/")+"/"+filename
     else:
