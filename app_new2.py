@@ -634,13 +634,14 @@ def ai_reply(response, if_history=False):
                 with col5:
                     st.markdown(f"{size}")
                 with col6:
-                    google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"]["value"].strip("/")
-                    google_drive_file_path += "/"+file["name"]
-                    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    if st.button("Upload to ADMA",key=f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA. current time: {current_time}",type="secondary"):
-                        st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA."
-                        print(st.session_state["button_prompt"])
-                        print("button clicked")
+                    if not size == "":
+                        google_drive_file_path = st.session_state.program_controller.meta_program_graph["Google_drive_file_path"]["value"].strip("/")
+                        google_drive_file_path += "/"+file["name"]
+                        current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        if st.button("Upload to ADMA",key=f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA. current time: {current_time}",type="secondary"):
+                            st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA."
+                            print(st.session_state["button_prompt"])
+                            print("button clicked")
 
                 
                 
