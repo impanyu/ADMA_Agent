@@ -315,6 +315,7 @@ def get_answer(prompt,max_iter=10):
             if program_controller.meta_program_graph["Google_drive_redirect_url"]["value"] != "":
                 continue
             username = program_controller.meta_program_graph["username"]["value"]
+            print(f"username: {username}")
             if not username:
                 continue
 
