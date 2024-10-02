@@ -1,4 +1,20 @@
 {
+    "username":{
+        "type":"string",
+        "description":" the username of the user.",
+        "output_from":["variable_initializer","input_username"],
+        "input_to":["Google_drive_generate_credentials","Google_drive_connect"],
+        "value":""
+    },
+
+    "ADMA_API_token":{
+        "type":"ADMA API token",
+        "description":"ADMA_API_token is the security token for calling ADMA API.",
+        "output_from":["input_ADMA_API_token","variable_initializer"],
+        "input_to":["ADMA_search","ADMA_list_directory","ADMA_get_meta_data","ADMA_download_file","ADMA_upload_file"],
+        "value":""
+    },
+
     "ADMA_API_file_path":{
         "type":"ADMA API file path",
         "description":"ADMA_API_file_path is a path of the directory on the ADMA system. The format should be like path/to/directory, with 0 or more / in the path. when user asked to go to file or folder followed by a path, you should set this to the path.",
@@ -140,7 +156,8 @@
         "call_condition":"",
         "description":"variable_initializer tries its best to initialize the value of the variables in the output list.",
         "input":["user_instruction"],
-        "output":["ADMA_search_string","JD_ENREEC_field_name","Realm5_date_str","JD_ENREEC_field_id","ADMA_menu_name","ADMA_API_file_path"]
+        "output":["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "username"],
+          
     },
 
 
@@ -148,7 +165,7 @@
         "type":"method",
         "call_condition": "",
         "description": "Given a ADMA API file path of directory on ADMA, return the list of paths for all the subdirectories and files under the directory.",
-        "input":["ADMA_API_file_path"],
+        "input":["ADMA_API_file_path","ADMA_API_token"],
         "output":["ADMA_API_file_path_list"]
     },
     "ADMA_API_file_path_list_iterator":{
@@ -162,7 +179,7 @@
         "type":"method",
         "call_condition": "",
         "description":"Given a path on ADMA, return the meta data of the path on the ADMA server. ",
-        "input":["ADMA_API_file_path"],
+        "input":["ADMA_API_file_path","ADMA_API_token"],
         "output":["ADMA_meta_data"]
     },
     "ADMA_push_to_meta_data_list":{
@@ -233,14 +250,14 @@
         "type":"method",
         "call_condition": "",
         "description":"Given a ADMA API file path on ADMA, download the file and return the local file path of the downloaded file.",
-        "input":["ADMA_API_file_path"],
+        "input":["ADMA_API_file_path","ADMA_API_token"],
         "output":["local_file_path"]
     },
     "ADMA_upload_file":{
         "type":"method",
         "call_condition": "",
         "description":"Given a local file path and ADMA API file path, upload the file to the ADMA API file path on ADMA server and then return the ADMA API file path of the uploaded file.",
-        "input":["local_file_path","ADMA_API_file_path"],
+        "input":["local_file_path","ADMA_API_file_path","ADMA_API_token"],
         "output":["ADMA_API_file_path"]
     },
     
@@ -250,7 +267,7 @@
         "type":"method",
         "call_condition": "",
         "description":"Given a ADMA API file path as root directory, and a search content, return the list of meta data for all the folders or directories under the root directory.",
-        "input":["ADMA_API_file_path","ADMA_search_string"],
+        "input":["ADMA_API_file_path","ADMA_search_string","ADMA_API_token"],
         "output":["ADMA_meta_data"]
     },
  
@@ -337,12 +354,28 @@
         "output":["Realm5_date_str"]
     },
 
+    "input_ADMA_API_token":{
+        "type":"method",
+        "call_condition": "If there's empty ADMA_API_token, before calling any method which required ADMA_API_token, call this method to ask user input.",
+        "description":"Given the ADMA_API_token from the user, initialize ADMA_API_token.",
+        "input":[],
+        "output":["ADMA_API_token"]
+    },
+    
+    "input_username":{
+        "type":"method",
+        "call_condition": "If there's empty username, before calling any method which required username, call this method to ask user input.",
+        "description":"Given the username from the user, initialize username.",
+        "input":[],
+        "output":["username"]
+    },
+
 
     "Google_drive_connect":{
         "type":"method",
         "call_condition": "Only call this if the value of Google_drive_redirect_url is empty.",
         "description":"Connect to Google Drive, and return the credentials.",
-        "input":[],
+        "input":["username"],
         "output":["Google_drive_redirect_url"]
     },
 
@@ -374,7 +407,7 @@
         "type":"method",
         "call_condition": "call this only if you have the Google_drive_redirect_url.",
         "description":"Given Google drive redirect url, return the Google drive credentials.",
-        "input":["Google_drive_redirect_url"],
+        "input":["Google_drive_redirect_url","username"],
         "output":["Google_drive_credentials"]
     }
 

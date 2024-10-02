@@ -1,58 +1,60 @@
-import requests as refresh_requests
+
 import os
 
-from langchain.tools import BaseTool, StructuredTool, tool
+
 import json
-from langchain_community.utilities import Requests
-from langchain.pydantic_v1 import BaseModel, Field
+
 import uuid
+import requests
 
 
-token = '7353d23703a37d3a5554e63aa448bbc509b0cec0'
-# Headers including the Authorization token (if needed)
-headers = {'Authorization': f'Token {token}'}
 
-requests = Requests(headers=headers)
+#token = '7353d23703a37d3a5554e63aa448bbc509b0cec0'
+#requests = Requests(headers=headers)
 root_url = 'https://adma.hopto.org'
 
-class ADMA_get_meta_data_input_schema(BaseModel):
-    path: str = Field(description="The path or name of the file in the ADMA system. The full path is like /username/ag_data/.../file_name, but here the file_path is the relative path after the ag_data directory.")
-
-@tool("ADMA_get_meta_data", args_schema=ADMA_get_meta_data_input_schema)
-def ADMA_get_meta_data(path):
-  """ Always call this tool when the user want to get the meta data of a file or directory on the ADMA server."""
-  api_url = f'{root_url}/api/meta_data/?target_path={path}'
-
-  # Sending the GET request to the meta data of the file
-  response = requests.get(api_url)
-
-  # Checking the response from the server
-  if response.status_code == 200:
-      #print(response.json())
-      return response.json()
-
-  else:
-      return {}
-      #print("Failed to download the meta data:", response.text)
 
 
-class ADMA_list_directory_contents_input_schema(BaseModel):
-    dir_path: str = Field(description="The path or name of the directory in the ADMA system. The full path is like /username/ag_data/.../file_name, but here the dir_path is the relative path after the ag_data directory.")
+def ADMA_get_meta_data(path,token):
+    """ Always call this tool when the user want to get the meta data of a file or directory on the ADMA server."""
+    api_url = f'{root_url}/api/meta_data/?target_path={path}'
 
-@tool("ADMA_list_directory_contents", args_schema=ADMA_list_directory_contents_input_schema)
-def ADMA_list_directory_contents(dir_path):
+    
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
+
+    # Sending the GET request to the meta data of the file
+    response = requests.get(api_url,headers=headers)
+
+    # Checking the response from the server
+    if response.status_code == 200:
+        #print(response.json())
+        return response.json()
+
+    else:
+        return {}
+        #print("Failed to download the meta data:", response.text)
+
+
+
+def ADMA_list_directory_contents(dir_path,token):
     """Always call this tool when the user want to list a directory on the ADMA server."""
     list_url = f"{root_url}/api/list/?target_path={dir_path}"
-    response = requests.get(list_url)
+  
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
+
+    response = requests.get(list_url, headers=headers)
     if response.status_code == 200:
         return response.json()  # Assuming the API returns a JSON list of paths
     else:
         return f"Failed to list directory: {dir_path}, Status code: {response.status_code}, {response.text}"
     
-def ADMA_list_dir(dir_path):
+def ADMA_list_dir(dir_path,token):
     """Return the list of paths under the directory dir_path on the ADMA server, the return path is in ADMA API file path format"""
     list_url = f"{root_url}/api/list/?target_path={dir_path}"
-    response = requests.get(list_url)
+    headers = {'Authorization': f'Token {token}'}
+    response = requests.get(list_url, headers=headers)
     if response.status_code == 200:
         list_of_paths = response.json()
         result = ["/".join(path.split("/")[3:]) for path in list_of_paths]
@@ -62,14 +64,13 @@ def ADMA_list_dir(dir_path):
        
     
 
-class ADMA_get_running_instance_input_schema(BaseModel):
-    dir_path: str = Field(description="The path or name of the directory in the ADMA system. The full path is like /username/ag_data/.../file_name, but here the dir_path is the relative path after the ag_data directory.")
 
-@tool("ADMA_get_running_instance", args_schema=ADMA_get_running_instance_input_schema)
-def ADMA_get_running_instance(dir_path):
+def ADMA_get_running_instance(dir_path,token):
     """Always call this tool when the user want to check if there is any running instance for dir_path on the ADMA server."""
     instance_url = f"{root_url}/api/get_running_instance/?target_path=ypan12/ag_data/{dir_path}"
-    response = requests.get(instance_url)
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
+    response = requests.get(instance_url, headers=headers)
     print(response.json())
     if response.status_code == 200:
         return response.json()  # Assuming the API returns a JSON list of paths
@@ -78,14 +79,13 @@ def ADMA_get_running_instance(dir_path):
         
     
 
-class ADMA_check_file_input_schema(BaseModel):
-    dir_path: str = Field(description="The path or name of the directory in the ADMA system. The full path is like /username/ag_data/.../file_name, but here the dir_path is the relative path after the ag_data directory.")
 
-@tool("ADMA_check_file", args_schema=ADMA_check_file_input_schema)
-def ADMA_check_file(dir_path):
+def ADMA_check_file(dir_path,token):
     """Always call this tool when the user want to check or display the content of dir_path on the ADMA server."""
     download_url = f"{root_url}/api/download/?target_path={dir_path}"
-    response = requests.get(download_url)
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
+    response = requests.get(download_url, headers=headers)
 
     if response.status_code == 200:
         rd = uuid.uuid4()
@@ -97,10 +97,12 @@ def ADMA_check_file(dir_path):
     else:
         return f"Failed to download file: {dir_path}, Status code: {response.status_code}, {response.text}"
 
-def ADMA_download_file(dir_path):
+def ADMA_download_file(dir_path,token):
    
     download_url = f"{root_url}/api/download/?target_path={dir_path}"
-    response = requests.get(download_url)
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
+    response = requests.get(download_url,   headers=headers)
 
     if response.status_code == 200:
         #rd = uuid.uuid4()
@@ -114,15 +116,13 @@ def ADMA_download_file(dir_path):
 
 
 
-class ADMA_plot_option_input_schema(BaseModel):
-    dir_path: str = Field(description="The path or name of the realm5 data file in the ADMA system. The full path is like /username/ag_data/.../file_name, but here the dir_path is the relative path after the ag_data directory.")   
-    value_name: str = Field(description="the name of the value to be plotted") 
-   
-@tool("ADMA_plot_option", args_schema=ADMA_plot_option_input_schema)
-def ADMA_plot_option(dir_path, value_name="temperature"):
+
+def ADMA_plot_option(dir_path,token ,value_name="temperature"):
     """Always call this tool when the user want to plot realm5 weather data by specifying the value name and the realm5 data path.  If the user ask to plot the temperature, the value_name should be 'temperature'."""
     download_url = f"{root_url}/api/download/?target_path={dir_path}"
-    response = requests.get(download_url)
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
+    response = requests.get(download_url, headers=headers)
 
     if response.status_code == 200:
         data = json.loads(response.content)
@@ -183,7 +183,7 @@ def ADMA_menu_option(menu_name,path=""):
 
 # URL of the API endpoiont for listing dir structure
 from urllib.parse import urlencode
-def ADMA_search(root_dir, search_box, category=["All"], mode=["All"], format=["All"], label=["All"], realtime=["All"], time_range=["start","end"], spatial_range=["southwest","northeast"]):
+def ADMA_search(token,root_dir, search_box, category=["All"], mode=["All"], format=["All"], label=["All"], realtime=["All"], time_range=["start","end"], spatial_range=["southwest","northeast"]):
     """Search the files or folders under root_dir """
     params = {
         'root_dir': root_dir,
@@ -205,8 +205,10 @@ def ADMA_search(root_dir, search_box, category=["All"], mode=["All"], format=["A
     list_url = f"{root_url}/api/search/?{urlencode(params, doseq=True)}"
     print(list_url)
 
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
 
-    response = requests.get(list_url)
+    response = requests.get(list_url, headers=headers)
     if response.status_code == 200:
         if len(response.json()) == 0:
             return []
@@ -231,7 +233,7 @@ def ADMA_url_extractor(meta_data):
 
 
 
-def ADMA_upload_file(local_file, server_path):
+def ADMA_upload_file(local_file, server_path, token):
     filename = os.path.basename(local_file)
     upload_url = f"{root_url}/api/upload/"
     # The file to be uploaded
@@ -243,7 +245,9 @@ def ADMA_upload_file(local_file, server_path):
         
     data = {'target_path': server_path}
     # Sending the POST request to upload the file
-    import requests
+    # Headers including the Authorization token (if needed)
+    headers = {'Authorization': f'Token {token}'}
+    
     response = requests.post(upload_url, headers=headers, files=files, data=data)
 
     if response.status_code == 201:

@@ -112,9 +112,17 @@ initializer_output = {
                 "Google_drive_file_path": {
                     "type": "string",
                     "description": "Google_drive_file_path."
+                },
+                "ADMA_API_token": {
+                    "type": "string",
+                    "description": "ADMA_API_token."
+                },
+                "username": {
+                    "type": "string",
+                    "description": "username of the user."
                 }
             },
-            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path"],
+            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "username"],
             "additionalProperties": False   
         }
     }
@@ -239,7 +247,7 @@ def get_next_task(program_controller):
 
 def get_answer(prompt,max_iter=10):
 
-    username = "ypan12"
+    
 
     if 'program_controller' not in st.session_state:
         with open("meta_program_graph_new2.json") as f:
@@ -288,11 +296,21 @@ def get_answer(prompt,max_iter=10):
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
 
         elif next_task["method"] == "input_date_string":
-            result = {"type": "input_date_string","output": "Please input a date string for Realm5."} 
+            result = {"type": "message","output": "Please input a date string for Realm5."} 
+            break
+
+        elif next_task["method"] == "input_ADMA_API_token":
+            result = {"type": "message","output": "Please input your token for ADMA API."}
+            break
+        elif next_task["method"] == "input_username":
+            result = {"type": "message","output": "Please input your username."}
             break
 
         elif next_task["method"] == "Google_drive_connect":
             if program_controller.meta_program_graph["Google_drive_redirect_url"]["value"] != "":
+                continue
+            username = program_controller.meta_program_graph["username"]["value"]
+            if not username:
                 continue
 
             credential_file = f"/tmp/google_drive_credential_{username}.json"
@@ -311,6 +329,9 @@ def get_answer(prompt,max_iter=10):
             
 
         elif next_task["method"] == "Google_drive_generate_credentials":
+            username = meta_program_graph["username"]["value"]
+            if not username:
+                continue
             meta_program_graph["Google_drive_credentials"]["value"] = google_drive_generate_credentials(meta_program_graph["Google_drive_redirect_url"]["value"],username)
 
         elif next_task["method"] == "Google_drive_list_directory":
@@ -326,9 +347,11 @@ def get_answer(prompt,max_iter=10):
             meta_program_graph["local_file_path"]["description"] = f"local_file_path is the downloaded local file path of {meta_program_graph['Google_drive_file_path']['value']} from Google Drive."
         
         elif next_task["method"] == "ADMA_upload_file":
-            if not meta_program_graph["local_file_path"]["value"]:
+            if not meta_program_graph["local_file_path"]["value"] or not meta_program_graph["ADMA_API_token"]["value"]:
                 continue
-            meta_program_graph["ADMA_API_file_path"]["value"] = ADMA_upload_file(meta_program_graph["local_file_path"]["value"],meta_program_graph["ADMA_API_file_path"]["value"])
+            if not os.path.exists(meta_program_graph["local_file_path"]["value"]):
+                continue
+            meta_program_graph["ADMA_API_file_path"]["value"] = ADMA_upload_file(meta_program_graph["local_file_path"]["value"],meta_program_graph["ADMA_API_file_path"]["value"],meta_program_graph["ADMA_API_token"]["value"])
             meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the uploaded file {meta_program_graph['local_file_path']['value']} on the ADMA server."
 
 
@@ -363,8 +386,12 @@ def get_answer(prompt,max_iter=10):
         elif next_task["method"] == "ADMA_list_directory":
 
             dir_path = meta_program_graph["ADMA_API_file_path"]["value"]
+            token = meta_program_graph["ADMA_API_token"]["value"]
+            if not token:
+                continue
+            
             # update the value of the output list
-            meta_program_graph["ADMA_API_file_path_list"]["value"] = ADMA_list_dir(dir_path)
+            meta_program_graph["ADMA_API_file_path_list"]["value"] = ADMA_list_dir(dir_path,token)
 
             # update the description of the output list
             #meta_program_graph["ADMA_API_file_path_list"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
@@ -373,9 +400,12 @@ def get_answer(prompt,max_iter=10):
         elif next_task["method"] == "ADMA_get_meta_data":
 
             path = meta_program_graph["ADMA_API_file_path"]["value"]
+            token = meta_program_graph["ADMA_API_token"]["value"]
+            if not token:
+                continue
             # update the value of the meta data
             print(f"ADMA_API_file_path: {path}")
-            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_get_meta_data(path)
+            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_get_meta_data(path,token)
             # update the description of the meta data
             #meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
             meta_program_graph["ADMA_meta_data"]["description"] = f"ADMA_meta_data is the meta data of the file or directory {path} in the ADMA system."
@@ -468,8 +498,11 @@ def get_answer(prompt,max_iter=10):
         elif next_task["method"] == "ADMA_download_file":
   
             file_url = meta_program_graph["ADMA_API_file_path"]["value"]
+            token = meta_program_graph["ADMA_API_token"]["value"]
+            if not token:
+                continue
             
-            meta_program_graph["local_file_path"]["value"] = ADMA_download_file(file_url)
+            meta_program_graph["local_file_path"]["value"] = ADMA_download_file(file_url,token)
             #print(meta_program_graph["local_file_path"]["value"])
             #meta_program_graph["local_file_path"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
             meta_program_graph["local_file_path"]["description"] = f"local_file_path is the downloaded local file path of {file_url} from ADMA."
@@ -491,11 +524,14 @@ def get_answer(prompt,max_iter=10):
         elif next_task["method"] == "ADMA_search":
        
             search_string = meta_program_graph["ADMA_search_string"]["value"]
+            token = meta_program_graph["ADMA_API_token"]["value"]
+            if not token:
+                continue
             
    
             path = meta_program_graph["ADMA_API_file_path"]["value"]
             
-            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_search(path,search_string)
+            meta_program_graph["ADMA_meta_data"]["value"] = ADMA_search(path,search_string,token)
             #print(meta_program_graph["ADMA_meta_data"]["value"])
             #meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_search_string"]["description"]+"\n"
             meta_program_graph["ADMA_meta_data"]["description"] = f"ADMA_meta_data is the meta data of the file or folder on the ADMA system searched by {search_string}."
@@ -538,7 +574,7 @@ def get_answer(prompt,max_iter=10):
     return result
 
 def ai_reply(response, if_history=False):
-    if response["type"] == "input_date_string":
+    if response["type"] == "message":
         st.chat_message("assistant", avatar="🤖").write(response["output"])
         return
     elif response["type"] == "google_drive_url":
