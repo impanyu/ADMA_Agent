@@ -11,7 +11,7 @@
         "type":"ADMA API token",
         "description":"ADMA_API_token is the security token for calling ADMA API.",
         "output_from":["input_ADMA_API_token","variable_initializer"],
-        "input_to":["ADMA_search","ADMA_list_directory","ADMA_get_meta_data","ADMA_download_file","ADMA_upload_file"]
+        "input_to":["ADMA_search","ADMA_list_directory","ADMA_get_meta_data","ADMA_download_file","ADMA_upload_file"],
         "value":""
     },
 
@@ -156,7 +156,7 @@
         "call_condition":"",
         "description":"variable_initializer tries its best to initialize the value of the variables in the output list.",
         "input":["user_instruction"],
-        "output":["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "username"],
+        "output":["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "username"]
           
     },
 
