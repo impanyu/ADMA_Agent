@@ -642,6 +642,26 @@ def ai_reply(response, if_history=False):
                             st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA, then go to the ADMA root page."
                             print(st.session_state["button_prompt"])
                             print("button clicked")
+                            prompt = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA, then go to the ADMA root page."
+                            # Update chat history with user message
+                            user_message = {"role": "user",  "content": f"{prompt}"}
+                            st.session_state['chat_history'].append(user_message)
+                            st.chat_message("user",avatar="👨‍🎓").write(prompt)
+
+                            # response is a json object with the following format: {"type": "the type of the output", "output": "the json string"}
+                            response = get_answer(prompt,max_iter=30)
+
+                            ai_reply(response)
+
+                            
+                            bot_message = {"role": "assistant","content": response}
+                            st.session_state['chat_history'].append(bot_message)
+                            
+                        
+
+        
+        bot_message = {"role": "assistant","content": response}
+        st.session_state['chat_history'].append(bot_message)
 
                 
                 
@@ -793,10 +813,7 @@ def main():
     display_chat_history()
 
     prompt = st.chat_input("Ask Me Anything About Your AgData")
-    if not prompt:
-        prompt = ""
-    prompt += st.session_state["button_prompt"]
-    
+ 
 
     print(prompt)
 
