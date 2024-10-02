@@ -5,6 +5,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from google.auth.transport.requests import Request
 import io
+import time
 
 import os
 
@@ -29,6 +30,7 @@ def google_drive_generate_credentials(redirect_url,username):
     credential_file = f"/tmp/google_drive_credential_{username}.json"
     while not os.path.exists(credential_file):
         pass
+    time.sleep(2)
 
     credentials = Credentials.from_authorized_user_file(credential_file, SCOPES)
 
