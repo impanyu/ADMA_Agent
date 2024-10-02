@@ -639,7 +639,7 @@ def ai_reply(response, if_history=False):
                         google_drive_file_path += "/"+file["name"]
                         current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                         if st.button("Upload to ADMA",key=f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA. current time: {current_time}",type="secondary"):
-                            st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA."
+                            st.session_state["button_prompt"] = f"I want to download google drive file path {google_drive_file_path}, and upload it to the root folder of ADMA, then display the ADMA root directory."
                             print(st.session_state["button_prompt"])
                             print("button clicked")
 
