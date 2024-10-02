@@ -245,7 +245,7 @@ def get_next_task(program_controller):
     else:
         next_task = program_controller.get_next_task()
 
-    result = {"type": "middle_instruction","output": f"Call method: {next_task["method"]}"}
+    result = {"type": "middle_instruction","output": f"Call method: {next_task['method']}"}
     ai_reply(result)
     bot_message = {"role": "assistant","content": result}
     st.session_state['chat_history'].append(bot_message)
