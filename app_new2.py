@@ -292,7 +292,7 @@ def get_answer(prompt,max_iter=10):
             initialized_variables = initializer.initialize_meta_program_graph()
             print(initialized_variables)
             for variable in initialized_variables:
-                if initialized_variables[variable] != "DEFAULT":
+                if initialized_variables[variable] != "" or initialized_variables[variable] != []:
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
 
         elif next_task["method"] == "input_date_string":
