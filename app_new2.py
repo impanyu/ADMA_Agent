@@ -316,8 +316,8 @@ def get_answer(prompt,max_iter=10):
                 continue
             username = program_controller.meta_program_graph["username"]["value"]
             print(f"username: {username}")
-            #if not username:
-            #    continue
+            if not username:
+                continue
 
             credential_file = f"/tmp/google_drive_credential_{username}.json"
             if os.path.exists(credential_file):
