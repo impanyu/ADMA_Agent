@@ -591,7 +591,7 @@ def get_answer(prompt,max_iter=10):
 
 def ai_reply(response, if_history=False):
     if response["type"] == "middle_instruction":
-        st.markdown(f"###### Call method: :green[{response['output']}]")
+        st.markdown(f"###### :green[Call method:] :gray[{response['output']}]")
         return
     elif response["type"] == "message":
         st.chat_message("assistant", avatar="🤖").write(response["output"])
