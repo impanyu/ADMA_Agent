@@ -365,7 +365,7 @@
 
     "input_ADMA_API_token":{
         "type":"method",
-        "call_condition": "If there's empty ADMA_API_token, before calling any method which required ADMA_API_token, call this method to ask user input.",
+        "call_condition": "If there's empty ADMA_API_token, before calling any method which required ADMA_API_token, you must call this method to ask user input.",
         "description":"Given the ADMA_API_token from the user, initialize ADMA_API_token.",
         "input":[],
         "output":["ADMA_API_token"]
@@ -373,7 +373,7 @@
     
     "input_username":{
         "type":"method",
-        "call_condition": "If username is empty string, you must call this method to ask user input.",
+        "call_condition": "If username is empty string, you must call this method first to ask user input.",
         "description":"Given the username from the user, initialize username.",
         "input":[],
         "output":["username"]
