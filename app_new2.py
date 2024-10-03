@@ -297,8 +297,7 @@ def get_answer(prompt,max_iter=10):
         max_iter -= 1
         #next_task = program_controller.get_next_task()
         next_task = get_next_task(program_controller)
-        print(next_task)
-        print(program_controller.executed_methods)
+        
         variables = {}
         variables["username"] = meta_program_graph["username"]["value"]
         variables["Google_drive_redirect_url"] = meta_program_graph["Google_drive_redirect_url"]["value"]
@@ -310,6 +309,8 @@ def get_answer(prompt,max_iter=10):
         variables["ADMA_API_file_path_list"] = meta_program_graph["ADMA_API_file_path_list"]["value"]
         variables["ADMA_API_file_path_list_index"] = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
         print(variables)
+        print(next_task)
+        print(program_controller.executed_methods)
 
 
         if next_task["method"] == "variable_initializer":
