@@ -358,7 +358,7 @@ def get_answer(prompt,max_iter=10):
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
 
 
-        elif next_task["method"]= "ADMA_API_file_path_setter":
+        elif next_task["method"]== "ADMA_API_file_path_setter":
             meta_program_graph["ADMA_API_file_path"] = variable_value_setter.get_value()
 
         elif next_task["method"] == "input_date_string":
