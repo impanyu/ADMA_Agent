@@ -310,7 +310,7 @@ def get_answer(prompt,max_iter=10):
         variables["ADMA_API_file_path_list_index"] = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
         print(variables)
         print(next_task)
-        print(program_controller.executed_methods)
+        #print(program_controller.executed_methods)
 
 
         if next_task["method"] == "variable_initializer":
@@ -383,7 +383,7 @@ def get_answer(prompt,max_iter=10):
                 continue
             meta_program_graph["ADMA_API_file_path"]["value"] = ADMA_upload_file(meta_program_graph["local_file_path"]["value"],meta_program_graph["ADMA_API_file_path"]["value"],meta_program_graph["ADMA_API_token"]["value"])
             meta_program_graph["ADMA_API_file_path"]["description"] = f"ADMA_API_file_path is the path of the already uploaded file {meta_program_graph['local_file_path']['value']} on the ADMA server."
-
+            print(meta_program_graph["ADMA_API_file_path"]["value"])
 
 
         # process different methods
@@ -434,7 +434,7 @@ def get_answer(prompt,max_iter=10):
             if not token:
                 continue
             # update the value of the meta data
-            print(f"ADMA_API_file_path: {path}")
+            #print(f"ADMA_API_file_path: {path}")
             meta_program_graph["ADMA_meta_data"]["value"] = ADMA_get_meta_data(path,token)
             # update the description of the meta data
             #meta_program_graph["ADMA_meta_data"]["description"] = meta_program_graph["ADMA_API_file_path"]["description"]+"\n"
@@ -586,7 +586,7 @@ def get_answer(prompt,max_iter=10):
     if next_task["method"][:6] == "output" or max_iter < 0:
         print("clear")
         program_controller.executed_methods = []
-        initializer.executed_methods = []
+        initializer.executed_methods = program_controller.executed_methods
         with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
         # keep the google drive redirect url for this session
