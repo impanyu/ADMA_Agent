@@ -299,11 +299,24 @@ def get_answer(prompt,max_iter=10):
         next_task = get_next_task(program_controller)
         print(next_task)
         print(program_controller.executed_methods)
+        variables = {}
+        variables["username"] = meta_program_graph["username"]["value"]
+        variables["Google_drive_redirect_url"] = meta_program_graph["Google_drive_redirect_url"]["value"]
+        variables["Google_drive_credentials"] = meta_program_graph["Google_drive_credentials"]["value"]
+        variables["Google_drive_file_path"] = meta_program_graph["Google_drive_file_path"]["value"]
+        variables["Google_drive_file_path_list"] = meta_program_graph["Google_drive_file_path_list"]["value"]
+        variables["local_file_path"] = meta_program_graph["local_file_path"]["value"]
+        variables["ADMA_API_token"] = meta_program_graph["ADMA_API_token"]["value"]
+        variables["ADMA_API_file_path"] = meta_program_graph["ADMA_API_file_path"]["value"]
+        variables["ADMA_API_file_path_list"] = meta_program_graph["ADMA_API_file_path_list"]["value"]
+        variables["ADMA_API_file_path_list_index"] = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
+        print(variables)
+
 
         if next_task["method"] == "variable_initializer":
             # initialize the meta program graph
             initialized_variables = initializer.initialize_meta_program_graph()
-            print(initialized_variables)
+            #print(initialized_variables)
             for variable in initialized_variables:
                 if initialized_variables[variable] != "NA" :
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
