@@ -304,7 +304,6 @@ def get_answer(prompt,max_iter=10):
         variables["Google_drive_redirect_url"] = meta_program_graph["Google_drive_redirect_url"]["value"]
         variables["Google_drive_credentials"] = meta_program_graph["Google_drive_credentials"]["value"]
         variables["Google_drive_file_path"] = meta_program_graph["Google_drive_file_path"]["value"]
-        variables["Google_drive_file_path_list"] = meta_program_graph["Google_drive_file_path_list"]["value"]
         variables["local_file_path"] = meta_program_graph["local_file_path"]["value"]
         variables["ADMA_API_token"] = meta_program_graph["ADMA_API_token"]["value"]
         variables["ADMA_API_file_path"] = meta_program_graph["ADMA_API_file_path"]["value"]

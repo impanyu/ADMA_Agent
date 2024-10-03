@@ -63,6 +63,8 @@ def google_drive_list(credential_file,file_path):
     results = service.files().list(q=f"'{parent_id}' in parents",pageSize=100, fields="nextPageToken, files(name,webViewLink,modifiedTime, createdTime, owners,size)").execute()
     items = results.get('files', [])
 
+    file_path_list = [file_path+"/"+file['name'] for file in items]
+
     return items
 
 def google_drive_download_file(credential_file, file_path):
