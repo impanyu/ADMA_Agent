@@ -27,7 +27,7 @@
     "ADMA_API_file_path":{
         "type":"ADMA API file path",
         "description":"ADMA_API_file_path is a path of the directory on the ADMA system. The format should be like path/to/directory, with 0 or more / in the path. when user asked to go to file or folder followed by a path, you should set this to the path.",
-        "output_from":["ADMA_API_file_path_list_iterator","Realm5_generate_file_url","ADMA_upload_file","variable_initializer","ADMA_API_file_path_setter"],
+        "output_from":["ADMA_API_file_path_list_iterator","Realm5_generate_file_url","ADMA_upload_file","variable_initializer"],
         "input_to":["ADMA_list_directory","ADMA_get_meta_data","ADMA_menu_option","ADMA_search","ADMA_download_file","ADMA_upload_file"],
         "value":""
     },
@@ -420,13 +420,7 @@
         "output":["Google_drive_credentials"]
     },
 
-    "ADMA_API_file_path_setter":{
-        "type":"method",
-        "call_condition": "call this only if you need to set the value of ADMA_API_file_path",
-        "description":"Given user instruction, return value of ADMA_API_file_path",
-        "input":["user_instruction"],
-        "output":["ADMA_API_file_path"]
-    }
+   
 
  
 }
