@@ -27,7 +27,7 @@
     "ADMA_API_file_path":{
         "type":"ADMA API file path",
         "description":"ADMA_API_file_path is a path of the directory on the ADMA system. The format should be like path/to/directory, with 0 or more / in the path. when user asked to go to file or folder followed by a path, you should set this to the path.",
-        "output_from":["ADMA_API_file_path_list_iterator","Realm5_generate_file_url","ADMA_upload_file"],
+        "output_from":["ADMA_API_file_path_list_iterator","Realm5_generate_file_url","ADMA_upload_file","variable_initializer"],
         "input_to":["ADMA_list_directory","ADMA_get_meta_data","ADMA_menu_option","ADMA_search","ADMA_download_file","ADMA_upload_file"],
         "value":""
     },
@@ -69,14 +69,14 @@
     "ADMA_menu_name":{
         "type":"ADMA menu name",
         "description":"ADMA_menu_name is the name of the menu on the ADMA server. ",
-        "output_from":[],
+        "output_from":["variable_initializer"],
         "input_to":["ADMA_menu_option"],
         "value":""
     },
     "JD_ENREEC_field_id":{
         "type":"JD field id",
         "description":"JD_ENREEC_field_id is the id of the field in ENREEC from John Deere. Note, this field_id is a long string, like 514a1e63-0000-1000-4052-e1e1e1263770, which is different from the field name, like 1863.",
-        "output_from":["JD_ENREEC_field_id_from_name"],
+        "output_from":["JD_ENREEC_field_id_from_name","variable_initializer"],
         "input_to":["JD_ENREEC_boundary_in_field"],
         "value":""
     },
@@ -90,7 +90,7 @@
     "JD_ENREEC_field_name":{
         "type":"string",
         "description":"JD_ENREEC_field_name is the name of the field in ENREEC from John Deere.",
-        "output_from":[],
+        "output_from":["variable_initializer"],
         "input_to":["JD_ENREEC_field_id_from_name"],
         "value":""
     },
@@ -98,7 +98,7 @@
     "Realm5_variable_name_list":{
         "type":"Realm5 variable name list",
         "description":"Realm5_variable_name_list is a list of variable names, which must be from [ 'wind_direction','wind_speed','temperature', 'humidity','pressure'].",
-        "output_from":[],
+        "output_from":["variable_initializer"],
         "input_to":["Realm5_format_data_for_plot"],
         "value":["temperature"]
     },
@@ -106,7 +106,7 @@
     "Realm5_date_str":{
         "type":"date string",
         "description":"Realm5_date_str is the date string in the format of 'YYYY-MM-DD'.",
-        "output_from":["input_date_string"],
+        "output_from":["input_date_string","variable_initializer"],
         "input_to":["Realm5_generate_file_url"],
         "value":""
     },
@@ -114,7 +114,7 @@
     "ADMA_search_string":{
         "type":"ADMA_search_string",
         "description":"ADMA_search_string is the search string of the search on ADMA. This value is a single world extracted from user's instruction, or a single world related to the user's instruction.",
-        "output_from":[],
+        "output_from":["variable_initializer"],
         "input_to":["ADMA_search"],
         "value":""
     },
@@ -145,7 +145,7 @@
     "Google_drive_file_path":{
         "type":"Google Drive file path",
         "description":"Google_drive_file_path is the path of the file on the Google Drive.",
-        "output_from":[],
+        "output_from":["variable_initializer"],
         "input_to":["Google_drive_download_file","Google_drive_list_directory"],
         "value":""
     },

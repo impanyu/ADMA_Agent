@@ -197,7 +197,7 @@ class meta_program_graph_initializer:
         self.system_prompt += "If the user ask for token on adma, you should set ADMA_menu_name to 'api'."
         self.system_prompt += "Note: If the user's instruction contains required information, you can set the value of the variable based on the information. "
         self.system_prompt += "Note: If you can not find the value of a variable from the user's instruction, you must set the value to 'NA'."
-        self.system_prompt += "When setting the value of a variable, you need to check the user's instruction and the execution history, timing is important. If it is not appropriate to set the value now, you should postpone and set the value to 'NA' now."
+        #self.system_prompt += "Timing is important. Sometimes even you can find the value from user's instruction, but based on user's intent,  If it is not appropriate to set the value now, you should postpone and set the value to 'NA' now."
    
 
         
