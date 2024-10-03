@@ -159,7 +159,7 @@ class controller:
         self.system_prompt += "Also, when it is needed, you can call variable_initializer any time, to modify the value of some variable, based on current user's instruction and current status of meta program graph."
 
     def get_next_task(self):
-        system_prompt=self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+        system_prompt = self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
         system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
         #self.meta_program_graph["ADMA_list_directory_contents&output_list"]
         user_instruction = self.meta_program_graph["user_instruction"]["value"]
@@ -181,9 +181,10 @@ class controller:
 
                                 
 class meta_program_graph_initializer:
-    def __init__(self,meta_program_graph):
+    def __init__(self,meta_program_graph,executed_methods):
         
         self.meta_program_graph = meta_program_graph
+        self.executed_methods = executed_methods
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.system_prompt = "Given the user's instruction, you need to initialize the variables in meta program graph."
         
@@ -194,9 +195,9 @@ class meta_program_graph_initializer:
         #self.system_prompt += "If you see a file name or a path, you should set the value of ADMA_API_file_path to the file name or the path."
         self.system_prompt += "If you see Chinese, first translate it to English."
         self.system_prompt += "If the user ask for token on adma, you should set ADMA_menu_name to 'api'."
-        self.system_prompt += "Current meta program graph is: " + json.dumps(self.meta_program_graph)
         self.system_prompt += "Note: If the user's instruction contains required information, you can set the value of the variable based on the information. "
         self.system_prompt += "Note: If you can not find the value of a variable from the user's instruction, you must set the value to 'NA'."
+        self.system_prompt += "When setting the value of a variable, you need to check the user's instruction and the execution history, timing is important. If it is not appropriate to set the value now, you should postpone and set the value to 'NA' now."
    
 
         
@@ -204,10 +205,13 @@ class meta_program_graph_initializer:
     def initialize_meta_program_graph(self):
         user_instruction = self.meta_program_graph["user_instruction"]["value"]
 
+        system_prompt = self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+        system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
+
 
         response = self.client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
-            messages=[{"role": "system", "content": self.system_prompt},
+            messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": user_instruction}],
             response_format= initializer_output,
             temperature=temperature,
@@ -263,7 +267,7 @@ def get_answer(prompt,max_iter=10):
             meta_program_graph = json.load(f)
         executed_methods = []
         st.session_state.program_controller = controller(meta_program_graph,executed_methods)
-        st.session_state.initializer = meta_program_graph_initializer(meta_program_graph)
+        st.session_state.initializer = meta_program_graph_initializer(meta_program_graph,executed_methods)
     
 
     program_controller = st.session_state.program_controller
@@ -569,6 +573,7 @@ def get_answer(prompt,max_iter=10):
     if next_task["method"][:6] == "output" or max_iter < 0:
         print("clear")
         program_controller.executed_methods = []
+        initializer.executed_methods = []
         with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
         # keep the google drive redirect url for this session
