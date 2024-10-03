@@ -157,7 +157,7 @@ class controller:
         self.system_prompt += "You can only call the methods which exist in the meta program graph. "
         #self.system_prompt += "Note: only call a method, if all the variables in the input list of this method have value. "
         self.system_prompt += "Also, when it is needed, you need to call variable_initializer any time to modify the value of some variable, based on user's instruction, execution history and current status of meta program graph."
-
+        self.system_prompt += "Note: timing is important. Sometimes, you need to call variable_initializer after executing some methods, and then reinitialize some of the variables and call the subsequent methods."
     def get_next_task(self):
         system_prompt = self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
         system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
