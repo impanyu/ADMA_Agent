@@ -143,10 +143,12 @@ class controller:
         self.system_prompt += "Check each method in the meta program graph, check the value and description of each variable in the input list of each method. Choose the most appropriate method which can use these variables as input, and which once called will move the status towards the goal of user's instruction."
         #self.system_prompt += "You only need to observe the value and description of these variables: ADMA_url and local_file_path"
         #self.system_prompt += 'If you are confident you can answer user\'s instruction, based on these variables, you should make no further method call and you should only output a json with the following format: {"method": "None"}, with no other extra word at all.'
-        self.system_prompt += "Try your best to explore every possible path to approche the goal of user's instruction, do not be lazy!"
+        self.system_prompt += "Try your best to explore every possible path to approach the goal of user's instruction, do not be lazy!"
         self.system_prompt += 'Try to find a method which may lead you to the answer of user\'s instruction, you need to output a json with the following format: {"method": "the name of the method to call"}, with no other extra word at all.'
         self.system_prompt += 'If you feel confident that you can answer user\'s instruction, especially one variable contains what the user want, you can call one of the method whose name begins with "output". Note: once you call these output methods, you indicate the program ends with no further method calls.'
         self.system_prompt += 'If you feel you further information is needed, you can call one of the method whose name begins with "input".'
+        self.system_prompt += 'If you feel you further information is needed, you can also call variable_initializer.'
+        
         self.system_prompt += 'The name of the method should match one of the methods in the meta program graph. '
         self.system_prompt += 'Try your best to extract required information from the meta program graph, and reduce the needs to make method calls. But do not fabricate any information.'
         self.system_prompt += 'How to extract required information from the meta program graph? You can check the description of each variable and the correspondingvalue of each variable. Compare this information with user\'s instruction, and check if you can find the answer.'
