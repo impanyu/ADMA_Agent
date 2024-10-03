@@ -222,6 +222,35 @@ class meta_program_graph_initializer:
         return json.loads(response.choices[0].message.content)
     
 
+    
+class variable_value_setter:
+    def __init__(self,meta_program_graph,executed_methods):
+        
+        self.meta_program_graph = meta_program_graph
+        self.executed_methods = executed_methods
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.system_prompt = "Given the user's instruction, you need to return the value of ADMA_API_file_path."
+        
+
+        
+
+    def get_value(self):
+        user_instruction = self.meta_program_graph["user_instruction"]["value"]
+
+        system_prompt = self.system_prompt + "Current meta program graph is: " + json.dumps(self.meta_program_graph)
+        system_prompt += "The methods that have been executed in the previous steps are: " + json.dumps(self.executed_methods)
+
+
+        response = self.client.beta.chat.completions.parse(
+            model="gpt-4o-2024-08-06",
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": user_instruction}],
+
+            temperature=temperature,
+        )
+        return json.loads(response.choices[0].message.content)
+    
+
 
 
 
@@ -271,10 +300,13 @@ def get_answer(prompt,max_iter=10):
         executed_methods = []
         st.session_state.program_controller = controller(meta_program_graph,executed_methods)
         st.session_state.initializer = meta_program_graph_initializer(meta_program_graph,executed_methods)
+        st.session_state.value_setter = variable_value_setter(meta_program_graph,executed_methods)
     
 
     program_controller = st.session_state.program_controller
     initializer = st.session_state.initializer
+
+    value_setter = st.session_state.value_setter
 
     # start a new instruction
     if len(program_controller.executed_methods) == 0:
@@ -324,6 +356,10 @@ def get_answer(prompt,max_iter=10):
             for variable in initialized_variables:
                 if initialized_variables[variable] != "NA" :
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
+
+
+        elif next_task["ADMA_API_file_path_setter"]:
+            meta_program_graph["ADMA_API_file_path"] = variable_value_setter.get_value()
 
         elif next_task["method"] == "input_date_string":
             result = {"type": "message","output": "Please input a date string for Realm5."} 
@@ -591,6 +627,9 @@ def get_answer(prompt,max_iter=10):
         print("clear")
         program_controller.executed_methods = []
         initializer.executed_methods = program_controller.executed_methods
+
+        value_setter.executed_methods = program_controller.executed_methods
+
         with open("meta_program_graph_new2.json") as f:
             meta_program_graph = json.load(f)
         # keep the google drive redirect url for this session
@@ -600,6 +639,8 @@ def get_answer(prompt,max_iter=10):
 
         program_controller.meta_program_graph = meta_program_graph
         initializer.meta_program_graph = meta_program_graph
+        value_setter.meta_program_graph = meta_program_graph
+
         program_controller.meta_program_graph["Google_drive_redirect_url"] = google_drive_redirect_url
         program_controller.meta_program_graph["username"]["value"] = username
         program_controller.meta_program_graph["ADMA_API_token"]["value"] = ADMA_API_token
