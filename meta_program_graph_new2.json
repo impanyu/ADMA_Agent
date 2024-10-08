@@ -8,10 +8,10 @@
     },
     
     
-    "username":{
+    "Google_username":{
         "type":"string",
-        "description":" the username of the user.",
-        "output_from":["variable_initializer","input_username"],
+        "description":" the Google username of the user.",
+        "output_from":["variable_initializer","input_Google_username"],
         "input_to":["Google_drive_generate_credentials","Google_drive_connect"],
         "value":""
     },
@@ -165,7 +165,7 @@
         "call_condition":"",
         "description":"variable_initializer tries its best to initialize the value of the variables in the output list, also you can call this method in the middle of process to change the value of some variable when you feel necessary.",
         "input":["user_instruction"],
-        "output":["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "username"]
+        "output":["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "Google_username"]
           
     },
 
@@ -371,20 +371,20 @@
         "output":["ADMA_API_token"]
     },
     
-    "input_username":{
+    "input_Google_username":{
         "type":"method",
-        "call_condition": "If username is empty string, before calling any method which required username, you must call this method first to ask user input.",
-        "description":"Given the username from the user, initialize username.",
+        "call_condition": "If Google_username is empty string, before calling any method which required Google_username, you must call this method first to ask user input.",
+        "description":"Given the Google_username from the user, initialize Google_username.",
         "input":[],
-        "output":["username"]
+        "output":["Google_username"]
     },
 
 
     "Google_drive_connect":{
         "type":"method",
-        "call_condition": "Only call this if the value of Google_drive_redirect_url is empty and username is not empty.",
+        "call_condition": "Only call this if the value of Google_drive_redirect_url is empty and Google_username is not empty.",
         "description":"Connect to Google Drive, and return the credentials.",
-        "input":["username"],
+        "input":["Google_username"],
         "output":["Google_drive_redirect_url"]
     },
 
@@ -416,7 +416,7 @@
         "type":"method",
         "call_condition": "call this only if you have the Google_drive_redirect_url.",
         "description":"Given Google drive redirect url, return the Google drive credentials.",
-        "input":["Google_drive_redirect_url","username"],
+        "input":["Google_drive_redirect_url","Google_username"],
         "output":["Google_drive_credentials"]
     }
 
