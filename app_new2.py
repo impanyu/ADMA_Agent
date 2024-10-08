@@ -117,12 +117,12 @@ initializer_output = {
                     "type": "string",
                     "description": "ADMA_API_token."
                 },
-                "username": {
+                "Google_username": {
                     "type": "string",
-                    "description": "username of the user."
+                    "description": "Google username of the user."
                 }
             },
-            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "username"],
+            "required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "Google_username"],
             "additionalProperties": False   
         }
     }
@@ -334,7 +334,7 @@ def get_answer(prompt,max_iter=10):
         next_task = get_next_task(program_controller)
         
         variables = {}
-        variables["username"] = meta_program_graph["username"]["value"]
+        variables["Google_username"] = meta_program_graph["Google_username"]["value"]
         variables["Google_drive_redirect_url"] = meta_program_graph["Google_drive_redirect_url"]["value"]
         variables["Google_drive_credentials"] = meta_program_graph["Google_drive_credentials"]["value"]
         variables["Google_drive_file_path"] = meta_program_graph["Google_drive_file_path"]["value"]
@@ -370,7 +370,7 @@ def get_answer(prompt,max_iter=10):
             result = {"type": "message","output": "Please input your token for ADMA API."}
             program_controller.meta_program_graph["next_prompt"]["value"] = "The token for ADMA API is: "
             break
-        elif next_task["method"] == "input_username":
+        elif next_task["method"] == "input_Google_username":
             result = {"type": "message","output": "Please input your username."}
             program_controller.meta_program_graph["next_prompt"]["value"] = "The username is: "
             break
@@ -378,7 +378,7 @@ def get_answer(prompt,max_iter=10):
         elif next_task["method"] == "Google_drive_connect":
             if program_controller.meta_program_graph["Google_drive_redirect_url"]["value"] != "":
                 continue
-            username = program_controller.meta_program_graph["username"]["value"]
+            username = program_controller.meta_program_graph["Google_username"]["value"]
             print(f"username: {username}")
             if not username:
                 continue
@@ -634,7 +634,7 @@ def get_answer(prompt,max_iter=10):
             meta_program_graph = json.load(f)
         # keep the google drive redirect url for this session
         google_drive_redirect_url = program_controller.meta_program_graph["Google_drive_redirect_url"]
-        username = program_controller.meta_program_graph["username"]["value"]
+        username = program_controller.meta_program_graph["Google_username"]["value"]
         ADMA_API_token = program_controller.meta_program_graph["ADMA_API_token"]["value"]
 
         program_controller.meta_program_graph = meta_program_graph
@@ -642,7 +642,7 @@ def get_answer(prompt,max_iter=10):
         value_setter.meta_program_graph = meta_program_graph
 
         program_controller.meta_program_graph["Google_drive_redirect_url"] = google_drive_redirect_url
-        program_controller.meta_program_graph["username"]["value"] = username
+        program_controller.meta_program_graph["Google_username"]["value"] = username
         program_controller.meta_program_graph["ADMA_API_token"]["value"] = ADMA_API_token
 
 
