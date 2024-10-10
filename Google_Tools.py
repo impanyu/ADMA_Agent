@@ -15,7 +15,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 def google_drive_auth(username):
     # Create the flow using the client_secrets.json file.
     flow = Flow.from_client_secrets_file(
-        '/tmp/google_drive_client_secret.json',
+        'tmp/google_drive_client_secret.json',
         scopes=SCOPES,
         redirect_uri=f'https://adma.hopto.org/api/google_drive_auth_callback/'
     )
@@ -27,7 +27,7 @@ def google_drive_auth(username):
     return auth_url
 
 def google_drive_generate_credentials(redirect_url,username):
-    credential_file = f"/tmp/google_drive_credential_{username}.json"
+    credential_file = f"tmp/google_drive_credential_{username}.json"
     while not os.path.exists(credential_file):
         pass
     time.sleep(3)
