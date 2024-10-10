@@ -334,6 +334,7 @@ def get_answer(prompt,max_iter=10):
         next_task = get_next_task(program_controller)
         
         variables = {}
+        variables["Realm5_variable_name_list"] = meta_program_graph["Realm5_variable_name_list"]["value"]
         variables["Google_username"] = meta_program_graph["Google_username"]["value"]
         variables["Google_drive_redirect_url"] = meta_program_graph["Google_drive_redirect_url"]["value"]
         variables["Google_drive_credentials"] = meta_program_graph["Google_drive_credentials"]["value"]
