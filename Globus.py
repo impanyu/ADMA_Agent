@@ -30,7 +30,7 @@ def get_authorize_url(*, scopes=TransferScopes.all):
     
     for endpoint in endpoints_ids:
         COLLECTION_UUID = endpoints_ids[endpoint]
-        additional_scope = f" *https://auth.globus.org/scopes/{COLLECTION_UUID}/data_access"
+        additional_scope = f" https://auth.globus.org/scopes/{COLLECTION_UUID}/data_access"
         additional_scopes += additional_scope
     additional_scopes = additional_scopes.strip()
 
