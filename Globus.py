@@ -20,7 +20,8 @@ endpoints_ids = {"unl_onedrive":"c10b0a87-02e6-4d3a-bda4-6d10f12820c1", "hcc_swa
 CLIENT_ID = "7afd2a98-df9b-4ede-83b9-b8dbd6009be9"
 CLIENT_SECRET = "9ade63b2-6cf0-4a06-b4ee-922f3a31ccaa"
 TOKEN = "your-access-token"  # Replace with your actual access token if available
-auth_client = NativeAppAuthClient(CLIENT_ID)
+#auth_client = NativeAppAuthClient(CLIENT_ID)
+auth_client = globus_sdk.ConfidentialAppAuthClient(client_id="your-client-id", client_secret="your-client-secret")
 
 # we default to using the Transfer "all" scope, but it is settable here
 # look at the ConsentRequired handler below for how this is used
@@ -64,7 +65,8 @@ def check_for_consent_required(transfer_client):
 def get_transfer_token(auth_code):
     print(f"auth_code: {auth_code}")
     additional_scopes = ""
-    auth_client = NativeAppAuthClient(CLIENT_ID)
+    #auth_client = NativeAppAuthClient(CLIENT_ID)
+    auth_client = globus_sdk.ConfidentialAppAuthClient(client_id="your-client-id", client_secret="your-client-secret")
 
     
     for endpoint in endpoints_ids:
