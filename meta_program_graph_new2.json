@@ -247,7 +247,7 @@
         "description":"Boolean value indicating if current task is a Globus task",
         "output_from":["variable_initializer"],
         "input_to":["Get_Globus_auth_url"],
-        "value":"False"
+        "value":false
     },
 
 
