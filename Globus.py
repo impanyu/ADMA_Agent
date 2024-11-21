@@ -66,7 +66,7 @@ def get_transfer_token(auth_code):
     print(f"auth_code: {auth_code}")
     additional_scopes = ""
     #auth_client = NativeAppAuthClient(CLIENT_ID)
-    auth_client = globus_sdk.ConfidentialAppAuthClient(client_id="your-client-id", client_secret="your-client-secret")
+    #auth_client = globus_sdk.ConfidentialAppAuthClient(client_id="your-client-id", client_secret="your-client-secret")
 
     
     for endpoint in endpoints_ids:
