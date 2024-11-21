@@ -7,6 +7,7 @@
         "value":""
     },
     
+  
     
     "Google_username":{
         "type":"string",
@@ -157,6 +158,148 @@
         "input_to":["Google_drive_generate_credentials"],
         "value":""
     },
+
+
+    "Globus_path":{
+        "type":"Globus file path",
+        "description":"Globus_path is the path of the file on the Globus system.",
+        "output_from":["variable_initializer"],
+        "input_to":["Globus_list"],
+        "value":""
+    },
+    "Globus_collection":{
+        "type":"Globus collection name",
+        "description":"Globus_collection is the path of the collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
+        "output_from":["variable_initializer"],
+        "input_to":["Globus_list"],
+        "value":""
+    },
+
+    "Globus_source_path":{
+        "type":"Globus file path",
+        "description":"Globus_source_path is the path of the source file on the Globus system.",
+        "output_from":["variable_initializer"],
+        "input_to":["Globus_transfer"],
+        "value":""
+    },
+    "Globus_target_path":{
+        "type":"Globus file path",
+        "description":"Globus_target_path is the path of the target file on the Globus system.",
+        "output_from":["variable_initializer"],
+        "input_to":["Globus_transfer"],
+        "value":""
+    },
+    "Globus_source_collection":{
+        "type":"Globus collection name",
+        "description":"Globus_source_collection is the path of the source collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
+        "output_from":["variable_initializer"],
+        "input_to":["Globus_transfer"],
+        "value":""
+    },
+
+    "Globus_target_collection":{
+        "type":"Globus collection name",
+        "description":"Globus_target_collection is the path of the target collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
+        "output_from":["variable_initializer"],
+        "input_to":["Globus_transfer"],
+        "value":""
+    },
+
+      "Globus_auth_url":{
+        "type": "Globus authorize url",
+        "description": "Globus_auth_url is the url sent to the user to authenticate Globus",
+        "output_from" : ["Get_Globus_auth_url"],
+        "input_to": ["input_Globus_auth_code"],
+        "value":""  
+      },
+      "Globus_auth_code":{
+        "type": "Globus authorize code",
+        "description": "Globus_auth_code is the code input by the user to authenticate Globus",
+        "output_from" : ["input_Globus_auth_code"],
+        "input_to": ["Get_Globus_token"],
+        "value":""  
+      },
+
+      "Globus_token":{
+        "type": "Globus token",
+        "description": "Globus_token is used in transfering and listing files in Globus system",
+        "output_from" : ["Get_Globus_token"],
+        "input_to": ["Globus_transfer","Globus_list"],
+        "value":""  
+      },
+
+      "Globus_path_list":{
+        "type":"Globus path list",
+        "description":"Globus_path_list is the list of path on the Globus system.",
+        "output_from":["Globus_list"],
+        "input_to":["output_Globus_list"],
+        "value":[]
+    },
+    "Globus_task_id":{
+        "type":"Globus task id",
+        "description":"Globus_task_id is the transfer task id in Globus system.",
+        "output_from":["Globus_transfer"],
+        "input_to":["output_Globus_task_id"],
+        "value":""
+    },
+
+
+
+
+      "Get_Globus_auth_url":{
+        "type":"method",
+        "call_condition": "Only call this if the value of Globus_auth_url is empty.",
+        "description":"Get the Globus authorize url for the user to authenticating Globus",
+        "input":[],
+        "output":["Globus_auth_url"]
+    },  
+    "input_Globus_auth_code":{
+        "type":"method",
+        "call_condition": "",
+        "description":"initialize Globus_auth_code based on user input",
+        "input":["Globus_auth_url"],
+        "output":["Globus_auth_code"]
+    },
+     "Get_Globus_token":{
+        "type":"method",
+        "call_condition": "call this only if you have the non empty Globus_auth_url.",
+        "description":"Given Globus_auth_code, return the Globus token.",
+        "input":["Globus_auth_code"],
+        "output":["Globus_token"]
+    },
+    "Globus_transfer":{
+        "type":"method",
+        "call_condition": "call this only if you have the non empty Globus_token.",
+        "description":"Given Globus_token, Globus_source_path, Globus_target_path, Globus_source_collection and Globus_target_collection,  return the Globus_task_id ",
+        "input":["Globus_token", "Globus_source_path", "Globus_target_path", "Globus_source_collection", "Globus_target_collection"],
+        "output":["Globus_task_id"]
+    },
+    "Globus_list":{
+        "type":"method",
+        "call_condition": "call this only if you have the non empty Globus_token.",
+        "description":"Given Globus_token, Globus_path, Globus_collection,  return the Globus_path_list under Globus_path in Globus system ",
+        "input":["Globus_token", "Globus_path",  "Globus_collection"],
+        "output":["Globus_path_list"]
+    },
+    "output_Globus_path_list":{
+        "type":"method",
+        "call_condition": "",
+        "description":"output Globus_path_list ",
+        "input":["Globus_path_list"],
+        "output":[]
+    },
+
+    "output_Globus_task_id":{
+        "type":"method",
+        "call_condition": "",
+        "description":"output Globus_task_id ",
+        "input":["Globus_task_id"],
+        "output":[]
+    },
+
+    
+
+
     
 
 
@@ -168,6 +311,7 @@
         "output":["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "Google_username"]
           
     },
+    
 
 
     "ADMA_list_directory": {

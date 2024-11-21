@@ -25,6 +25,7 @@ import pandas as pd
 from Soil import *
 from Google_Tools import *
 import datetime
+from Globus import *
 
 temperature = 0.2
 
@@ -280,6 +281,10 @@ def get_next_task(program_controller):
     elif program_controller.executed_methods[-1] == "Google_drive_connect":
         next_task = {"method":"Google_drive_generate_credentials"}
         program_controller.executed_methods.append("Google_drive_generate_credentials")
+    #elif program_controller.executed_methods[-1] == "Get_Globus_auth_url":
+    #    next_task = {"method":"Get_Globus_token"}
+    #    program_controller.executed_methods.append("Get_Globus_token")
+
     else:
         next_task = program_controller.get_next_task()
 
@@ -357,6 +362,32 @@ def get_answer(prompt,max_iter=10):
             for variable in initialized_variables:
                 if initialized_variables[variable] != "NA" :
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
+
+        elif next_task["method"] == "Get_Globus_auth_url":
+            program_controller.meta_program_graph["Globus_auth_url"]["value"] = get_authorize_url()
+
+        elif next_task["method"] == "input_Globus_auth_code":
+            globus_auth_url = program_controller.meta_program_graph["Globus_auth_url"]["value"]
+            result = {"type": "message","output": f"Click this link: {globus_auth_url}, and input the auth code:"} 
+            program_controller.meta_program_graph["next_prompt"]["value"] = "The Globus auth code is: "
+            break
+
+        elif next_task["method"] == "Get_Globus_token":
+            auth_code = program_controller.meta_program_graph["Globus_token"]["value"]
+            if auth_code = "":
+                continue
+            program_controller.meta_program_graph["Globus_token"]["value"] = get_transfer_token(auth_code)
+
+        elif next_task["method"] == "Globus_list":
+            globus_token = program_controller.meta_program_graph["Globus_token"]["value"]
+            endpoint = program_controller.meta_program_graph["Globus_collection"]["value"]
+            path = program_controller.meta_program_graph["Globus_path"]["value"]
+            program_controller.meta_program_graph["Globus_path_list"]["value"] = list_folder(globus_token, endpoint, path)
+
+        elif next_task["method"] == "output_Globus_path_list":
+            result = {"type": "Globus_path_list","output": meta_program_graph["Globus_path_list"]["value"]}
+            break
+        
 
 
         #elif next_task["method"]== "ADMA_API_file_path_setter":
@@ -659,6 +690,9 @@ def ai_reply(response, if_history=False):
     if response["type"] == "middle_instruction":
         st.markdown(f"###### :green[Call method:] :gray[{response['output']}]")
         return
+    elif response["type"] == "Globus_path_list":
+        st.json(response["output"],expanded=True)
+
     elif response["type"] == "message":
         st.chat_message("assistant", avatar="🤖").write(response["output"])
         return
