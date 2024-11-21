@@ -248,21 +248,21 @@
 
       "Get_Globus_auth_url":{
         "type":"method",
-        "call_condition": "Only call this if the value of Globus_auth_url is empty.",
+        "call_condition": "Must call this if the value of Globus_auth_url is empty.",
         "description":"Get the Globus authorize url for the user to authenticating Globus",
         "input":[],
         "output":["Globus_auth_url"]
     },  
     "input_Globus_auth_code":{
         "type":"method",
-        "call_condition": "",
+        "call_condition": "call this only if you have the non empty Globus_auth_url.",
         "description":"initialize Globus_auth_code based on user input",
         "input":["Globus_auth_url"],
         "output":["Globus_auth_code"]
     },
      "Get_Globus_token":{
         "type":"method",
-        "call_condition": "call this only if you have the non empty Globus_auth_url.",
+        "call_condition": "call this only if you have the non empty Globus_auth_code.",
         "description":"Given Globus_auth_code, return the Globus token.",
         "input":["Globus_auth_code"],
         "output":["Globus_token"]
