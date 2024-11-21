@@ -169,7 +169,7 @@
     },
     "Globus_collection":{
         "type":"Globus collection name",
-        "description":"Globus_collection is the path of the collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
+        "description":"Globus_collection is the collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
         "output_from":["variable_initializer"],
         "input_to":["Globus_list"],
         "value":""
@@ -191,7 +191,7 @@
     },
     "Globus_source_collection":{
         "type":"Globus collection name",
-        "description":"Globus_source_collection is the path of the source collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
+        "description":"Globus_source_collection is the source collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
         "output_from":["variable_initializer"],
         "input_to":["Globus_transfer"],
         "value":""
@@ -199,7 +199,7 @@
 
     "Globus_target_collection":{
         "type":"Globus collection name",
-        "description":"Globus_target_collection is the path of the target collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
+        "description":"Globus_target_collection is  the target collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
         "output_from":["variable_initializer"],
         "input_to":["Globus_transfer"],
         "value":""
