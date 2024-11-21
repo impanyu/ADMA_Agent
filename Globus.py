@@ -17,7 +17,7 @@ endpoints_ids = {"unl_onedrive":"c10b0a87-02e6-4d3a-bda4-6d10f12820c1", "hcc_swa
 
 
 # Define your client credentials
-CLIENT_ID = "6d490b93-aaaa-48d9-87b3-a3044e599114"#"7afd2a98-df9b-4ede-83b9-b8dbd6009be9"
+CLIENT_ID = "7afd2a98-df9b-4ede-83b9-b8dbd6009be9"
 CLIENT_SECRET = "9ade63b2-6cf0-4a06-b4ee-922f3a31ccaa"
 TOKEN = "your-access-token"  # Replace with your actual access token if available
 auth_client = NativeAppAuthClient(CLIENT_ID)
