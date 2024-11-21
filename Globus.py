@@ -62,9 +62,20 @@ def check_for_consent_required(transfer_client):
         )
 
 def get_transfer_token2():
+    additional_scopes = ""
+    
+    for endpoint in endpoints_ids:
+        COLLECTION_UUID = endpoints_ids[endpoint]
+        additional_scope = f" https://auth.globus.org/scopes/{COLLECTION_UUID}/data_access"
+        additional_scopes += additional_scope
+    additional_scopes = additional_scopes.strip()
+
+    # Define the specific scope including data_access for the collection
+    custom_scopes = f"urn:globus:auth:scope:transfer.api.globus.org:all[{additional_scopes}]"
 
     try:
-        tokens = auth_client.oauth2_exchange_code_for_tokens()
+        auth_client = globus_sdk.ConfidentialAppAuthClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+        tokens = auth_client.oauth2_exchange_code_for_tokens(requested_scopes=custom_scopes)
         transfer_tokens = tokens.by_resource_server["transfer.api.globus.org"]
     except globus_sdk.AuthAPIError as e:
         print(f"Error: {e.code} - {e.message}")
