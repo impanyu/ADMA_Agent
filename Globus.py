@@ -21,7 +21,7 @@ CLIENT_ID = "7afd2a98-df9b-4ede-83b9-b8dbd6009be9"
 CLIENT_SECRET = "9ade63b2-6cf0-4a06-b4ee-922f3a31ccaa"
 TOKEN = "your-access-token"  # Replace with your actual access token if available
 #auth_client = NativeAppAuthClient(CLIENT_ID)
-auth_client = globus_sdk.ConfidentialAppAuthClient(client_id="your-client-id", client_secret="your-client-secret")
+auth_client = globus_sdk.ConfidentialAppAuthClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 # we default to using the Transfer "all" scope, but it is settable here
 # look at the ConsentRequired handler below for how this is used
