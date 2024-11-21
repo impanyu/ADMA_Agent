@@ -262,7 +262,7 @@
     },  
     "input_Globus_auth_code":{
         "type":"method",
-        "call_condition": "call this only if you have the non empty Globus_auth_url.",
+        "call_condition": "once you call Get_Globus_auth_url, you must call this method",
         "description":"initialize Globus_auth_code based on user input",
         "input":["Globus_auth_url"],
         "output":["Globus_auth_code"]
