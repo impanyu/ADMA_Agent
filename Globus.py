@@ -64,7 +64,7 @@ def check_for_consent_required(transfer_client):
 def get_transfer_token(auth_code):
     print(f"auth_code: {auth_code}")
     additional_scopes = ""
-    auth_client = NativeAppAuthClient(CLIENT_ID)
+    auth_client = NativeAppAuthClient("6d490b93-aaaa-48d9-87b3-a3044e599114")
 
     
     for endpoint in endpoints_ids:
