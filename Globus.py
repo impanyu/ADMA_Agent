@@ -30,6 +30,7 @@ def get_authorize_url(*, scopes=TransferScopes.all):
         COLLECTION_UUID = endpoints_ids[endpoint]
         additional_scope = f" *https://auth.globus.org/scopes/{COLLECTION_UUID}/data_access"
         additional_scopes += additional_scope
+    additional_scopes = additional_scopes.strip()
 
     # Define the specific scope including data_access for the collection
     custom_scopes = f"urn:globus:auth:scope:transfer.api.globus.org:all[{additional_scopes}]"

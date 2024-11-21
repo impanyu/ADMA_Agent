@@ -165,7 +165,7 @@
         "description":"Globus_path is the path of the file on the Globus system.",
         "output_from":["variable_initializer"],
         "input_to":["Globus_list"],
-        "value":""
+        "value":"/"
     },
     "Globus_collection":{
         "type":"Globus collection name",
