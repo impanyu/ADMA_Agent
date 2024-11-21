@@ -147,6 +147,10 @@ initializer_output = {
                     "type": "string",
                     "description": "Globus_target_path."
                 },
+                "Globus_auth_code": {
+                    "type": "string",
+                    "description": "Globus_auth_code."
+                },
 
 
 
@@ -172,6 +176,7 @@ initializer_output = {
                 "Globus_path",
                 "Globus_source_path",
                 "Globus_target_path",
+                "Globus_auth_code",
           
                 "Globus_task"
             ],
