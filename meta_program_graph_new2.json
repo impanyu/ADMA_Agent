@@ -257,7 +257,7 @@
         "type":"method",
         "call_condition": "Always start from here when you complete a task relevant to Globus ",
         "description":"Get the Globus authorize url for the user to authenticating Globus",
-        "input":[],
+        "input":["Globus_task"],
         "output":["Globus_auth_url"]
     },  
     "input_Globus_auth_code":{
