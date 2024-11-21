@@ -75,7 +75,8 @@ def get_transfer_token2():
 
     try:
         auth_client = globus_sdk.ConfidentialAppAuthClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-        tokens = auth_client.oauth2_exchange_code_for_tokens(requested_scopes=custom_scopes)
+        #tokens = auth_client.oauth2_exchange_code_for_tokens(requested_scopes=custom_scopes)
+        tokens = auth_client.oauth2_client_credentials_tokens(requested_scopes=custom_scopes)
         transfer_tokens = tokens.by_resource_server["transfer.api.globus.org"]
     except globus_sdk.AuthAPIError as e:
         print(f"Error: {e.code} - {e.message}")
