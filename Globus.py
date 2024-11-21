@@ -68,15 +68,6 @@ def get_transfer_token(auth_code):
     #auth_client = NativeAppAuthClient(CLIENT_ID)
     #auth_client = globus_sdk.ConfidentialAppAuthClient(client_id="your-client-id", client_secret="your-client-secret")
 
-    
-    for endpoint in endpoints_ids:
-        COLLECTION_UUID = endpoints_ids[endpoint]
-        additional_scope = f" *https://auth.globus.org/scopes/{COLLECTION_UUID}/data_access"
-        additional_scopes += additional_scope
-    additional_scopes = additional_scopes.strip()
-
-    # Define the specific scope including data_access for the collection
-    custom_scopes = f"urn:globus:auth:scope:transfer.api.globus.org:all[{additional_scopes}]"
     try:
         #auth_client.oauth2_start_flow(requested_scopes=custom_scopes,redirect_uri="https://adma.hopto.org/")
         tokens = auth_client.oauth2_exchange_code_for_tokens(auth_code)
