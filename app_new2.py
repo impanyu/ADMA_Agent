@@ -374,7 +374,7 @@ def get_answer(prompt,max_iter=10):
 
         elif next_task["method"] == "Get_Globus_token":
             auth_code = program_controller.meta_program_graph["Globus_token"]["value"]
-            if auth_code = "":
+            if auth_code == "":
                 continue
             program_controller.meta_program_graph["Globus_token"]["value"] = get_transfer_token(auth_code)
 
