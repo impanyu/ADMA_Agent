@@ -274,7 +274,13 @@
         "input":["Globus_auth_code"],
         "output":["Globus_token"]
     },
-   
+    "Get_Globus_token2":{
+        "type":"method",
+        "call_condition": "directly generate Globus_token, without the need of Globus_auth_code. You can call this first when the user asks to complete a Globus relevant task.",
+        "description":"Given Globus_auth_code, return the Globus token.",
+        "input":[],
+        "output":["Globus_token"]
+    },
     "Globus_transfer":{
         "type":"method",
         "call_condition": "call this only if you have the non empty Globus_token.",

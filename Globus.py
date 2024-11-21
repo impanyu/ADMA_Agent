@@ -37,7 +37,7 @@ def get_authorize_url(*, scopes=TransferScopes.all):
     # Define the specific scope including data_access for the collection
     custom_scopes = f"urn:globus:auth:scope:transfer.api.globus.org:all[{additional_scopes}]"
     
-    auth_client.oauth2_start_flow(requested_scopes=scopes,redirect_uri="https://adma.hopto.org/")
+    auth_client.oauth2_start_flow(requested_scopes=scopes,redirect_uri="https://auth.globus.org/v2/web/auth-code")
     authorize_url = auth_client.oauth2_get_authorize_url()
     return authorize_url
 
