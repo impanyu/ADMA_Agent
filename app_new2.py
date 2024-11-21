@@ -122,6 +122,15 @@ initializer_output = {
                     "type": "string",
                     "description": "Google username of the user."
                 },
+
+                "Globus_collection": {
+                    "type": "string",
+                    "description": "Globus_collection."
+                },
+                "Globus_path": {
+                    "type": "string",
+                    "description": "Globus_path."
+                },
                 "Globus_source_collection": {
                     "type": "string",
                     "description": "Globus_source_collection."
@@ -130,28 +139,17 @@ initializer_output = {
                     "type": "string",
                     "description": "Globus_target_collection."
                 },
-                "Globus_auth_url": {
+                "Globus_source_path": {
                     "type": "string",
-                    "description": "Globus_auth_url."
+                    "description": "Globus_source_path."
                 },
-                "Globus_auth_code": {
+                "Globus_target_path": {
                     "type": "string",
-                    "description": "Globus_auth_code."
+                    "description": "Globus_target_path."
                 },
-                "Globus_token": {
-                    "type": "string",
-                    "description": "Globus_token."
-                },
-                "Globus_path_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "Globus_task_id": {
-                    "type": "string",
-                    "description": "Globus_task_id."
-                },
+
+
+
                 "Globus_task": {
                     "type": "boolean",
                     "description": "Globus_task."
@@ -169,12 +167,12 @@ initializer_output = {
                 "ADMA_API_token", 
                 "Google_username",
                 "Globus_source_collection",
+                "Globus_collection",
                 "Globus_target_collection",
-                "Globus_auth_url",
-                "Globus_auth_code",
-                "Globus_token",
-                "Globus_path_list",
-                "Globus_task_id",
+                "Globus_path",
+                "Globus_source_path",
+                "Globus_target_path",
+          
                 "Globus_task"
             ],
             #"required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "Google_username"],
