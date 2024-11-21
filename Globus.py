@@ -100,6 +100,8 @@ def check_task_status(access_token, task_id):
 # List the folder structure of a collection
 def list_folder(access_token, endpoint, path):
     endpoint_id = endpoints_ids[endpoint]
+    print(f"Access Token: {access_token}")
+
     tc = globus_sdk.TransferClient(authorizer=globus_sdk.AccessTokenAuthorizer(access_token))
     results = []
     try:
