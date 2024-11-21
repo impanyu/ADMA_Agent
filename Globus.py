@@ -37,7 +37,7 @@ def get_authorize_url(*, scopes=TransferScopes.all):
     # Define the specific scope including data_access for the collection
     custom_scopes = f"urn:globus:auth:scope:transfer.api.globus.org:all[{additional_scopes}]"
     
-    auth_client.oauth2_start_flow(requested_scopes=scopes,redirect_uri="urn:ietf:wg:oauth:2.0:oob")#"https://adma.hopto.org/")
+    auth_client.oauth2_start_flow(requested_scopes=scopes,redirect_uri="https://adma.hopto.org/")
     authorize_url = auth_client.oauth2_get_authorize_url()
     return authorize_url
 
@@ -60,6 +60,16 @@ def check_for_consent_required(transfer_client):
             "One of your endpoints requires consent in order to be used.\n"
             "You must login a second time to grant consents.\n\n"
         )
+
+def get_transfer_token2():
+
+    try:
+        tokens = auth_client.oauth2_exchange_code_for_tokens()
+        transfer_tokens = tokens.by_resource_server["transfer.api.globus.org"]
+    except globus_sdk.AuthAPIError as e:
+        print(f"Error: {e.code} - {e.message}")
+        print(f"Raw Response: {e.raw_json}")
+    return transfer_tokens["access_token"]
 
 
 def get_transfer_token(auth_code):

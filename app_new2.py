@@ -441,6 +441,10 @@ def get_answer(prompt,max_iter=10):
                 continue
             program_controller.meta_program_graph["Globus_token"]["value"] = get_transfer_token(auth_code)
 
+        elif next_task["method"] == "Get_Globus_token2":
+
+            program_controller.meta_program_graph["Globus_token"]["value"] = get_transfer_token2()
+
         elif next_task["method"] == "Globus_list":
             globus_token = program_controller.meta_program_graph["Globus_token"]["value"]
             endpoint = program_controller.meta_program_graph["Globus_collection"]["value"]
