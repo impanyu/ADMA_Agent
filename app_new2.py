@@ -350,6 +350,12 @@ def get_answer(prompt,max_iter=10):
         variables["ADMA_API_file_path_list"] = meta_program_graph["ADMA_API_file_path_list"]["value"]
         variables["ADMA_API_file_path_list_index"] = meta_program_graph["ADMA_API_file_path_list_index"]["value"]
         variables["ADMA_menu_name"] =  meta_program_graph["ADMA_menu_name"]["value"]
+
+        variables["Globus_path"] = meta_program_graph["Globus_path"]["value"]
+        variables["Globus_collection"] = meta_program_graph["Globus_collection"]["value"]
+        variables["Globus_auth_url"] = meta_program_graph["Globus_auth_url"]["value"]
+        variables["Globus_auth_code"] = meta_program_graph["Globus_auth_code"]["value"]
+
         print(variables)
         print(next_task)
         #print(program_controller.executed_methods)

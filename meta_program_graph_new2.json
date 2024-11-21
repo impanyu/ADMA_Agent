@@ -248,7 +248,7 @@
 
       "Get_Globus_auth_url":{
         "type":"method",
-        "call_condition": "Must call this if the value of Globus_auth_url is empty.",
+        "call_condition": "Always start from here when you complete a task relevant to Globus ",
         "description":"Get the Globus authorize url for the user to authenticating Globus",
         "input":[],
         "output":["Globus_auth_url"]
