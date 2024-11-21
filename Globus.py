@@ -104,7 +104,7 @@ def list_folder(access_token, endpoint, path):
     results = []
     try:
         # Perform a directory listing on the given endpoint and path
-        response = tc.operation_ls(endpoint_id, path=path)
+        response = tc.operation_ls(endpoint_id=endpoint_id, path=path)
         #print(f"Contents of {path} on endpoint {endpoint_id}:\n")
         for item in response["DATA"]:
             item_type = "Folder" if item["type"] == "dir" else "File"
