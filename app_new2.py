@@ -173,6 +173,8 @@ initializer_output = {
                 "Globus_auth_url",
                 "Globus_auth_code",
                 "Globus_token",
+                "Globus_path_list",
+                "Globus_task_id",
                 "Globus_task"
             ],
             #"required": ["ADMA_search_string", "ADMA_menu_name", "ADMA_API_file_path", "Realm5_date_str", "JD_ENREEC_field_id", "JD_ENREEC_field_name", "Realm5_variable_name_list", "Google_drive_file_path", "ADMA_API_token", "Google_username"],
