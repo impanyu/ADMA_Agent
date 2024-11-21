@@ -79,7 +79,7 @@ def get_transfer_token(auth_code):
     custom_scopes = f"urn:globus:auth:scope:transfer.api.globus.org:all[{additional_scopes}]"
     try:
         #auth_client.oauth2_start_flow(requested_scopes=custom_scopes,redirect_uri="https://adma.hopto.org/")
-        tokens = auth_client.oauth2_exchange_code_for_tokens()
+        tokens = auth_client.oauth2_exchange_code_for_tokens(auth_code)
         transfer_tokens = tokens.by_resource_server["transfer.api.globus.org"]
     except globus_sdk.AuthAPIError as e:
         print(f"Error: {e.code} - {e.message}")
