@@ -464,7 +464,7 @@ def get_answer(prompt,max_iter=10):
             break
 
         elif next_task["method"] == "output_Globus_task_id":
-            result = {"type": "message","output": f"The file transfer task is submitted to Globus with the task id: {meta_program_graph["Globus_task_id"]["value"]}"}
+            result = {"type": "message","output": f"The file transfer task is submitted to Globus with the task id: {meta_program_graph['Globus_task_id']['value']}"}
             break
         
 
