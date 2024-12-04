@@ -451,8 +451,20 @@ def get_answer(prompt,max_iter=10):
             path = program_controller.meta_program_graph["Globus_path"]["value"]
             program_controller.meta_program_graph["Globus_path_list"]["value"] = list_folder(globus_token, endpoint, path)
 
+        elif next_task["method"] == "Globus_transfer":
+            globus_token = program_controller.meta_program_graph["Globus_token"]["value"]
+            source_endpoint = program_controller.meta_program_graph["Globus_source_collection"]["value"]
+            target_endpoint = program_controller.meta_program_graph["Globus_target_collection"]["value"]
+            source_path = program_controller.meta_program_graph["Globus_source_path"]["value"]
+            target_path = program_controller.meta_program_graph["Globus_target_path"]["value"]
+            program_controller.meta_program_graph["Globus_path_list"]["value"] =  transfer_file(globus_token, source_endpoint, target_endpoint, source_path, target_path)
+
         elif next_task["method"] == "output_Globus_path_list":
             result = {"type": "Globus_path_list","output": meta_program_graph["Globus_path_list"]["value"]}
+            break
+
+        elif next_task["method"] == "output_Globus_task_id":
+            result = {"type": "message","output": f"The file transfer task is submitted to Globus with the task id: {meta_program_graph["Globus_task_id"]["value"]}"}
             break
         
 
