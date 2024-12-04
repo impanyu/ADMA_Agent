@@ -412,6 +412,7 @@ def get_answer(prompt,max_iter=10):
         variables["Globus_collection"] = meta_program_graph["Globus_collection"]["value"]
         variables["Globus_auth_url"] = meta_program_graph["Globus_auth_url"]["value"]
         variables["Globus_auth_code"] = meta_program_graph["Globus_auth_code"]["value"]
+        variables["Globus_token"] = meta_program_graph["Globus_token"]["value"]
 
         print(variables)
         print(next_task)
