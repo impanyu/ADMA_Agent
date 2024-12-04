@@ -427,15 +427,21 @@ def get_answer(prompt,max_iter=10):
                     meta_program_graph[variable]["value"] = initialized_variables[variable]
 
         elif next_task["method"] == "Get_Globus_auth_url":
+            if program_controller.meta_program_graph["Globus_token"]["value"] != "":
+                continue
             program_controller.meta_program_graph["Globus_auth_url"]["value"] = get_authorize_url()
 
         elif next_task["method"] == "input_Globus_auth_code":
+            if program_controller.meta_program_graph["Globus_token"]["value"] != "":
+                continue
             globus_auth_url = program_controller.meta_program_graph["Globus_auth_url"]["value"]
             result = {"type": "message","output": f"Click this link: {globus_auth_url}, and input the auth code:"} 
             program_controller.meta_program_graph["next_prompt"]["value"] = "The Globus auth code is: "
             break
 
         elif next_task["method"] == "Get_Globus_token":
+            if program_controller.meta_program_graph["Globus_token"]["value"] != "":
+                continue
             auth_code = program_controller.meta_program_graph["Globus_auth_code"]["value"]
             if auth_code == "":
                 continue
