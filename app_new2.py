@@ -754,6 +754,7 @@ def get_answer(prompt,max_iter=10):
         google_drive_redirect_url = program_controller.meta_program_graph["Google_drive_redirect_url"]
         username = program_controller.meta_program_graph["Google_username"]["value"]
         ADMA_API_token = program_controller.meta_program_graph["ADMA_API_token"]["value"]
+        globus_token = program_controller.meta_program_graph["Globus_token"]["value"]
 
         program_controller.meta_program_graph = meta_program_graph
         initializer.meta_program_graph = meta_program_graph
@@ -762,6 +763,7 @@ def get_answer(prompt,max_iter=10):
         program_controller.meta_program_graph["Google_drive_redirect_url"] = google_drive_redirect_url
         program_controller.meta_program_graph["Google_username"]["value"] = username
         program_controller.meta_program_graph["ADMA_API_token"]["value"] = ADMA_API_token
+        program_controller.meta_program_graph["Globus_token"]["value"] = globus_token
 
 
 
