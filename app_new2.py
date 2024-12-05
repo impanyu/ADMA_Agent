@@ -784,7 +784,7 @@ def ai_reply(response, if_history=False):
             #for file in response["output"]:
                 #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
             #    st.write(f"[{file['name']}]({file['webViewLink']})")
-            col1, col2, col3, col4, col5 = st.columns([3,2])
+            col1, col2= st.columns([3,2])
             with col1:
                 st.markdown(f"{'Name'} ")
             with col2:
