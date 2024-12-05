@@ -109,14 +109,16 @@ def transfer_file(transfer_token, source_endpoint, target_endpoint, source_path,
     transfer_client = globus_sdk.TransferClient(
         authorizer=globus_sdk.AccessTokenAuthorizer(transfer_token)
     )
+    recursive = True
     #source path is a file
     if "." in os.path.basename(source_path):
         target_path = os.path.join(target_path, os.path.basename(source_path))
+        recursive = False
     task_data = globus_sdk.TransferData(source_endpoint=endpoints_ids[source_endpoint], destination_endpoint= endpoints_ids[target_endpoint])
     task_data.add_item(
         source_path,
         target_path,
-        recursive=True  # Enable recursive transfer for folders
+        recursive=recursive  # Enable recursive transfer for folders
     )
 
     task_doc = transfer_client.submit_transfer(task_data)
