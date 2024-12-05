@@ -143,7 +143,7 @@ def list_folder(access_token, endpoint, path):
         #print(f"Contents of {path} on endpoint {endpoint_id}:\n")
         for item in response["DATA"]:
             item_type = "Folder" if item["type"] == "dir" else "File"
-            results.append({item_type: item['name']})
+            results.append({"name": item['name'],"type": item_type})
         return results
     except globus_sdk.TransferAPIError as e:
         print(f"Error listing folder: {e.code} - {e.message}")

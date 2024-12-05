@@ -794,8 +794,9 @@ def ai_reply(response, if_history=False):
             
             #html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
             #html_code += '<tbody>'
-            for item_type in response["output"]:
-                name = response["output"][item_type]
+            for item in response["output"]:
+                name = item["name"]
+                item_type = item["type"]
 
                 # Set up two columns: one for text and one for the button
                 col1, col2 = st.columns([3,2])
