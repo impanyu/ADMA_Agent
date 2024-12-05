@@ -109,6 +109,9 @@ def transfer_file(transfer_token, source_endpoint, target_endpoint, source_path,
     transfer_client = globus_sdk.TransferClient(
         authorizer=globus_sdk.AccessTokenAuthorizer(transfer_token)
     )
+    #source path is a file
+    if "." in os.path.basename(source_path):
+        target_path = os.path.join(target_path, os.path.basename(source_path))
     task_data = globus_sdk.TransferData(source_endpoint=endpoints_ids[source_endpoint], destination_endpoint= endpoints_ids[target_endpoint])
     task_data.add_item(
         source_path,
@@ -143,6 +146,8 @@ def list_folder(access_token, endpoint, path):
         #print(f"Contents of {path} on endpoint {endpoint_id}:\n")
         for item in response["DATA"]:
             item_type = "Folder" if item["type"] == "dir" else "File"
+            if "." == item['name'][0]:
+                continue
             results.append({"name": item['name'],"type": item_type})
         return results
     except globus_sdk.TransferAPIError as e:
