@@ -464,7 +464,7 @@ def get_answer(prompt,max_iter=10):
             target_endpoint = program_controller.meta_program_graph["Globus_target_collection"]["value"]
             source_path = program_controller.meta_program_graph["Globus_source_path"]["value"]
             target_path = program_controller.meta_program_graph["Globus_target_path"]["value"]
-            program_controller.meta_program_graph["Globus_path_list"]["value"] =  transfer_file(globus_token, source_endpoint, target_endpoint, source_path, target_path)
+            program_controller.meta_program_graph["Globus_task_id"]["value"] =  transfer_file(globus_token, source_endpoint, target_endpoint, source_path, target_path)
 
         elif next_task["method"] == "output_Globus_path_list":
             result = {"type": "Globus_path_list","output": meta_program_graph["Globus_path_list"]["value"]}
