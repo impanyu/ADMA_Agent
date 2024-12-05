@@ -769,9 +769,6 @@ def get_answer(prompt,max_iter=10):
 
    
 
-
-
-
     return result
 
 def ai_reply(response, if_history=False):
@@ -779,7 +776,34 @@ def ai_reply(response, if_history=False):
         st.markdown(f"###### :green[Call method:] :gray[{response['output']}]")
         return
     elif response["type"] == "Globus_path_list":
-        st.json(response["output"],expanded=True)
+        if not response["output"]:
+            st.write("No files found.")
+        else:
+            st.markdown("<style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style>", unsafe_allow_html=True)
+            
+            #for file in response["output"]:
+                #st.markdown(f"<a href={file['webViewLink']}>{file['name']}</a>",unsafe_allow_html=True)
+            #    st.write(f"[{file['name']}]({file['webViewLink']})")
+            col1, col2, col3, col4, col5 = st.columns([3,2])
+            with col1:
+                st.markdown(f"{'Name'} ")
+            with col2:
+                st.markdown(f"{'Type'}")
+
+ 
+            
+            #html_code = ' <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Styled Table</title><style>table{width:100%;border-collapse:collapse;background-color:white}th{text-align:left;padding:8px;}td{padding:8px;vertical-align:top;}tr{border-bottom:1px solid grey;}tr:last-child{border-bottom:none;}</style></head><body><table><thead><tr><th>Name</th><th>Owner</th><th>Created Time</th><th>Last Modified</th><th>Size</th></tr></thead>'
+            #html_code += '<tbody>'
+            for item_type in response["output"]:
+                name = response["output"][item_type]
+
+                # Set up two columns: one for text and one for the button
+                col1, col2 = st.columns([3,2])
+                with col1:
+                    st.markdown(f"[{name.ljust(30)}] ")
+                with col2:
+                    st.markdown(f"{item_type}")
+
 
     elif response["type"] == "message":
         st.chat_message("assistant", avatar="🤖").write(response["output"])
