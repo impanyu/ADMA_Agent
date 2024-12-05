@@ -277,14 +277,14 @@
 
     "Globus_transfer":{
         "type":"method",
-        "call_condition": "you can directly call this method if you have non-empty Globus_token; otherwise call Get_Globus_auth_url first",
+        "call_condition": "",
         "description":"Given Globus_token, Globus_source_path, Globus_target_path, Globus_source_collection and Globus_target_collection,  return the Globus_task_id ",
         "input":["Globus_token", "Globus_source_path", "Globus_target_path", "Globus_source_collection", "Globus_target_collection"],
         "output":["Globus_task_id"]
     },
     "Globus_list":{
         "type":"method",
-        "call_condition": "you can directly call this method if you have non-empty Globus_token; otherwise call Get_Globus_auth_url first",
+        "call_condition": "",
         "description":"Given Globus_token, Globus_path, Globus_collection,  return the Globus_path_list under Globus_path in Globus system ",
         "input":["Globus_token", "Globus_path",  "Globus_collection"],
         "output":["Globus_path_list"]
