@@ -11,6 +11,8 @@ from globus_sdk import (
     RefreshTokenAuthorizer,
     NativeAppAuthClient
 )
+import urllib.parse
+
 
 # Define the source and destination endpoints
 endpoints_ids = {"unl_onedrive":"c10b0a87-02e6-4d3a-bda4-6d10f12820c1", "hcc_swan":"bf57b3a0-ba0f-11ec-ad98-5ddcb36bd5b8", "ADAPT":"7a502952-f65e-4592-8623-9be9350142af", "Globus_Test":"9251c931-5104-4381-be76-496c97f17178"}
@@ -142,6 +144,9 @@ def list_folder(access_token, endpoint, path):
 
     tc = globus_sdk.TransferClient(authorizer=globus_sdk.AccessTokenAuthorizer(access_token))
     results = []
+    # Retrieve the collection details
+    collection = tc.get_endpoint(endpoint_id)
+    https_server = collection['https_server']
     try:
         # Perform a directory listing on the given endpoint and path
         response = tc.operation_ls(endpoint_id=endpoint_id, path=path)
@@ -150,7 +155,10 @@ def list_folder(access_token, endpoint, path):
             item_type = "Folder" if item["type"] == "dir" else "File"
             if "." == item['name'][0]:
                 continue
-            results.append({"name": item['name'],"type": item_type})
+            item_url = f"{https_server}/{item['name']}"
+            # URL-encode the file path
+            encoded_file_path = urllib.parse.quote(item_url)
+            results.append({"name": item['name'],"type": item_type, "size": item.get('size', 'Unknown'), "url": encoded_file_path})
         return results
     except globus_sdk.TransferAPIError as e:
         print(f"Error listing folder: {e.code} - {e.message}")
