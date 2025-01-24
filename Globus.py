@@ -13,7 +13,7 @@ from globus_sdk import (
 )
 
 # Define the source and destination endpoints
-endpoints_ids = {"unl_onedrive":"c10b0a87-02e6-4d3a-bda4-6d10f12820c1", "hcc_swan":"bf57b3a0-ba0f-11ec-ad98-5ddcb36bd5b8"}
+endpoints_ids = {"unl_onedrive":"c10b0a87-02e6-4d3a-bda4-6d10f12820c1", "hcc_swan":"bf57b3a0-ba0f-11ec-ad98-5ddcb36bd5b8", "ADAPT":"7a502952-f65e-4592-8623-9be9350142af", "Globus_Test":"9251c931-5104-4381-be76-496c97f17178"}
 
 
 # Define your client credentials
