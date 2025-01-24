@@ -169,7 +169,7 @@
     },
     "Globus_collection":{
         "type":"Globus collection name",
-        "description":"Globus_collection is the collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive'] ",
+        "description":"Globus_collection is the collection name on the Globus system. Must be one of the values in : ['hcc_swan','unl_onedrive','ADAPT','Globus_Test'] ",
         "output_from":["variable_initializer"],
         "input_to":["Globus_list"],
         "value":""

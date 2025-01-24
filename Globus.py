@@ -28,8 +28,8 @@ auth_client = NativeAppAuthClient(CLIENT_ID)
 # we default to using the Transfer "all" scope, but it is settable here
 # look at the ConsentRequired handler below for how this is used
 def get_authorize_url(*, scopes=TransferScopes.all):  
-    additional_scopes = ""
-    
+    #additional_scopes = ""
+    '''
     for endpoint in endpoints_ids:
         COLLECTION_UUID = endpoints_ids[endpoint]
         additional_scope = f" https://auth.globus.org/scopes/{COLLECTION_UUID}/data_access"
@@ -38,7 +38,8 @@ def get_authorize_url(*, scopes=TransferScopes.all):
 
     # Define the specific scope including data_access for the collection
     custom_scopes = f"urn:globus:auth:scope:transfer.api.globus.org:all[{additional_scopes}]"
-    
+    '''
+    custom_scopes = scopes
     auth_client.oauth2_start_flow(requested_scopes=custom_scopes,redirect_uri="https://auth.globus.org/v2/web/auth-code")
     authorize_url = auth_client.oauth2_get_authorize_url()
     return authorize_url
